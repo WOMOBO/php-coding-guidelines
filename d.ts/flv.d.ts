@@ -89,3 +89,99 @@ declare namespace FlvJs {
         deferLoadAfterSourceOpen?: boolean;
 
         /**
+         * @desc Do auto cleanup for SourceBuffer
+         * @defaultvalue false (from docs)
+         */
+        autoCleanupSourceBuffer?: boolean;
+        /**
+         * @desc When backward buffer duration exceeded this value (in seconds), do auto cleanup for SourceBuffer
+         * @defaultvalue 3 * 60
+         */
+        autoCleanupMaxBackwardDuration?: number;
+        /**
+         * @desc Indicates the duration in seconds to reserve for backward buffer when doing auto cleanup.
+         * @defaultvalue 2 * 60
+         */
+        autoCleanupMinBackwardDuration?: number;
+
+        /**
+         * @defaultvalue 600
+         */
+        statisticsInfoReportInterval?: number;
+
+        /**
+         * @desc Fill silent audio frames to avoid a/v unsync when detect large audio timestamp gap.
+         * @defaultvalue true
+         */
+        fixAudioTimestampGap?: boolean;
+
+        /**
+         * @desc Accurate seek to any frame, not limited to video IDR frame, but may a bit slower.
+         *          Available on Chrome > 50, FireFox and Safari.
+         * @defaultvalue false
+         */
+        accurateSeek?: boolean;
+        /**
+         * @desc 'range' use range request to seek, or 'param' add params into url to indicate request range.
+         * @defaultvalue 'range'
+         */
+        seekType?: 'range' | 'param' | 'custom';
+        /**
+         * @desc Indicates seek start parameter name for seekType = 'param'
+         * @defaultvalue 'bstart'
+         */
+        seekParamStart?: string;
+        /**
+         * @desc Indicates seek end parameter name for seekType = 'param'
+         * @defaultvalue 'bend'
+         */
+        seekParamEnd?: string;
+        /**
+         * @desc Send Range: bytes=0- for first time load if use Range seek
+         * @defaultvalue false
+         */
+        rangeLoadZeroStart?: boolean;
+        /**
+         * @desc Indicates a custom seek handler
+         * @desc Should implement `SeekHandler` interface
+         */
+        customSeekHandler?: CustomSeekHandlerConstructor;
+        /**
+         * @desc Reuse 301/302 redirected url for subsequence request like seek, reconnect, etc.
+         * @defaultvalue false
+         */
+        reuseRedirectedURL?: boolean;
+        /**
+         * @desc Indicates the Referrer Policy when using FetchStreamLoader
+         * @defaultvalue 'no-referrer-when-downgrade' (from docs)
+         */
+        referrerPolicy?: ReferrerPolicy;
+        /**
+         * @desc Indicates additional headers that will be added to request
+         */
+        headers?: {
+            [k: string]: string
+        }
+        /**
+         * @desc Should implement `BaseLoader` interface
+         */
+        customLoader?: CustomLoaderConstructor;
+    }
+
+    interface CustomSeekHandlerConstructor {
+        new(): SeekHandler;
+    }
+
+    interface SeekHandler {
+        getConfig(sourceURL: string, range: Range): SeekConfig;
+        removeURLParameters(url: string): string;
+    }
+
+    interface SeekConfig {
+        url: string;
+        headers: Headers | object;
+    }
+
+    interface BaseLoaderConstructor {
+        new(typeName: string): BaseLoader;
+    }
