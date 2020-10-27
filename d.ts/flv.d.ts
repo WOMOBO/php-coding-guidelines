@@ -185,3 +185,98 @@ declare namespace FlvJs {
     interface BaseLoaderConstructor {
         new(typeName: string): BaseLoader;
     }
+
+    interface BaseLoader {
+        _status: number;
+        _needStash: boolean;
+
+        destroy(): void;
+        isWorking(): boolean;
+        readonly type: string;
+        readonly status: number;
+        readonly needStashBuffer: boolean;
+        onContentLengthKnown: (contentLength: number) => void;
+        onURLRedirect: (redirectedURL: string) => void;
+        onDataArrival: (chunk: ArrayBuffer, byteStart: number, receivedLength?: number) => void;
+        onError: (errorType: LoaderErrors, errorInfo: LoaderErrorMessage) => void;
+        onComplete: (rangeFrom: number, rangeTo: number) => void;
+        open(dataSource: MediaSegment, range: Range): void;
+        abort(): void;
+    }
+
+    interface CustomLoaderConstructor {
+        new(seekHandler: SeekHandler, config: Config): BaseLoader;
+    }
+
+    interface Range {
+        from: number;
+        to: number;
+    }
+
+    interface LoaderStatus {
+        readonly kIdle: 0;
+        readonly kConnecting: 1;
+        readonly kBuffering: 2;
+        readonly kError: 3;
+        readonly kComplete: 4;
+    }
+
+    interface LoaderErrors {
+        readonly OK: 'OK';
+        readonly EXCEPTION: 'Exception';
+        readonly HTTP_STATUS_CODE_INVALID: 'HttpStatusCodeInvalid';
+        readonly CONNECTING_TIMEOUT: 'ConnectingTimeout';
+        readonly EARLY_EOF: 'EarlyEof';
+        readonly UNRECOVERABLE_EARLY_EOF: 'UnrecoverableEarlyEof';
+    }
+
+    interface LoaderErrorMessage {
+        code: number;
+        msg: string;
+    }
+
+    interface FeatureList {
+        mseFlvPlayback: boolean;
+        mseLiveFlvPlayback: boolean;
+        networkStreamIO: boolean;
+        networkLoaderName: string;
+        nativeMP4H264Playback: boolean;
+        nativeWebmVP8Playback: boolean;
+        nativeWebmVP9Playback: boolean;
+    }
+
+    interface PlayerConstructor {
+        new (mediaDataSource: MediaDataSource, config?: Config): Player;
+    }
+
+    interface Player {
+        destroy(): void;
+        on(event: string, listener: (...args: any[]) => void): void;
+        off(event: string, listener: (...args: any[]) => void): void;
+        attachMediaElement(mediaElement: HTMLMediaElement): void;
+        detachMediaElement(): void;
+        load(): void;
+        unload(): void;
+        play(): Promise<void> | void;
+        pause(): void;
+        type: string;
+        buffered: TimeRanges;
+        duration: number;
+        volume: number;
+        muted: boolean;
+        currentTime: number;
+        /**
+         * @deprecated FlvPlayer/NativePlayer have its own `mediaInfo` field.
+         * @desc Keep it for backwards compatibility
+         * @since 1.4
+         */
+        mediaInfo: NativePlayerMediaInfo | FlvPlayerMediaInfo;
+        /**
+         * @deprecated FlvPlayer/NativePlayer have its own `statisticsInfo` field.
+         * @desc Keep it for backwards compatibility
+         * @since 1.4
+         */
+        statisticsInfo: NativePlayerStatisticsInfo | FlvPlayerStatisticsInfo;
+    }
+
+    interface NativePlayerStatisticsInfo {
