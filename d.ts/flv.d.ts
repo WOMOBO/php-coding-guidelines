@@ -370,3 +370,50 @@ declare namespace FlvJs {
         NETWORK_EXCEPTION: string;
         NETWORK_STATUS_CODE_INVALID: string;
         NETWORK_TIMEOUT: string;
+        NETWORK_UNRECOVERABLE_EARLY_EOF: string;
+
+        MEDIA_MSE_ERROR: string;
+
+        MEDIA_FORMAT_ERROR: string;
+        MEDIA_FORMAT_UNSUPPORTED: string;
+        MEDIA_CODEC_UNSUPPORTED: string;
+    }
+}
+
+declare var FlvJs: {
+    createPlayer(mediaDataSource: FlvJs.MediaDataSource, config?: FlvJs.Config): FlvJs.Player;
+    isSupported(): boolean;
+    getFeatureList(): FlvJs.FeatureList;
+
+    /**
+     * @deprecated Use `FlvJs.BaseLoaderConstructor` instead.
+     *              Because it's not available on `flvjs` variable.
+     * @desc implement interface `BaseLoader`
+     * @since 1.4
+     */
+    BaseLoader: FlvJs.BaseLoaderConstructor;
+    /**
+     * @deprecated Use `FlvJs.BaseLoaderConstructor` instead.
+     *              Because it's not available on `flvjs` variable.
+     * @since 1.4
+     */
+    LoaderStatus: FlvJs.LoaderStatus;
+    /**
+     * @deprecated Use `FlvJs.BaseLoaderConstructor` instead.
+     *              Because it's not available on `flvjs` variable.
+     * @since 1.4
+     */
+    LoaderErrors: FlvJs.LoaderErrors;
+
+    readonly version: string;
+
+    readonly Events: Readonly<FlvJs.Events>;
+    readonly ErrorTypes: Readonly<FlvJs.ErrorTypes>;
+    readonly ErrorDetails: Readonly<FlvJs.ErrorDetails>;
+
+    readonly FlvPlayer: FlvJs.PlayerConstructor;
+    readonly NativePlayer: FlvJs.PlayerConstructor;
+    readonly LoggingControl: FlvJs.LoggingControl;
+};
+
+export default FlvJs;
