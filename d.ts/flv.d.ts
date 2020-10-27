@@ -280,3 +280,93 @@ declare namespace FlvJs {
     }
 
     interface NativePlayerStatisticsInfo {
+        playerType: 'NativePlayer';
+        url: string;
+        decodedFrames?: number;
+        droppedFrames?: number;
+    }
+
+    interface FlvPlayerReportStatisticsInfo {
+        url: string;
+        hasRedirect: boolean;
+        redirectedURL?: string;
+        speed: number; // KB/s
+        loaderType: string;
+        currentSegmentIndex: number;
+        totalSegmentCount: number;
+    }
+
+    interface FlvPlayerStatisticsInfo extends Partial<FlvPlayerReportStatisticsInfo> {
+        playerType: 'FlvPlayer';
+        decodedFrames?: number;
+        droppedFrames?: number;
+    }
+
+    interface NativePlayerMediaInfo {
+        mimeType: string;
+        duration?: number;
+        width?: number;
+        height?: number;
+    }
+
+    interface FlvPlayerMediaInfo extends NativePlayerMediaInfo {
+        audioCodec?: string;
+        videoCodec?: string;
+        audioDataRate?: number;
+        videoDataRate?: number;
+        hasAudio?: boolean;
+        hasVideo?: boolean;
+        chromaFormat?: string;
+        fps?: number;
+
+        [k: string]: any;
+    }
+
+    interface FlvPlayer extends Player {
+        mediaInfo: FlvPlayerMediaInfo;
+        statisticsInfo: FlvPlayerStatisticsInfo;
+    }
+
+    interface NativePlayer extends Player {
+        mediaInfo: NativePlayerMediaInfo;
+        statisticsInfo: NativePlayerStatisticsInfo;
+    }
+
+    interface LoggingControlConfig {
+        forceGlobalTag: boolean;
+        globalTag: string;
+        enableAll: boolean;
+        enableDebug: boolean;
+        enableVerbose: boolean;
+        enableInfo: boolean;
+        enableWarn: boolean;
+        enableError: boolean;
+    }
+
+    interface LoggingControl extends LoggingControlConfig {
+        getConfig(): LoggingControlConfig;
+        applyConfig(config: Partial<LoggingControlConfig>): void;
+        addLogListener(listener: (...args: any[]) => void): void;
+        removeLogListener(listener: (...args: any[]) => void): void;
+    }
+
+    interface Events {
+        ERROR: string;
+        LOADING_COMPLETE: string;
+        RECOVERED_EARLY_EOF: string;
+        MEDIA_INFO: string;
+        METADATA_ARRIVED: string;
+        SCRIPTDATA_ARRIVED: string;
+        STATISTICS_INFO: string;
+    }
+
+    interface ErrorTypes {
+        NETWORK_ERROR: string;
+        MEDIA_ERROR: string;
+        OTHER_ERROR: string;
+    }
+
+    interface ErrorDetails {
+        NETWORK_EXCEPTION: string;
+        NETWORK_STATUS_CODE_INVALID: string;
+        NETWORK_TIMEOUT: string;
