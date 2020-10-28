@@ -9,4 +9,10 @@
         display: block;
         width: 1152px;
         margin-left: auto;
-     
+        margin-right: auto;
+    }
+}
+
+.video-container {
+    position: relative;
+    mar
