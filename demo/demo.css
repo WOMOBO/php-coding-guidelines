@@ -5,3 +5,8 @@
     margin-right: auto;
 }
 @media screen and (min-width: 1152px) {
+    .mainContainer {
+        display: block;
+        width: 1152px;
+        margin-left: auto;
+     
