@@ -21,4 +21,8 @@
 .video-container:before {
     display: block;
     content: "";
- 
+    width: 100%;
+    padding-bottom: 56.25%;
+}
+
+.video-container > div {
