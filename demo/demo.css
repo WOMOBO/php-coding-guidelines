@@ -15,4 +15,10 @@
 
 .video-container {
     position: relative;
-    mar
+    margin-top: 8px;
+}
+
+.video-container:before {
+    display: block;
+    content: "";
+ 
