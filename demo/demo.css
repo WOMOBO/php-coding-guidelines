@@ -67,4 +67,7 @@
 }
 
 .logcatBox {
-    border-color: #CCCC
+    border-color: #CCCCCC;
+    font-size: 11px;
+    font-family: Menlo, Consolas, monospace;
+    display: blo
