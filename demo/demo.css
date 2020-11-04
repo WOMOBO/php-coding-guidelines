@@ -70,4 +70,11 @@
     border-color: #CCCCCC;
     font-size: 11px;
     font-family: Menlo, Consolas, monospace;
-    display: blo
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.url-input 
