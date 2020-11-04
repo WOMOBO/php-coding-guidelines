@@ -77,4 +77,13 @@
     margin-right: auto;
 }
 
-.url-input 
+.url-input , .options {
+    font-size: 13px;
+}
+
+.url-input {
+    display: flex;
+}
+
+.url-input label {
+    fl
