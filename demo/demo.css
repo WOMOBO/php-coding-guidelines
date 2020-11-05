@@ -86,4 +86,12 @@
 }
 
 .url-input label {
-    fl
+    flex: initial;
+}
+
+.url-input input {
+    flex: auto;
+    margin-left: 8px;
+}
+
+.url-input but
