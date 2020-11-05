@@ -94,4 +94,12 @@
     margin-left: 8px;
 }
 
-.url-input but
+.url-input button {
+    flex: initial;
+    margin-left: 8px;
+}
+
+.options {
+    margin-top: 5px;
+}
+
