@@ -209,3 +209,17 @@
         flvjs.LoggingControl.addLogListener(function(type, str) {
             logcatbox.value = logcatbox.value + str + '\n';
             logcatbox.scrollTop = logcatbox.scrollHeight;
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            streamURL = document.getElementById('streamURL');
+            mediaSourceURL = document.getElementById('mediaSourceURL');
+            loadSettings();
+            showVersion();
+            flv_load();
+        });
+    </script>
+    
+</body>
+
+</html>
