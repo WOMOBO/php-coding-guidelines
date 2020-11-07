@@ -53,3 +53,92 @@ Create a player instance according to `type` field indicated in `mediaDataSource
 | `segments?`        | `Array<MediaSegment>` | Optional field for multipart playback, see **MediaSegment** |
 
 If `segments` field exists, transmuxer will treat this `MediaDataSource` as a **multipart** source.
+
+In multipart mode, `duration` `filesize` `url` field in `MediaDataSource` structure will be ignored.
+
+### MediaSegment
+
+| Field       | Type     | Description                              |
+| ----------- | -------- | ---------------------------------------- |
+| `duration`  | `number` | Required field, indicates segment duration in **milliseconds** |
+| `filesize?` | `number` | Optional field, indicates segment file size in bytes |
+| `url`       | `string` | Required field, indicates segment file URL |
+
+
+### Config
+
+| Field                            | Type      | Default                      | Description                              |
+| -------------------------------- | --------- | ---------------------------- | ---------------------------------------- |
+| `enableWorker?`                  | `boolean` | `false`                      | Enable separated thread for transmuxing (unstable for now) |
+| `enableStashBuffer?`             | `boolean` | `true`                       | Enable IO stash buffer. Set to false if you need realtime (minimal latency) for live stream playback, but may stalled if there's network jittering. |
+| `stashInitialSize?`              | `number`  | `384KB`                      | Indicates IO stash buffer initial size. Default is `384KB`. Indicate a suitable size can improve video load/seek time. |
+| `isLive?`                        | `boolean` | `false`                      | Same to `isLive` in **MediaDataSource**, ignored if has been set in MediaDataSource structure. |
+| `lazyLoad?`                      | `boolean` | `true`                       | Abort the http connection if there's enough data for playback. |
+| `lazyLoadMaxDuration?`           | `number`  | `3 * 60`                     | Indicates how many seconds of data to be kept for `lazyLoad`. |
+| `lazyLoadRecoverDuration?`       | `number`  | `30`                         | Indicates the `lazyLoad` recover time boundary in seconds. |
+| `deferLoadAfterSourceOpen?`      | `boolean` | `true`                       | Do load after MediaSource `sourceopen` event triggered. On Chrome, tabs which be opened in background may not trigger `sourceopen` event until switched to that tab. |
+| `autoCleanupSourceBuffer`        | `boolean` | `false`                      | Do auto cleanup for SourceBuffer         |
+| `autoCleanupMaxBackwardDuration` | `number`  | `3 * 60`                     | When backward buffer duration exceeded this value (in seconds), do auto cleanup for SourceBuffer |
+| `autoCleanupMinBackwardDuration` | `number`  | `2 * 60`                     | Indicates the duration in seconds to reserve for backward buffer when doing auto cleanup. |
+| `fixAudioTimestampGap`           | `boolean` | `true`                       | Fill silent audio frames to avoid a/v unsync when detect large audio timestamp gap. |
+| `accurateSeek?`                  | `boolean` | `false`                      | Accurate seek to any frame, not limited to video IDR frame, but may a bit slower. Available on `Chrome > 50`, `FireFox` and `Safari`. |
+| `seekType?`                      | `string`  | `'range'`                    | `'range'` use range request to seek, or `'param'` add params into url to indicate request range. |
+| `seekParamStart?`                | `string`  | `'bstart'`                   | Indicates seek start parameter name for `seekType = 'param'` |
+| `seekParamEnd?`                  | `string`  | `'bend'`                     | Indicates seek end parameter name for `seekType = 'param'` |
+| `rangeLoadZeroStart?`            | `boolean` | `false`                      | Send `Range: bytes=0-` for first time load if use Range seek |
+| `customSeekHandler?`             | `object`  | `undefined`                  | Indicates a custom seek handler          |
+| `reuseRedirectedURL?`            | `boolean` | `false`                      | Reuse 301/302 redirected url for subsequence request like seek, reconnect, etc. |
+| `referrerPolicy?`                | `string`  | `no-referrer-when-downgrade` | Indicates the [Referrer Policy][] when using FetchStreamLoader |
+| `headers?`                       | `object`  | `undefined`                  | Indicates additional headers that will be added to request |
+
+
+[Referrer Policy]: https://w3c.github.io/webappsec-referrer-policy/#referrer-policy
+
+### flvjs.isSupported()
+```js
+function isSupported(): boolean;
+```
+Return `true` if basic playback can works on your browser.
+
+
+
+### flvjs.getFeatureList()
+```js
+function getFeatureList(): FeatureList;
+```
+Return a `FeatureList` object which has following details:
+#### FeatureList
+| Field                   | Type      | Description                              |
+| ----------------------- | --------- | ---------------------------------------- |
+| `mseFlvPlayback`        | `boolean` | Same to `flvjs.isSupported()`, indicates whether basic playback works on your browser. |
+| `mseLiveFlvPlayback`    | `boolean` | Indicates whether HTTP FLV live stream can works on your browser. |
+| `networkStreamIO`       | `boolean` | Indicates whether the network loader is streaming. |
+| `networkLoaderName`     | `string`  | Indicates the network loader type name.  |
+| `nativeMP4H264Playback` | `boolean` | Indicates whether your browser support H.264 MP4 video file natively. |
+| `nativeWebmVP8Playback` | `boolean` | Indicates whether your browser support WebM VP8 video file natively. |
+| `nativeWebmVP9Playback` | `boolean` | Indicates whether your browser support WebM VP9 video file natively. |
+
+
+
+### flvjs.FlvPlayer
+```typescript
+interface FlvPlayer extends Player {}
+```
+
+FLV player which implements the `Player` interface. Can be created by `new` operator directly.
+
+### flvjs.NativePlayer
+
+```typescript
+interface NativePlayer extends Player {}
+```
+
+Player wrapper for browser's native player (HTMLVideoElement) without MediaSource src, which implements the `Player` interface. Useful for singlepart **MP4** file playback.
+
+### interface Player (abstract)
+
+```typescript
+interface Player {
+    constructor(mediaDataSource: MediaDataSource, config?: Config): Player;
+    destroy(): void;
+    on(event: string, listener: Function): void;
