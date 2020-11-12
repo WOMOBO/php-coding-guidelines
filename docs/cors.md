@@ -19,3 +19,8 @@ Or a wildcard value `*` to allow any request origin:
 Access-Control-Allow-Origin: *
 ```
 
+## Static FLV file playback
+For static FLV file playback, we recommend you to add:
+
+```
+Access-Cont
