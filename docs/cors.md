@@ -13,4 +13,9 @@ For example, if an html on your site `http://flvplayback.com` want's to play an 
 Access-Control-Allow-Origin: http://flvplayback.com
 ```
 
-Or a wildcard value
+Or a wildcard value `*` to allow any request origin:
+
+```
+Access-Control-Allow-Origin: *
+```
+
