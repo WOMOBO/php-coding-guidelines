@@ -23,4 +23,7 @@ Access-Control-Allow-Origin: *
 For static FLV file playback, we recommend you to add:
 
 ```
-Access-Cont
+Access-Control-Expose-Headers: Content-Length
+```
+
+Or you should provide accura
