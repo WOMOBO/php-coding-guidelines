@@ -29,4 +29,4 @@ Access-Control-Expose-Headers: Content-Length
 Or you should provide accurate filesize in **MediaDataSource** object.
 
 ## CORS with 301/302 redirect
-If your vi
+If your video server response with a 3xx redirection, the redirection's respon
