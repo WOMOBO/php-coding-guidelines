@@ -26,4 +26,7 @@ For static FLV file playback, we recommend you to add:
 Access-Control-Expose-Headers: Content-Length
 ```
 
-Or you should provide accura
+Or you should provide accurate filesize in **MediaDataSource** object.
+
+## CORS with 301/302 redirect
+If your vi
