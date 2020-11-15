@@ -31,4 +31,4 @@ Or you should provide accurate filesize in **MediaDataSource** object.
 ## CORS with 301/302 redirect
 If your video server response with a 3xx redirection, the redirection's response headers **must** contains `Access-Control-Allow-Origin`;
 
-Obviously the redire
+Obviously the redirect target server should also response with CORS headers, but pay attention that the 
