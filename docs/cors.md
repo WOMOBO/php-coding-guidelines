@@ -36,4 +36,7 @@ Obviously the redirect target server should also response with CORS headers, but
 It means that your actual edge server should response with:
 
 ```
-Access-Control-Allo
+Access-Control-Allow-Origin: null | *
+```
+
+Or you can determine by request header `Origin` dynamica
