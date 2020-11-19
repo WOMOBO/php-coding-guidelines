@@ -44,4 +44,7 @@ Or you can determine by request header `Origin` dynamically.
 ## Preflight OPTIONS for Range seek
 When use Range seek for cross-origin FLV file, `Range` header added by flv.js will cause a [Preflight OPTIONS][] request by the browser.
 
-The browser will send an `OPTIONS` request before actual `GET` request, w
+The browser will send an `OPTIONS` request before actual `GET` request, with following additional headers according to CORS policy:
+
+```
+Access-Control-R
