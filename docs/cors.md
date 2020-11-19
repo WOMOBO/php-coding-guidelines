@@ -39,4 +39,7 @@ It means that your actual edge server should response with:
 Access-Control-Allow-Origin: null | *
 ```
 
-Or you can determine by request header `Origin` dynamica
+Or you can determine by request header `Origin` dynamically.
+
+## Preflight OPTIONS for Range seek
+When use Range seek for cross-origin FLV file, `Range`
