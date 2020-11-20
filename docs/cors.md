@@ -47,4 +47,8 @@ When use Range seek for cross-origin FLV file, `Range` header added by flv.js wi
 The browser will send an `OPTIONS` request before actual `GET` request, with following additional headers according to CORS policy:
 
 ```
-Access-Control-R
+Access-Control-Request-Headers: range
+Access-Control-Request-Method: GET
+```
+
+This means your video serv
