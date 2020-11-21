@@ -54,4 +54,6 @@ Access-Control-Request-Method: GET
 This means your video server must response to OPTIONS request with following additional CORS headers:
 
 ```
-Access-
+Access-Control-Allow-Origin: <your-origin> | *
+Access-Control-Allow-Methods: GET, OPTIONS
+Access-C
