@@ -56,4 +56,7 @@ This means your video server must response to OPTIONS request with following add
 ```
 Access-Control-Allow-Origin: <your-origin> | *
 Access-Control-Allow-Methods: GET, OPTIONS
-Access-C
+Access-Control-Allow-Headers: range
+```
+
+[Preflight OPTIONS]: https://developer.mozilla.org/e
