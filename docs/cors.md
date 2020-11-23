@@ -59,4 +59,6 @@ Access-Control-Allow-Methods: GET, OPTIONS
 Access-Control-Allow-Headers: range
 ```
 
-[Preflight OPTIONS]: https://developer.mozilla.org/e
+[Preflight OPTIONS]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Preflighted_requests
+
+## Referenc
