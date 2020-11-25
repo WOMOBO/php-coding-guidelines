@@ -64,4 +64,4 @@ Access-Control-Allow-Headers: range
 ## Reference
 We strongly advise you to read [HTTP access control (CORS)][] and [CORS spec][] document carefully.
 
-[HTTP access control (CORS)
+[HTTP access control (CORS)]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_
