@@ -62,4 +62,6 @@ Access-Control-Allow-Headers: range
 [Preflight OPTIONS]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Preflighted_requests
 
 ## Reference
-We strongly advise you to read [HTTP access control (CORS)][] a
+We strongly advise you to read [HTTP access control (CORS)][] and [CORS spec][] document carefully.
+
+[HTTP access control (CORS)
