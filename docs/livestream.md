@@ -1,4 +1,4 @@
 
 Livestream playback
 ===================
-You n
+You need to provide a livestream URL in `MediaDataSource` and indicat
