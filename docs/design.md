@@ -2,4 +2,6 @@
 flv.js design
 ======
 
-Architecture
+Architecture overview:
+
+![arch](architecture.png)
