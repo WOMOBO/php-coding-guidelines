@@ -20,4 +20,9 @@ Or a WebSocket source:
 {
     // FLV over WebSocket
     "type": "flv",
-    "i
+    "isLive": true,
+    "url": "ws://127.0.0.1:9090/live/livestream.flv"
+}
+```
+
+## HTTP FLV live stream
