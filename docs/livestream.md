@@ -10,4 +10,14 @@ Sample HTTP FLV source:
     // HTTP FLV
     "type": "flv",
     "isLive": true,
-    "url": "http://127.0.0.1:8080/live/livestream.f
+    "url": "http://127.0.0.1:8080/live/livestream.flv"
+}
+```
+
+Or a WebSocket source:
+
+```js
+{
+    // FLV over WebSocket
+    "type": "flv",
+    "i
