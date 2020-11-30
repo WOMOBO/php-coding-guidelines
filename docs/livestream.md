@@ -8,4 +8,6 @@ Sample HTTP FLV source:
 ```js
 {
     // HTTP FLV
-    "type":
+    "type": "flv",
+    "isLive": true,
+    "url": "http://127.0.0.1:8080/live/livestream.f
