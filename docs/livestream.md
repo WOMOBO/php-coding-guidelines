@@ -28,4 +28,8 @@ Or a WebSocket source:
 ## HTTP FLV live stream
 
 ### CORS
-You must configure `Access-Control-Allow-Origin` header correctly on your stream 
+You must configure `Access-Control-Allow-Origin` header correctly on your stream server.
+
+See [cors.md](../docs/cors.md) for details.
+
+### Compatibili
