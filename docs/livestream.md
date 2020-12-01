@@ -26,3 +26,6 @@ Or a WebSocket source:
 ```
 
 ## HTTP FLV live stream
+
+### CORS
+You must configure `Access-Control-Allow-Origin` header correctly on your stream 
