@@ -32,4 +32,5 @@ You must configure `Access-Control-Allow-Origin` header correctly on your stream
 
 See [cors.md](../docs/cors.md) for details.
 
-### Compatibili
+### Compatibility
+Due to IO restrictions, flv.js can support HTTP FLV live stream on `Chrome 43+
