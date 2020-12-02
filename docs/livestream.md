@@ -35,4 +35,4 @@ See [cors.md](../docs/cors.md) for details.
 ### Compatibility
 Due to IO restrictions, flv.js can support HTTP FLV live stream on `Chrome 43+`, `FireFox 42+`, `Edge 15.15048+` and `Safari 10.1+` for now.
 
-HTTP FLV live strea
+HTTP FLV live stream relies on stream IO, which has been introduced in [fetch][] and [stream][] spec. Now
