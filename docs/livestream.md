@@ -38,4 +38,4 @@ Due to IO restrictions, flv.js can support HTTP FLV live stream on `Chrome 43+`,
 HTTP FLV live stream relies on stream IO, which has been introduced in [fetch][] and [stream][] spec. Now `FetchStreamLoader` works well on most of the modern browsers:
 
 - Chrome: `FetchStreamLoader` works well on Chrome 43+
-- FireFox: FireFox has `fetch` suppor
+- FireFox: FireFox has `fetch` support but `stream` is missing, `moz-chunked-arraybuffer` xhr extension is used
