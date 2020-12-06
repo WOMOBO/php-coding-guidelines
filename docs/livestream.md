@@ -40,4 +40,6 @@ HTTP FLV live stream relies on stream IO, which has been introduced in [fetch][]
 - Chrome: `FetchStreamLoader` works well on Chrome 43+
 - FireFox: FireFox has `fetch` support but `stream` is missing, `moz-chunked-arraybuffer` xhr extension is used
 - Edge: `fetch + stream` is broken on old version of Microsoft Edge, see [Fetch API with ReadableStream has bug with data pumping][]. Got fixed in Creator Update (RS2).
-- Safari: `FetchStreamLoader` work
+- Safari: `FetchStreamLoader` works well since Safari 10.1 (macOS 10.12.4)
+
+[fetch]: https://fetc
