@@ -44,4 +44,5 @@ HTTP FLV live stream relies on stream IO, which has been introduced in [fetch][]
 
 [fetch]: https://fetch.spec.whatwg.org/
 [stream]: https://streams.spec.whatwg.org/
-[Fetch API with ReadableStream has bug with data pumping]: https://developer.microsoft.com/en-us/micr
+[Fetch API with ReadableStream has bug with data pumping]: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/8196907/
+[Safari Technology Preview]: https://deve
