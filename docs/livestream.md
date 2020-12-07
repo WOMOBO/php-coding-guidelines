@@ -42,4 +42,6 @@ HTTP FLV live stream relies on stream IO, which has been introduced in [fetch][]
 - Edge: `fetch + stream` is broken on old version of Microsoft Edge, see [Fetch API with ReadableStream has bug with data pumping][]. Got fixed in Creator Update (RS2).
 - Safari: `FetchStreamLoader` works well since Safari 10.1 (macOS 10.12.4)
 
-[fetch]: https://fetc
+[fetch]: https://fetch.spec.whatwg.org/
+[stream]: https://streams.spec.whatwg.org/
+[Fetch API
