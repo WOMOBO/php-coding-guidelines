@@ -13,4 +13,7 @@ You need to provide a playlist for `MediaDataSource` in following format:
     // Optional
     "duration": 12345678,  // total duration, in milliseconds
     "cors": true,
-    "w
+    "withCredentials": false,
+
+    // Optional
+    // true by default, do not indic
