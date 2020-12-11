@@ -8,4 +8,7 @@ You need to provide a playlist for `MediaDataSource` in following format:
 ```js
 {
     // Required
-    "type"
+    "type": "flv",  // Only flv type supports multipart playback
+
+    // Optional
+    "du
