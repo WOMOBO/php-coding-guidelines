@@ -17,4 +17,10 @@ You need to provide a playlist for `MediaDataSource` in following format:
 
     // Optional
     // true by default, do not indicate unless you have to deal with audio-only or video-only stream
-    "hasAudio":
+    "hasAudio": true,
+    "hasVideo": true,
+
+    // Required
+    "segments": [
+        {
+            "dur
