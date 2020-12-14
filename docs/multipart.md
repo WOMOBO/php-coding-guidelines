@@ -23,4 +23,5 @@ You need to provide a playlist for `MediaDataSource` in following format:
     // Required
     "segments": [
         {
-            "dur
+            "duration": 1234,  // in milliseconds
+            "filesize": 5678,  // in by
