@@ -30,4 +30,5 @@ You need to provide a playlist for `MediaDataSource` in following format:
         {
             "duration": 2345,
             "filesize": 6789,
-  
+            "url": "http://cdn.flvplayback.com/segments-2.flv"
+        },
