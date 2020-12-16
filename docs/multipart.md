@@ -51,4 +51,6 @@ You must provide **accurate** duration for each segment.
     "duration": 1373161,
     "segments": [
         {
-            "dura
+            "duration": 333438,
+            "filesize": 60369190,
+            "url": "http://127.0.0.1/flv/7182741
