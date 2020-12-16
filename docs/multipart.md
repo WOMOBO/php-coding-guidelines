@@ -47,4 +47,8 @@ You must provide **accurate** duration for each segment.
 ## Sample input
 ```json
 {
-    "t
+    "type": "flv",
+    "duration": 1373161,
+    "segments": [
+        {
+            "dura
