@@ -42,4 +42,9 @@ You need to provide a playlist for `MediaDataSource` in following format:
 }
 ```
 
-You must p
+You must provide **accurate** duration for each segment.
+
+## Sample input
+```json
+{
+    "t
