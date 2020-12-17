@@ -56,4 +56,7 @@ You must provide **accurate** duration for each segment.
             "url": "http://127.0.0.1/flv/7182741-1.flv"
         },{
             "duration": 390828,
-            "filesize": 7572643
+            "filesize": 75726439,
+            "url": "http://127.0.0.1/flv/7182741-2.flv"
+        },{
+        
