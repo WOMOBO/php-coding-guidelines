@@ -65,4 +65,8 @@ You must provide **accurate** duration for each segment.
         },{
             "duration": 214442,
             "filesize": 44189200,
-            "url": "http://127.0.0.1/flv/
+            "url": "http://127.0.0.1/flv/7182741-4.flv"
+        }
+    ]
+}
+```
