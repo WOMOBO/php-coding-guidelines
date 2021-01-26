@@ -1,0 +1,21 @@
+
+{
+  "name": "flv.js",
+  "version": "1.6.2",
+  "description": "HTML5 FLV Player",
+  "main": "./dist/flv.js",
+  "types": "./d.ts/flv.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bilibili/flv.js"
+  },
+  "keywords": [
+    "html5",
+    "flv",
+    "mse",
+    "javascript"
+  ],
+  "scripts": {
+    "build": "webpack --mode=production --progress",
+    "build:debug": "webpack --mode=development --progress",
+    "dev": "webpack --mode=development --progress --watch",
