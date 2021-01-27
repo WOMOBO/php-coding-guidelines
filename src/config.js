@@ -1,4 +1,7 @@
 /*
  * Copyright (C) 2016 Bilibili. All Rights Reserved.
  *
- * @a
+ * @author zheng qian <xqq@xqq.im>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * yo
