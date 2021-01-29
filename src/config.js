@@ -16,4 +16,6 @@
  * limitations under the License.
  */
 
-export 
+export const defaultConfig = {
+    enableWorker: false,
+    enableStashBuffer:
