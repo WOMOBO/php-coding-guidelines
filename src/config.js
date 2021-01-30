@@ -24,3 +24,6 @@ export const defaultConfig = {
     isLive: false,
 
     lazyLoad: true,
+    lazyLoadMaxDuration: 3 * 60,
+    lazyLoadRecoverDuration: 30,
+    defer
