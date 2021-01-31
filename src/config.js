@@ -28,4 +28,6 @@ export const defaultConfig = {
     lazyLoadRecoverDuration: 30,
     deferLoadAfterSourceOpen: true,
 
-    // autoCleanupSourceBuffer: default as false, le
+    // autoCleanupSourceBuffer: default as false, leave unspecified
+    autoCleanupMaxBackwardDuration: 3 * 60,
+    autoCleanupMinBackwardDur
