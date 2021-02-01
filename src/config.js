@@ -30,4 +30,8 @@ export const defaultConfig = {
 
     // autoCleanupSourceBuffer: default as false, leave unspecified
     autoCleanupMaxBackwardDuration: 3 * 60,
-    autoCleanupMinBackwardDur
+    autoCleanupMinBackwardDuration: 2 * 60,
+
+    statisticsInfoReportInterval: 600,
+
+    fixAudioTimestampGap: true,
