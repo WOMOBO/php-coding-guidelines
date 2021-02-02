@@ -43,3 +43,7 @@ export const defaultConfig = {
     rangeLoadZeroStart: false,
     customSeekHandler: undefined,
     reuseRedirectedURL: false,
+    // referrerPolicy: leave as unspecified
+
+    headers: undefined,
+    customLoader: und
