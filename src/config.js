@@ -40,4 +40,6 @@ export const defaultConfig = {
     seekType: 'range',  // [range, param, custom]
     seekParamStart: 'bstart',
     seekParamEnd: 'bend',
-    rangeLoad
+    rangeLoadZeroStart: false,
+    customSeekHandler: undefined,
+    reuseRedirectedURL: false,
