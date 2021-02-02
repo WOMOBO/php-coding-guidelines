@@ -37,4 +37,7 @@ export const defaultConfig = {
     fixAudioTimestampGap: true,
 
     accurateSeek: false,
-    seekType: 'range',  // [range, param, 
+    seekType: 'range',  // [range, param, custom]
+    seekParamStart: 'bstart',
+    seekParamEnd: 'bend',
+    rangeLoad
