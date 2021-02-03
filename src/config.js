@@ -46,4 +46,8 @@ export const defaultConfig = {
     // referrerPolicy: leave as unspecified
 
     headers: undefined,
-    customLoader: und
+    customLoader: undefined
+};
+
+export function createDefaultConfig() {
+    return Object.assign({}, defaultCon
