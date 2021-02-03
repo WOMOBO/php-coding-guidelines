@@ -50,4 +50,5 @@ export const defaultConfig = {
 };
 
 export function createDefaultConfig() {
-    return Object.assign({}, defaultCon
+    return Object.assign({}, defaultConfig);
+}
