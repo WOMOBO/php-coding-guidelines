@@ -19,4 +19,8 @@
 class MediaInfo {
 
     constructor() {
-        this.mime
+        this.mimeType = null;
+        this.duration = null;
+
+        this.hasAudio = null;
+        t
