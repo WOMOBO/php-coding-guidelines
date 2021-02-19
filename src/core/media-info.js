@@ -26,4 +26,7 @@ class MediaInfo {
         this.hasVideo = null;
         this.audioCodec = null;
         this.videoCodec = null;
-  
+        this.audioDataRate = null;
+        this.videoDataRate = null;
+
+ 
