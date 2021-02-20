@@ -37,4 +37,7 @@ class MediaInfo {
         this.fps = null;
         this.profile = null;
         this.level = null;
-        this.refFrame
+        this.refFrames = null;
+        this.chromaFormat = null;
+        this.sarNum = null;
+        th
