@@ -35,4 +35,6 @@ class MediaInfo {
         this.width = null;
         this.height = null;
         this.fps = null;
-        t
+        this.profile = null;
+        this.level = null;
+        this.refFrame
