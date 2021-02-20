@@ -29,4 +29,7 @@ class MediaInfo {
         this.audioDataRate = null;
         this.videoDataRate = null;
 
- 
+        this.audioSampleRate = null;
+        this.audioChannelCount = null;
+
+        thi
