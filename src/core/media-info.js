@@ -32,4 +32,7 @@ class MediaInfo {
         this.audioSampleRate = null;
         this.audioChannelCount = null;
 
-        thi
+        this.width = null;
+        this.height = null;
+        this.fps = null;
+        t
