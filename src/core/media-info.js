@@ -45,4 +45,8 @@ class MediaInfo {
         this.metadata = null;
         this.segments = null;  // MediaInfo[]
         this.segmentCount = null;
-        this.hasKeyfr
+        this.hasKeyframesIndex = null;
+        this.keyframesIndex = null;
+    }
+
+    isComplete(
