@@ -49,4 +49,6 @@ class MediaInfo {
         this.keyframesIndex = null;
     }
 
-    isComplete(
+    isComplete() {
+        let audioInfoComplete = (this.hasAudio === false) ||
+                         
