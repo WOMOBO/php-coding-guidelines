@@ -43,4 +43,6 @@ class MediaInfo {
         this.sarDen = null;
 
         this.metadata = null;
-        this.segments = nul
+        this.segments = null;  // MediaInfo[]
+        this.segmentCount = null;
+        this.hasKeyfr
