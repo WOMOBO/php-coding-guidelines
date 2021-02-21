@@ -40,4 +40,7 @@ class MediaInfo {
         this.refFrames = null;
         this.chromaFormat = null;
         this.sarNum = null;
-        th
+        this.sarDen = null;
+
+        this.metadata = null;
+        this.segments = nul
