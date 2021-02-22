@@ -51,4 +51,5 @@ class MediaInfo {
 
     isComplete() {
         let audioInfoComplete = (this.hasAudio === false) ||
-                         
+                                (this.hasAudio === true &&
+                                 this.audioCodec != null
