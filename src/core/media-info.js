@@ -54,4 +54,6 @@ class MediaInfo {
                                 (this.hasAudio === true &&
                                  this.audioCodec != null &&
                                  this.audioSampleRate != null &&
-                                
+                                 this.audioChannelCount != null);
+
+        let videoInfoComplete = (this.hasVideo === fals
