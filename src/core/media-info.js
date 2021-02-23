@@ -61,4 +61,5 @@ class MediaInfo {
                                  this.videoCodec != null &&
                                  this.width != null &&
                                  this.height != null &&
-       
+                                 this.fps != null &&
+                               
