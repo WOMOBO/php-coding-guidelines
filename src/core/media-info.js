@@ -56,4 +56,6 @@ class MediaInfo {
                                  this.audioSampleRate != null &&
                                  this.audioChannelCount != null);
 
-        let videoInfoComplete = (this.hasVideo === fals
+        let videoInfoComplete = (this.hasVideo === false) ||
+                                (this.hasVideo === true &&
+                     
