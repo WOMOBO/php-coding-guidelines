@@ -59,4 +59,6 @@ class MediaInfo {
         let videoInfoComplete = (this.hasVideo === false) ||
                                 (this.hasVideo === true &&
                                  this.videoCodec != null &&
-                                 this.wid
+                                 this.width != null &&
+                                 this.height != null &&
+       
