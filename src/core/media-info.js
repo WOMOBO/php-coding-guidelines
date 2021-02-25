@@ -65,4 +65,5 @@ class MediaInfo {
                                  this.profile != null &&
                                  this.level != null &&
                                  this.refFrames != null &&
-                     
+                                 this.chromaFormat != null &&
+                                 this.sarN
