@@ -71,3 +71,6 @@ class MediaInfo {
 
         // keyframesIndex may not be present
         return this.mimeType != null &&
+               this.duration != null &&
+               this.metadata != null &&
+               this.hasKeyframe
