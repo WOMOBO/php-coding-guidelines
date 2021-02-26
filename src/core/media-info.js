@@ -69,4 +69,5 @@ class MediaInfo {
                                  this.sarNum != null &&
                                  this.sarDen != null);
 
-        //
+        // keyframesIndex may not be present
+        return this.mimeType != null &&
