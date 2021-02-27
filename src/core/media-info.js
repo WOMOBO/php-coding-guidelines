@@ -75,4 +75,8 @@ class MediaInfo {
                this.metadata != null &&
                this.hasKeyframesIndex != null &&
                audioInfoComplete &&
-               v
+               videoInfoComplete;
+    }
+
+    isSeekable() {
+        return this.hasKeyframesIndex ==
