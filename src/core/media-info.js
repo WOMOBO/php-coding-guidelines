@@ -73,4 +73,6 @@ class MediaInfo {
         return this.mimeType != null &&
                this.duration != null &&
                this.metadata != null &&
-               this.hasKeyframe
+               this.hasKeyframesIndex != null &&
+               audioInfoComplete &&
+               v
