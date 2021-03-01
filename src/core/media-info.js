@@ -87,4 +87,5 @@ class MediaInfo {
             return null;
         }
 
-        
+        let table = this.keyframesIndex;
+        let keyframeIdx = this._search(t
