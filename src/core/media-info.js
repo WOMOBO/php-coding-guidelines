@@ -83,4 +83,8 @@ class MediaInfo {
     }
 
     getNearestKeyframe(milliseconds) {
-        if (
+        if (this.keyframesIndex == null) {
+            return null;
+        }
+
+        
