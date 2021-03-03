@@ -93,4 +93,9 @@ class MediaInfo {
         return {
             index: keyframeIdx,
             milliseconds: table.times[keyframeIdx],
-            fileposit
+            fileposition: table.filepositions[keyframeIdx]
+        };
+    }
+
+    _search(list, value) {
+    
