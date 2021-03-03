@@ -88,4 +88,8 @@ class MediaInfo {
         }
 
         let table = this.keyframesIndex;
-        let keyframeIdx = this._search(t
+        let keyframeIdx = this._search(table.times, milliseconds);
+
+        return {
+            index: keyframeIdx,
+ 
