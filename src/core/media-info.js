@@ -92,4 +92,5 @@ class MediaInfo {
 
         return {
             index: keyframeIdx,
- 
+            milliseconds: table.times[keyframeIdx],
+            fileposit
