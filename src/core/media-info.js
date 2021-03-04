@@ -98,4 +98,7 @@ class MediaInfo {
     }
 
     _search(list, value) {
-    
+        let idx = 0;
+
+        let last = list.length - 1;
+        let mid =
