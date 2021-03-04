@@ -105,4 +105,7 @@ class MediaInfo {
         let lbound = 0;
         let ubound = last;
 
-        if (value < list
+        if (value < list[0]) {
+            idx = 0;
+            lbound = ubound + 1;  // skip search
+        }
