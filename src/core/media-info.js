@@ -101,4 +101,8 @@ class MediaInfo {
         let idx = 0;
 
         let last = list.length - 1;
-        let mid =
+        let mid = 0;
+        let lbound = 0;
+        let ubound = last;
+
+        if (value < list
