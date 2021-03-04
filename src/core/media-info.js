@@ -109,3 +109,7 @@ class MediaInfo {
             idx = 0;
             lbound = ubound + 1;  // skip search
         }
+
+        while (lbound <= ubound) {
+            mid = lbound + Math.floor((ubound - lbound) / 2);
+         
