@@ -115,4 +115,6 @@ class MediaInfo {
             if (mid === last || (value >= list[mid] && value < list[mid + 1])) {
                 idx = mid;
                 break;
-            } else if (
+            } else if (list[mid] < value) {
+                lbound = mid + 1;
+           
