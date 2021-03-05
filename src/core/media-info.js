@@ -112,4 +112,5 @@ class MediaInfo {
 
         while (lbound <= ubound) {
             mid = lbound + Math.floor((ubound - lbound) / 2);
-         
+            if (mid === last || (value >= list[mid] && value < list[mid + 1])) {
+      
