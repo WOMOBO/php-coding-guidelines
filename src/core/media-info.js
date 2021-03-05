@@ -117,4 +117,7 @@ class MediaInfo {
                 break;
             } else if (list[mid] < value) {
                 lbound = mid + 1;
-           
+            } else {
+                ubound = mid - 1;
+            }
+        }
