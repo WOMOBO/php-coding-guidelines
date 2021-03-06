@@ -121,3 +121,10 @@ class MediaInfo {
                 ubound = mid - 1;
             }
         }
+
+        return idx;
+    }
+
+}
+
+export default MediaInfo;
