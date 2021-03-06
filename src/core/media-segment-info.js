@@ -15,3 +15,88 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ */
+
+// Represents an media sample (audio / video)
+export class SampleInfo {
+
+    constructor(dts, pts, duration, originalDts, isSync) {
+        this.dts = dts;
+        this.pts = pts;
+        this.duration = duration;
+        this.originalDts = originalDts;
+        this.isSyncPoint = isSync;
+        this.fileposition = null;
+    }
+
+}
+
+// Media Segment concept is defined in Media Source Extensions spec.
+// Particularly in ISO BMFF format, an Media Segment contains a moof box followed by a mdat box.
+export class MediaSegmentInfo {
+
+    constructor() {
+        this.beginDts = 0;
+        this.endDts = 0;
+        this.beginPts = 0;
+        this.endPts = 0;
+        this.originalBeginDts = 0;
+        this.originalEndDts = 0;
+        this.syncPoints = [];     // SampleInfo[n], for video IDR frames only
+        this.firstSample = null;  // SampleInfo
+        this.lastSample = null;   // SampleInfo
+    }
+
+    appendSyncPoint(sampleInfo) {  // also called Random Access Point
+        sampleInfo.isSyncPoint = true;
+        this.syncPoints.push(sampleInfo);
+    }
+
+}
+
+// Ordered list for recording video IDR frames, sorted by originalDts
+export class IDRSampleList {
+
+    constructor() {
+        this._list = [];
+    }
+
+    clear() {
+        this._list = [];
+    }
+
+    appendArray(syncPoints) {
+        let list = this._list;
+
+        if (syncPoints.length === 0) {
+            return;
+        }
+
+        if (list.length > 0 && syncPoints[0].originalDts < list[list.length - 1].originalDts) {
+            this.clear();
+        }
+
+        Array.prototype.push.apply(list, syncPoints);
+    }
+
+    getLastSyncPointBeforeDts(dts) {
+        if (this._list.length == 0) {
+            return null;
+        }
+
+        let list = this._list;
+        let idx = 0;
+        let last = list.length - 1;
+        let mid = 0;
+        let lbound = 0;
+        let ubound = last;
+
+        if (dts < list[0].dts) {
+            idx = 0;
+            lbound = ubound + 1;
+        }
+
+        while (lbound <= ubound) {
+            mid = lbound + Math.floor((ubound - lbound) / 2);
+            if (mid === last || (dts >= list[mid].dts && dts < list[mid + 1].dts)) {
+                idx = mid;
