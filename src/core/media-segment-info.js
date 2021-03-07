@@ -100,3 +100,84 @@ export class IDRSampleList {
             mid = lbound + Math.floor((ubound - lbound) / 2);
             if (mid === last || (dts >= list[mid].dts && dts < list[mid + 1].dts)) {
                 idx = mid;
+                break;
+            } else if (list[mid].dts < dts) {
+                lbound = mid + 1;
+            } else {
+                ubound = mid - 1;
+            }
+        }
+        return this._list[idx];
+    }
+
+}
+
+// Data structure for recording information of media segments in single track.
+export class MediaSegmentInfoList {
+
+    constructor(type) {
+        this._type = type;
+        this._list = [];
+        this._lastAppendLocation = -1;  // cached last insert location
+    }
+
+    get type() {
+        return this._type;
+    }
+
+    get length() {
+        return this._list.length;
+    }
+
+    isEmpty() {
+        return this._list.length === 0;
+    }
+
+    clear() {
+        this._list = [];
+        this._lastAppendLocation = -1;
+    }
+
+    _searchNearestSegmentBefore(originalBeginDts) {
+        let list = this._list;
+        if (list.length === 0) {
+            return -2;
+        }
+        let last = list.length - 1;
+        let mid = 0;
+        let lbound = 0;
+        let ubound = last;
+
+        let idx = 0;
+
+        if (originalBeginDts < list[0].originalBeginDts) {
+            idx = -1;
+            return idx;
+        }
+
+        while (lbound <= ubound) {
+            mid = lbound + Math.floor((ubound - lbound) / 2);
+            if (mid === last || (originalBeginDts > list[mid].lastSample.originalDts &&
+                                (originalBeginDts < list[mid + 1].originalBeginDts))) {
+                idx = mid;
+                break;
+            } else if (list[mid].originalBeginDts < originalBeginDts) {
+                lbound = mid + 1;
+            } else {
+                ubound = mid - 1;
+            }
+        }
+        return idx;
+    }
+
+    _searchNearestSegmentAfter(originalBeginDts) {
+        return this._searchNearestSegmentBefore(originalBeginDts) + 1;
+    }
+
+    append(mediaSegmentInfo) {
+        let list = this._list;
+        let msi = mediaSegmentInfo;
+        let lastAppendIdx = this._lastAppendLocation;
+        let insertIdx = 0;
+
+        if (lastAppendIdx !== -1 && lastAppendIdx < list.length &&
