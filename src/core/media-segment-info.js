@@ -181,3 +181,51 @@ export class MediaSegmentInfoList {
         let insertIdx = 0;
 
         if (lastAppendIdx !== -1 && lastAppendIdx < list.length &&
+                                    msi.originalBeginDts >= list[lastAppendIdx].lastSample.originalDts &&
+                                    ((lastAppendIdx === list.length - 1) ||
+                                    (lastAppendIdx < list.length - 1 &&
+                                    msi.originalBeginDts < list[lastAppendIdx + 1].originalBeginDts))) {
+            insertIdx = lastAppendIdx + 1;  // use cached location idx
+        } else {
+            if (list.length > 0) {
+                insertIdx = this._searchNearestSegmentBefore(msi.originalBeginDts) + 1;
+            }
+        }
+
+        this._lastAppendLocation = insertIdx;
+        this._list.splice(insertIdx, 0, msi);
+    }
+
+    getLastSegmentBefore(originalBeginDts) {
+        let idx = this._searchNearestSegmentBefore(originalBeginDts);
+        if (idx >= 0) {
+            return this._list[idx];
+        } else {  // -1
+            return null;
+        }
+    }
+
+    getLastSampleBefore(originalBeginDts) {
+        let segment = this.getLastSegmentBefore(originalBeginDts);
+        if (segment != null) {
+            return segment.lastSample;
+        } else {
+            return null;
+        }
+    }
+
+    getLastSyncPointBefore(originalBeginDts) {
+        let segmentIdx = this._searchNearestSegmentBefore(originalBeginDts);
+        let syncPoints = this._list[segmentIdx].syncPoints;
+        while (syncPoints.length === 0 && segmentIdx > 0) {
+            segmentIdx--;
+            syncPoints = this._list[segmentIdx].syncPoints;
+        }
+        if (syncPoints.length > 0) {
+            return syncPoints[syncPoints.length - 1];
+        } else {
+            return null;
+        }
+    }
+
+}
