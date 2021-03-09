@@ -16,4 +16,6 @@
  * limitations under the License.
  */
 
-import Eve
+import EventEmitter from 'events';
+import Log from '../utils/logger.js';
+import Browser from '
