@@ -24,4 +24,9 @@ import {SampleInfo, IDRSampleList} from './media-segment-info.js';
 import {IllegalStateException} from '../utils/exception.js';
 
 // Media Source Extensions controller
-class MSEControl
+class MSEController {
+
+    constructor(config) {
+        this.TAG = 'MSEController';
+
+        this._c
