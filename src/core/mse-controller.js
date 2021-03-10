@@ -29,4 +29,7 @@ class MSEController {
     constructor(config) {
         this.TAG = 'MSEController';
 
-        this._c
+        this._config = config;
+        this._emitter = new EventEmitter();
+
+        if (this._conf
