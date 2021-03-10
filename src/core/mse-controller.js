@@ -20,4 +20,5 @@ import EventEmitter from 'events';
 import Log from '../utils/logger.js';
 import Browser from '../utils/browser.js';
 import MSEEvents from './mse-events.js';
-import {SampleInfo, IDRSampleLi
+import {SampleInfo, IDRSampleList} from './media-segment-info.js';
+import {IllegalStateException} from '..
