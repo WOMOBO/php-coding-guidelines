@@ -32,4 +32,5 @@ class MSEController {
         this._config = config;
         this._emitter = new EventEmitter();
 
-        if (this._conf
+        if (this._config.isLive && this._config.autoCleanupSourceBuffer == undefined) {
+   
