@@ -34,4 +34,8 @@ class MSEController {
 
         if (this._config.isLive && this._config.autoCleanupSourceBuffer == undefined) {
             // For live stream, do auto cleanup by default
-            this._con
+            this._config.autoCleanupSourceBuffer = true;
+        }
+
+        this.e = {
+    
