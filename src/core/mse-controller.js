@@ -38,4 +38,5 @@ class MSEController {
         }
 
         this.e = {
-    
+            onSourceOpen: this._onSourceOpen.bind(this),
+            onSourceEnd
