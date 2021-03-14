@@ -46,4 +46,7 @@ class MSEController {
         };
 
         this._mediaSource = null;
-        this._mediaSourceObjectU
+        this._mediaSourceObjectURL = null;
+        this._mediaElement = null;
+
+        this._isBufferFull = fal
