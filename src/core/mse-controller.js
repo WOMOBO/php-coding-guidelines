@@ -42,4 +42,8 @@ class MSEController {
             onSourceEnded: this._onSourceEnded.bind(this),
             onSourceClose: this._onSourceClose.bind(this),
             onSourceBufferError: this._onSourceBufferError.bind(this),
-            onSourceBufferUpdateEnd: this._onSourceBufferUpdateEnd.bi
+            onSourceBufferUpdateEnd: this._onSourceBufferUpdateEnd.bind(this)
+        };
+
+        this._mediaSource = null;
+        this._mediaSourceObjectU
