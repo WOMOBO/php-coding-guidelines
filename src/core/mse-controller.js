@@ -53,4 +53,6 @@ class MSEController {
         this._hasPendingEos = false;
 
         this._requireSetMediaDuration = false;
- 
+        this._pendingMediaDuration = 0;
+
+        this._pendingSourceBufferInit = 
