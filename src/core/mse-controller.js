@@ -62,4 +62,7 @@ class MSEController {
         };
         this._sourceBuffers = {
             video: null,
-         
+            audio: null
+        };
+        this._lastInitSegments = {
+            v
