@@ -58,4 +58,8 @@ class MSEController {
         this._pendingSourceBufferInit = [];
         this._mimeTypes = {
             video: null,
-            
+            audio: null
+        };
+        this._sourceBuffers = {
+            video: null,
+         
