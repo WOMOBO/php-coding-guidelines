@@ -65,4 +65,7 @@ class MSEController {
             audio: null
         };
         this._lastInitSegments = {
-            v
+            video: null,
+            audio: null
+        };
+        this._pendingSegments = {
