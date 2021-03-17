@@ -76,4 +76,8 @@ class MSEController {
             video: [],
             audio: []
         };
-        this._idrL
+        this._idrList = new IDRSampleList();
+    }
+
+    destroy() {
+        if (this._mediaElement || this._me
