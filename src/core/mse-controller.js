@@ -69,3 +69,7 @@ class MSEController {
             audio: null
         };
         this._pendingSegments = {
+            video: [],
+            audio: []
+        };
+        this._pendin
