@@ -72,4 +72,8 @@ class MSEController {
             video: [],
             audio: []
         };
-        this._pendin
+        this._pendingRemoveRanges = {
+            video: [],
+            audio: []
+        };
+        this._idrL
