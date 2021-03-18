@@ -80,4 +80,7 @@ class MSEController {
     }
 
     destroy() {
-        if (this._mediaElement || this._me
+        if (this._mediaElement || this._mediaSource) {
+            this.detachMediaElement();
+        }
+  
