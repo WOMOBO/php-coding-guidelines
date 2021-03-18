@@ -85,4 +85,9 @@ class MSEController {
         }
         this.e = null;
         this._emitter.removeAllListeners();
-        this._emit
+        this._emitter = null;
+    }
+
+    on(event, listener) {
+        this._emitter.addListener(event, listener);
+   
