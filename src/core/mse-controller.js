@@ -90,4 +90,10 @@ class MSEController {
 
     on(event, listener) {
         this._emitter.addListener(event, listener);
-   
+    }
+
+    off(event, listener) {
+        this._emitter.removeListener(event, listener);
+    }
+
+  
