@@ -96,4 +96,6 @@ class MSEController {
         this._emitter.removeListener(event, listener);
     }
 
-  
+    attachMediaElement(mediaElement) {
+        if (this._mediaSource) {
+        
