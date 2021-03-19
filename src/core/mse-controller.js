@@ -98,4 +98,4 @@ class MSEController {
 
     attachMediaElement(mediaElement) {
         if (this._mediaSource) {
-        
+            throw new IllegalStateException('MediaSource has been attached to an HTMLMediaElement!');
