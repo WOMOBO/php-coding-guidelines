@@ -101,4 +101,5 @@ class MSEController {
             throw new IllegalStateException('MediaSource has been attached to an HTMLMediaElement!');
         }
         let ms = this._mediaSource = new window.MediaSource();
-        ms
+        ms.addEventListener('sourceopen', this.e.onSourceOpen);
+        ms.addEventListener(
