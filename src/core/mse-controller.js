@@ -102,4 +102,5 @@ class MSEController {
         }
         let ms = this._mediaSource = new window.MediaSource();
         ms.addEventListener('sourceopen', this.e.onSourceOpen);
-        ms.addEventListener(
+        ms.addEventListener('sourceended', this.e.onSourceEnded);
+        ms.addEventListener('sourceclose', this.e.onSourc
