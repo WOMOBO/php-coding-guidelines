@@ -111,4 +111,6 @@ class MSEController {
     }
 
     detachMediaElement() {
-        if (this._medi
+        if (this._mediaSource) {
+            let ms = this._mediaSource;
+            for
