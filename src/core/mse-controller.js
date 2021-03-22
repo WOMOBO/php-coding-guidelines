@@ -106,4 +106,5 @@ class MSEController {
         ms.addEventListener('sourceclose', this.e.onSourceClose);
 
         this._mediaElement = mediaElement;
-        this._mediaSourceObjectURL 
+        this._mediaSourceObjectURL = window.URL.createObjectURL(this._mediaSource);
+        mediaElement.sr
