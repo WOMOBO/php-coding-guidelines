@@ -113,4 +113,5 @@ class MSEController {
     detachMediaElement() {
         if (this._mediaSource) {
             let ms = this._mediaSource;
-            for
+            for (let type in this._sourceBuffers) {
+                // pending segments should be disca
