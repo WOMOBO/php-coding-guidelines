@@ -107,4 +107,8 @@ class MSEController {
 
         this._mediaElement = mediaElement;
         this._mediaSourceObjectURL = window.URL.createObjectURL(this._mediaSource);
-        mediaElement.sr
+        mediaElement.src = this._mediaSourceObjectURL;
+    }
+
+    detachMediaElement() {
+        if (this._medi
