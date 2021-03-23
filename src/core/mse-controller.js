@@ -114,4 +114,6 @@ class MSEController {
         if (this._mediaSource) {
             let ms = this._mediaSource;
             for (let type in this._sourceBuffers) {
-                // pending segments should be disca
+                // pending segments should be discard
+                let ps = this._pendingSegments[type];
+                ps.splice(0, ps.leng
