@@ -116,4 +116,6 @@ class MSEController {
             for (let type in this._sourceBuffers) {
                 // pending segments should be discard
                 let ps = this._pendingSegments[type];
-                ps.splice(0, ps.leng
+                ps.splice(0, ps.length);
+                this._pendingSegments[type] = null;
+                this._pen
