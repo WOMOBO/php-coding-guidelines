@@ -121,4 +121,5 @@ class MSEController {
                 this._pendingRemoveRanges[type] = null;
                 this._lastInitSegments[type] = null;
 
-   
+                // remove all sourcebuffers
+                let sb = this._s
