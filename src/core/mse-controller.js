@@ -118,4 +118,7 @@ class MSEController {
                 let ps = this._pendingSegments[type];
                 ps.splice(0, ps.length);
                 this._pendingSegments[type] = null;
-                this._pen
+                this._pendingRemoveRanges[type] = null;
+                this._lastInitSegments[type] = null;
+
+   
