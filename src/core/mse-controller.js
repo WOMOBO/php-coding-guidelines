@@ -122,4 +122,6 @@ class MSEController {
                 this._lastInitSegments[type] = null;
 
                 // remove all sourcebuffers
-                let sb = this._s
+                let sb = this._sourceBuffers[type];
+                if (sb) {
+                    if (ms.readyS
