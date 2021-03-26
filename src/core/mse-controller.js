@@ -124,4 +124,5 @@ class MSEController {
                 // remove all sourcebuffers
                 let sb = this._sourceBuffers[type];
                 if (sb) {
-                    if (ms.readyS
+                    if (ms.readyState !== 'closed') {
+                        // ms edge can throw an e
