@@ -126,4 +126,6 @@ class MSEController {
                 if (sb) {
                     if (ms.readyState !== 'closed') {
                         // ms edge can throw an error: Unexpected call to method or property access
-                  
+                        try {
+                            ms.removeSourceBuffer(sb);
+                        
