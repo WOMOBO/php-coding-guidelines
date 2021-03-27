@@ -125,4 +125,5 @@ class MSEController {
                 let sb = this._sourceBuffers[type];
                 if (sb) {
                     if (ms.readyState !== 'closed') {
-                        // ms edge can throw an e
+                        // ms edge can throw an error: Unexpected call to method or property access
+                  
