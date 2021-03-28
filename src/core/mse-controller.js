@@ -130,4 +130,5 @@ class MSEController {
                             ms.removeSourceBuffer(sb);
                         } catch (error) {
                             Log.e(this.TAG, error.message);
-       
+                        }
+                        sb.removeEventListener(
