@@ -132,4 +132,6 @@ class MSEController {
                             Log.e(this.TAG, error.message);
                         }
                         sb.removeEventListener('error', this.e.onSourceBufferError);
-                        sb.removeEventListener('update
+                        sb.removeEventListener('updateend', this.e.onSourceBufferUpdateEnd);
+                    }
+                  
