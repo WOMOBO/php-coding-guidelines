@@ -134,4 +134,5 @@ class MSEController {
                         sb.removeEventListener('error', this.e.onSourceBufferError);
                         sb.removeEventListener('updateend', this.e.onSourceBufferUpdateEnd);
                     }
-                  
+                    this._mimeTypes[type] = null;
+                    this._sourceBuffers[type]
