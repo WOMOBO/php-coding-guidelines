@@ -139,4 +139,6 @@ class MSEController {
                 }
             }
             if (ms.readyState === 'open') {
-     
+                try {
+                    ms.endOfStream();
+                } catch (error)
