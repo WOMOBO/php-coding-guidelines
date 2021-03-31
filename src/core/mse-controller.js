@@ -141,4 +141,8 @@ class MSEController {
             if (ms.readyState === 'open') {
                 try {
                     ms.endOfStream();
-                } catch (error)
+                } catch (error) {
+                    Log.e(this.TAG, error.message);
+                }
+            }
+            
