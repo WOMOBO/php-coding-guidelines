@@ -145,4 +145,5 @@ class MSEController {
                     Log.e(this.TAG, error.message);
                 }
             }
-            
+            ms.removeEventListener('sourceopen', this.e.onSourceOpen);
+            ms.removeEventLi
