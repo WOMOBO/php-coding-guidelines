@@ -146,4 +146,5 @@ class MSEController {
                 }
             }
             ms.removeEventListener('sourceopen', this.e.onSourceOpen);
-            ms.removeEventLi
+            ms.removeEventListener('sourceended', this.e.onSourceEnded);
+            
