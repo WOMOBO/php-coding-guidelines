@@ -150,4 +150,8 @@ class MSEController {
             ms.removeEventListener('sourceclose', this.e.onSourceClose);
             this._pendingSourceBufferInit = [];
             this._isBufferFull = false;
-          
+            this._idrList.clear();
+            this._mediaSource = null;
+        }
+
+        if (this._
