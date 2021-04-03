@@ -156,4 +156,5 @@ class MSEController {
 
         if (this._mediaElement) {
             this._mediaElement.src = '';
-            this
+            this._mediaElement.removeAttribute('src');
+            this._mediaE
