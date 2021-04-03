@@ -154,4 +154,6 @@ class MSEController {
             this._mediaSource = null;
         }
 
-        if (this._
+        if (this._mediaElement) {
+            this._mediaElement.src = '';
+            this
