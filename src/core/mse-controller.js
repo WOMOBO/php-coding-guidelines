@@ -165,4 +165,5 @@ class MSEController {
         }
     }
 
-    appendInitSegment(initSegment
+    appendInitSegment(initSegment, deferred) {
+        if (!this._mediaSource || this._mediaSource.readyS
