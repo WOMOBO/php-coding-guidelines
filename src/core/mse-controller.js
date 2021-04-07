@@ -161,4 +161,8 @@ class MSEController {
         }
         if (this._mediaSourceObjectURL) {
             window.URL.revokeObjectURL(this._mediaSourceObjectURL);
-            th
+            this._mediaSourceObjectURL = null;
+        }
+    }
+
+    appendInitSegment(initSegment
