@@ -171,4 +171,9 @@ class MSEController {
             // so we defer the sourcebuffer creation, until sourceopen event triggered
             this._pendingSourceBufferInit.push(initSegment);
             // make sure that this InitSegment is in the front of pending segments queue
-            this._pendingSegments[initSegment.type].push(initS
+            this._pendingSegments[initSegment.type].push(initSegment);
+            return;
+        }
+
+        let is = initSegment;
+        le
