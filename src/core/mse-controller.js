@@ -170,4 +170,4 @@ class MSEController {
             // sourcebuffer creation requires mediaSource.readyState === 'open'
             // so we defer the sourcebuffer creation, until sourceopen event triggered
             this._pendingSourceBufferInit.push(initSegment);
-         
+            // make sure that this InitSegment is in the front of pending segments
