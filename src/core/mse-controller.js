@@ -176,4 +176,5 @@ class MSEController {
         }
 
         let is = initSegment;
-        le
+        let mimeType = `${is.container}`;
+        if (is.codec && is.codec.length
