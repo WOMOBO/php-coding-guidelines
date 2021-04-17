@@ -181,4 +181,6 @@ class MSEController {
             mimeType += `;codecs=${is.codec}`;
         }
 
-        let firstI
+        let firstInitSegment = false;
+
+        Log.v(this.TAG, 'Received Initialization 
