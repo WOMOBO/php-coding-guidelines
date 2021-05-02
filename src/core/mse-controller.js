@@ -196,4 +196,7 @@ class MSEController {
                 } catch (error) {
                     Log.e(this.TAG, error.message);
                     this._emitter.emit(MSEEvents.ERROR, {code: error.code, msg: error.message});
-                    
+                    return;
+                }
+            } else {
+                Log.v(this.TAG, `Notice: ${is.type}
