@@ -195,4 +195,5 @@ class MSEController {
                     sb.addEventListener('updateend', this.e.onSourceBufferUpdateEnd);
                 } catch (error) {
                     Log.e(this.TAG, error.message);
-                    this._e
+                    this._emitter.emit(MSEEvents.ERROR, {code: error.code, msg: error.message});
+                    
