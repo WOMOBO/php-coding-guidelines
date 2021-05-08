@@ -204,4 +204,5 @@ class MSEController {
             this._mimeTypes[is.type] = mimeType;
         }
 
-        if 
+        if (!deferred) {
+            // deferred means this InitSegment has been push
