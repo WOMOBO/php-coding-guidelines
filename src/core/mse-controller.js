@@ -206,4 +206,6 @@ class MSEController {
 
         if (!deferred) {
             // deferred means this InitSegment has been pushed to pendingSegments queue
-            this._pendingSegments[is.type
+            this._pendingSegments[is.type].push(is);
+        }
+        if (!firstInitSegment) {  // append imme
