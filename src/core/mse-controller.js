@@ -208,4 +208,5 @@ class MSEController {
             // deferred means this InitSegment has been pushed to pendingSegments queue
             this._pendingSegments[is.type].push(is);
         }
-        if (!firstInitSegment) {  // append imme
+        if (!firstInitSegment) {  // append immediately only if init segment in subsequence
+            if (this._sourceBuffers[is.type
