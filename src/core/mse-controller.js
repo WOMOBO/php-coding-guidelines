@@ -209,4 +209,6 @@ class MSEController {
             this._pendingSegments[is.type].push(is);
         }
         if (!firstInitSegment) {  // append immediately only if init segment in subsequence
-            if (this._sourceBuffers[is.type
+            if (this._sourceBuffers[is.type] && !this._sourceBuffers[is.type].updating) {
+                this._doAppendSegments();
+    
