@@ -211,4 +211,6 @@ class MSEController {
         if (!firstInitSegment) {  // append immediately only if init segment in subsequence
             if (this._sourceBuffers[is.type] && !this._sourceBuffers[is.type].updating) {
                 this._doAppendSegments();
-    
+            }
+        }
+        if (Browser.safari && is.container === 'audio/mpeg' && i
