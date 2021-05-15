@@ -213,4 +213,5 @@ class MSEController {
                 this._doAppendSegments();
             }
         }
-        if (Browser.safari && is.container === 'audio/mpeg' && i
+        if (Browser.safari && is.container === 'audio/mpeg' && is.mediaDuration > 0) {
+            // 'audio/mpeg' track under Safari may cause MediaElement's dura
