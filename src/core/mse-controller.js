@@ -217,4 +217,9 @@ class MSEController {
             // 'audio/mpeg' track under Safari may cause MediaElement's duration to be NaN
             // Manually correct MediaSource.duration to make progress bar seekable, and report right duration
             this._requireSetMediaDuration = true;
-            this._pendingMediaDuration = is.mediaDuration /
+            this._pendingMediaDuration = is.mediaDuration / 1000;  // in seconds
+            this._updateMediaSourceDuration();
+        }
+    }
+
+    appen
