@@ -222,4 +222,6 @@ class MSEController {
         }
     }
 
-    appen
+    appendMediaSegment(mediaSegment) {
+        let ms = mediaSegment;
+        this._pendingSegme
