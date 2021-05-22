@@ -224,4 +224,6 @@ class MSEController {
 
     appendMediaSegment(mediaSegment) {
         let ms = mediaSegment;
-        this._pendingSegme
+        this._pendingSegments[ms.type].push(ms);
+
+        if (this._config.autoCleanupSourceBuffer && this._needCleanu
