@@ -230,4 +230,5 @@ class MSEController {
             this._doCleanupSourceBuffer();
         }
 
-        
+        let sb = this._sourceBuffers[ms.type];
+        if (sb && !sb.updating && !this._hasPe
