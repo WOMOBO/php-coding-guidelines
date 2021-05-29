@@ -231,4 +231,9 @@ class MSEController {
         }
 
         let sb = this._sourceBuffers[ms.type];
-        if (sb && !sb.updating && !this._hasPe
+        if (sb && !sb.updating && !this._hasPendingRemoveRanges()) {
+            this._doAppendSegments();
+        }
+    }
+
+    seek(sec
