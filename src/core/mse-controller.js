@@ -236,4 +236,6 @@ class MSEController {
         }
     }
 
-    seek(sec
+    seek(seconds) {
+        // remove all appended buffers
+        for (let type in this._
