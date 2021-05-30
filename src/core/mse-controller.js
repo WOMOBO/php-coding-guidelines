@@ -238,4 +238,6 @@ class MSEController {
 
     seek(seconds) {
         // remove all appended buffers
-        for (let type in this._
+        for (let type in this._sourceBuffers) {
+            if (!this._sourceBuffers[type]) {
+                co
