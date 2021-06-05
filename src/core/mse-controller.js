@@ -240,4 +240,8 @@ class MSEController {
         // remove all appended buffers
         for (let type in this._sourceBuffers) {
             if (!this._sourceBuffers[type]) {
-                co
+                continue;
+            }
+
+            // abort current buffer append algorithm
+   
