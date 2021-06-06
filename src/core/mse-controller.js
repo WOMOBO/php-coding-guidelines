@@ -251,4 +251,8 @@ class MSEController {
                     // Ignore it.
                     sb.abort();
                 } catch (error) {
-     
+                    Log.e(this.TAG, error.message);
+                }
+            }
+
+           
