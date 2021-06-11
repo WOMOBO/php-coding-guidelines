@@ -255,4 +255,7 @@ class MSEController {
                 }
             }
 
-           
+            // IDRList should be clear
+            this._idrList.clear();
+
+            // pending segment
