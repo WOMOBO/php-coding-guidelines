@@ -260,4 +260,7 @@ class MSEController {
 
             // pending segments should be discard
             let ps = this._pendingSegments[type];
-      
+            ps.splice(0, ps.length);
+
+            if (this._mediaSource.readyState === 'closed') {
+ 
