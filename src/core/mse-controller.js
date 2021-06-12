@@ -258,4 +258,6 @@ class MSEController {
             // IDRList should be clear
             this._idrList.clear();
 
-            // pending segment
+            // pending segments should be discard
+            let ps = this._pendingSegments[type];
+      
