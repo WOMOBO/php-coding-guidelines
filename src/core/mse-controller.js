@@ -263,4 +263,8 @@ class MSEController {
             ps.splice(0, ps.length);
 
             if (this._mediaSource.readyState === 'closed') {
-                // Parent MediaSource object has been detached from HTMLMediaElem
+                // Parent MediaSource object has been detached from HTMLMediaElement
+                continue;
+            }
+
+            // record ranges to b
