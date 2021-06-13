@@ -267,4 +267,5 @@ class MSEController {
                 continue;
             }
 
-            // record ranges to b
+            // record ranges to be remove from SourceBuffer
+            for (let i = 0; i < sb.buffered.length; i
