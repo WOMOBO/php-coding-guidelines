@@ -275,4 +275,8 @@ class MSEController {
             }
 
             // if sb is not updating, let's remove ranges now!
-     
+            if (!sb.updating) {
+                this._doRemoveRanges();
+            }
+
+      
