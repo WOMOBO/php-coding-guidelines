@@ -279,4 +279,4 @@ class MSEController {
                 this._doRemoveRanges();
             }
 
-      
+            // Safari 10 may get InvalidStateError in the later appendBuffer() after SourceBuffer.remo
