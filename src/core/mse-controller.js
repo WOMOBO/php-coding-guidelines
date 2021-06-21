@@ -283,4 +283,5 @@ class MSEController {
             // Internal parser's state may be invalid at this time. Re-append last InitSegment to workaround.
             // Related issue: https://bugs.webkit.org/show_bug.cgi?id=159230
             if (Browser.safari) {
-                let 
+                let lastInitSegment = this._lastInitSegments[type];
+                if (lastInitSegme
