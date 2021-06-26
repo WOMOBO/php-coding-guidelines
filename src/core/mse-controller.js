@@ -286,4 +286,5 @@ class MSEController {
                 let lastInitSegment = this._lastInitSegments[type];
                 if (lastInitSegment) {
                     this._pendingSegments[type].push(lastInitSegment);
-     
+                    if (!sb.updating) {
+                        this._doAppendSegmen
