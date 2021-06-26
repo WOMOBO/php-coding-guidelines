@@ -294,4 +294,6 @@ class MSEController {
         }
     }
 
-    en
+    endOfStream() {
+        let ms = this._mediaSource;
+        let sb = this._s
