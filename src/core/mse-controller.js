@@ -296,4 +296,6 @@ class MSEController {
 
     endOfStream() {
         let ms = this._mediaSource;
-        let sb = this._s
+        let sb = this._sourceBuffers;
+        if (!ms || ms.readyState !== 'open') {
+            if 
