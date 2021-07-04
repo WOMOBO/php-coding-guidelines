@@ -300,4 +300,6 @@ class MSEController {
         if (!ms || ms.readyState !== 'open') {
             if (ms && ms.readyState === 'closed' && this._hasPendingSegments()) {
                 // If MediaSource hasn't turned into open state, and there're pending segments
-                // Mark pending endOfStream, defer call until all pending segments 
+                // Mark pending endOfStream, defer call until all pending segments appended complete
+                this._hasPendingEos = true;
+      
