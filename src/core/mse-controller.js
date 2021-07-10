@@ -305,4 +305,5 @@ class MSEController {
             }
             return;
         }
-        if (sb.video && sb.video.updating || sb.
+        if (sb.video && sb.video.updating || sb.audio && sb.audio.updating) {
+            // If any sourcebuffer is updating, def
