@@ -308,4 +308,6 @@ class MSEController {
         if (sb.video && sb.video.updating || sb.audio && sb.audio.updating) {
             // If any sourcebuffer is updating, defer endOfStream operation
             // See _onSourceBufferUpdateEnd()
-            t
+            this._hasPendingEos = true;
+        } else {
+            this._hasPendingEos = fa
