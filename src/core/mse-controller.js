@@ -306,4 +306,6 @@ class MSEController {
             return;
         }
         if (sb.video && sb.video.updating || sb.audio && sb.audio.updating) {
-            // If any sourcebuffer is updating, def
+            // If any sourcebuffer is updating, defer endOfStream operation
+            // See _onSourceBufferUpdateEnd()
+            t
