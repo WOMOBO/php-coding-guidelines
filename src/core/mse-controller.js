@@ -310,4 +310,6 @@ class MSEController {
             // See _onSourceBufferUpdateEnd()
             this._hasPendingEos = true;
         } else {
-            this._hasPendingEos = fa
+            this._hasPendingEos = false;
+            // Notify media data loading complete
+            // This is helpfu
