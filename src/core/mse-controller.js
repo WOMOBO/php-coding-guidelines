@@ -313,4 +313,5 @@ class MSEController {
             this._hasPendingEos = false;
             // Notify media data loading complete
             // This is helpful for correcting total duration to match last media segment
-          
+            // Otherwise MediaElement's ended event may not be triggered
+            ms.endOfStre
