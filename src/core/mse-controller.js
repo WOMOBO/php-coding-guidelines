@@ -312,4 +312,5 @@ class MSEController {
         } else {
             this._hasPendingEos = false;
             // Notify media data loading complete
-            // This is helpfu
+            // This is helpful for correcting total duration to match last media segment
+          
