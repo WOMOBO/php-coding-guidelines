@@ -314,4 +314,9 @@ class MSEController {
             // Notify media data loading complete
             // This is helpful for correcting total duration to match last media segment
             // Otherwise MediaElement's ended event may not be triggered
-            ms.endOfStre
+            ms.endOfStream();
+        }
+    }
+
+    getNearestKeyframe(dts) {
+        return this._idrList.getLastSync
