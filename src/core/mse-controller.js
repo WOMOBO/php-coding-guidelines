@@ -319,4 +319,8 @@ class MSEController {
     }
 
     getNearestKeyframe(dts) {
-        return this._idrList.getLastSync
+        return this._idrList.getLastSyncPointBeforeDts(dts);
+    }
+
+    _needCleanupSourceBuffer() {
+        if (!this._config.
