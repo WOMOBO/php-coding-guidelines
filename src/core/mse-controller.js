@@ -329,4 +329,7 @@ class MSEController {
 
         let currentTime = this._mediaElement.currentTime;
 
-        for (let type in this._sourceBuf
+        for (let type in this._sourceBuffers) {
+            let sb = this._sourceBuffers[type];
+            if (sb) {
+              
