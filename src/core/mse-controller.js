@@ -327,4 +327,6 @@ class MSEController {
             return false;
         }
 
-        let curre
+        let currentTime = this._mediaElement.currentTime;
+
+        for (let type in this._sourceBuf
