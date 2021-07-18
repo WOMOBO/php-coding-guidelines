@@ -323,4 +323,8 @@ class MSEController {
     }
 
     _needCleanupSourceBuffer() {
-        if (!this._config.
+        if (!this._config.autoCleanupSourceBuffer) {
+            return false;
+        }
+
+        let curre
