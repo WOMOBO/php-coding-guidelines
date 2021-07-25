@@ -334,4 +334,6 @@ class MSEController {
             if (sb) {
                 let buffered = sb.buffered;
                 if (buffered.length >= 1) {
-                    if (currentTime - buffered.start(0) >= this._config.autoCleanupMaxBackw
+                    if (currentTime - buffered.start(0) >= this._config.autoCleanupMaxBackwardDuration) {
+                        return true;
+                   
