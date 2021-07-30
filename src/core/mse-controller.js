@@ -344,4 +344,5 @@ class MSEController {
         return false;
     }
 
-   
+    _doCleanupSourceBuffer() {
+        let currentTime = this._mediaElement.currentTime
