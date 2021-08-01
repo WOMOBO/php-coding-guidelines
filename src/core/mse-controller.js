@@ -350,4 +350,7 @@ class MSEController {
         for (let type in this._sourceBuffers) {
             let sb = this._sourceBuffers[type];
             if (sb) {
-                let buffered = 
+                let buffered = sb.buffered;
+                let doRemove = false;
+
+                for (let i
