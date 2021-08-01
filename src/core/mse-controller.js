@@ -353,4 +353,5 @@ class MSEController {
                 let buffered = sb.buffered;
                 let doRemove = false;
 
-                for (let i
+                for (let i = 0; i < buffered.length; i++) {
+                    let start = buffered.start(i)
