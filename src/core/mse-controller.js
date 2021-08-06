@@ -354,4 +354,7 @@ class MSEController {
                 let doRemove = false;
 
                 for (let i = 0; i < buffered.length; i++) {
-                    let start = buffered.start(i)
+                    let start = buffered.start(i);
+                    let end = buffered.end(i);
+
+                  
