@@ -357,4 +357,5 @@ class MSEController {
                     let start = buffered.start(i);
                     let end = buffered.end(i);
 
-                  
+                    if (start <= currentTime && currentTime < end + 3) {  // padding 3 seconds
+       
