@@ -361,4 +361,4 @@ class MSEController {
                         if (currentTime - start >= this._config.autoCleanupMaxBackwardDuration) {
                             doRemove = true;
                             let removeEnd = currentTime - this._config.autoCleanupMinBackwardDuration;
-   
+                            this._pendingRemoveRanges[type].push({start: start, end: remov
