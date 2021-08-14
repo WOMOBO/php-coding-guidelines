@@ -369,4 +369,8 @@ class MSEController {
                     }
                 }
 
-                if (doRemove && !sb.updati
+                if (doRemove && !sb.updating) {
+                    this._doRemoveRanges();
+                }
+            }
+ 
