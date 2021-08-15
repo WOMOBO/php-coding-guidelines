@@ -373,4 +373,8 @@ class MSEController {
                     this._doRemoveRanges();
                 }
             }
- 
+        }
+    }
+
+    _updateMediaSourceDuration() {
+        let sb = this._sour
