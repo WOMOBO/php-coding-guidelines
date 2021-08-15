@@ -377,4 +377,5 @@ class MSEController {
     }
 
     _updateMediaSourceDuration() {
-        let sb = this._sour
+        let sb = this._sourceBuffers;
+        if (this._mediaElement.readyState === 0 || this._mediaSource.readyState !== 'open
