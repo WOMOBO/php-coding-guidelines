@@ -381,4 +381,8 @@ class MSEController {
         if (this._mediaElement.readyState === 0 || this._mediaSource.readyState !== 'open') {
             return;
         }
-        if ((sb.video && sb.video.updating) || (sb.audio &
+        if ((sb.video && sb.video.updating) || (sb.audio && sb.audio.updating)) {
+            return;
+        }
+
+        let cur
