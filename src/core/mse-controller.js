@@ -385,4 +385,6 @@ class MSEController {
             return;
         }
 
-        let cur
+        let current = this._mediaSource.duration;
+        let target = this._pendingMediaDuration;
+
