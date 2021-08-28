@@ -389,4 +389,5 @@ class MSEController {
         let target = this._pendingMediaDuration;
 
         if (target > 0 && (isNaN(current) || target > current)) {
-         
+            Log.v(this.TAG, `Update MediaSource duration from ${current} to ${target}`);
+           
