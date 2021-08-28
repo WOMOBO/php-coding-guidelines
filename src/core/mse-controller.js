@@ -388,3 +388,5 @@ class MSEController {
         let current = this._mediaSource.duration;
         let target = this._pendingMediaDuration;
 
+        if (target > 0 && (isNaN(current) || target > current)) {
+         
