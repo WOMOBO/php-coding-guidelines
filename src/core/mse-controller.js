@@ -390,4 +390,7 @@ class MSEController {
 
         if (target > 0 && (isNaN(current) || target > current)) {
             Log.v(this.TAG, `Update MediaSource duration from ${current} to ${target}`);
-           
+            this._mediaSource.duration = target;
+        }
+
+        this._requireSetMediaDuration = false;
