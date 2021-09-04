@@ -394,3 +394,8 @@ class MSEController {
         }
 
         this._requireSetMediaDuration = false;
+        this._pendingMediaDuration = 0;
+    }
+
+    _doRemoveRanges() {
+        for (let t
