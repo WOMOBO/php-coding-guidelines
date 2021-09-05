@@ -398,4 +398,5 @@ class MSEController {
     }
 
     _doRemoveRanges() {
-        for (let t
+        for (let type in this._pendingRemoveRanges) {
+            if (!this._sourceBuffers[type] || this
