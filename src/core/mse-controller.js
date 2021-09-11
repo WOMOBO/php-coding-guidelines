@@ -402,4 +402,5 @@ class MSEController {
             if (!this._sourceBuffers[type] || this._sourceBuffers[type].updating) {
                 continue;
             }
-         
+            let sb = this._sourceBuffers[type];
+            let ranges = this._pendingRemo
