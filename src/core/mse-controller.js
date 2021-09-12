@@ -412,4 +412,7 @@ class MSEController {
     }
 
     _doAppendSegments() {
-        let pendingSeg
+        let pendingSegments = this._pendingSegments;
+
+        for (let type in pendingSegments) {
+ 
