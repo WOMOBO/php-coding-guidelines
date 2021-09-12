@@ -406,4 +406,10 @@ class MSEController {
             let ranges = this._pendingRemoveRanges[type];
             while (ranges.length && !sb.updating) {
                 let range = ranges.shift();
-                sb.remove(range.start, rang
+                sb.remove(range.start, range.end);
+            }
+        }
+    }
+
+    _doAppendSegments() {
+        let pendingSeg
