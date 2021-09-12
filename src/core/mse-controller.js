@@ -403,4 +403,6 @@ class MSEController {
                 continue;
             }
             let sb = this._sourceBuffers[type];
-            let ranges = this._pendingRemo
+            let ranges = this._pendingRemoveRanges[type];
+            while (ranges.length && !sb.updating) {
+               
