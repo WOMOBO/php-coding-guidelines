@@ -416,4 +416,7 @@ class MSEController {
 
         for (let type in pendingSegments) {
             if (!this._sourceBuffers[type] || this._sourceBuffers[type].updating) {
-    
+                continue;
+            }
+
+            if (pendingSegments[type].l
