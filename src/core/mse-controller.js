@@ -422,4 +422,5 @@ class MSEController {
             if (pendingSegments[type].length > 0) {
                 let segment = pendingSegments[type].shift();
 
-              
+                if (segment.timestampOffset) {
+                    // For MPEG audio stream
