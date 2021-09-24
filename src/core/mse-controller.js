@@ -423,4 +423,5 @@ class MSEController {
                 let segment = pendingSegments[type].shift();
 
                 if (segment.timestampOffset) {
-                    // For MPEG audio stream
+                    // For MPEG audio stream in MSE, if unbuffered-seeking occurred
+                    // We need explicitly set timestam
