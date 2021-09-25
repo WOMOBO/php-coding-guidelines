@@ -424,4 +424,5 @@ class MSEController {
 
                 if (segment.timestampOffset) {
                     // For MPEG audio stream in MSE, if unbuffered-seeking occurred
-                    // We need explicitly set timestam
+                    // We need explicitly set timestampOffset to the desired point in timeline for mpeg SourceBuffer.
+                    l
