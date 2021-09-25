@@ -426,4 +426,6 @@ class MSEController {
                     // For MPEG audio stream in MSE, if unbuffered-seeking occurred
                     // We need explicitly set timestampOffset to the desired point in timeline for mpeg SourceBuffer.
                     let currentOffset = this._sourceBuffers[type].timestampOffset;
-            
+                    let targetOffset = segment.timestampOffset / 1000;  // in seconds
+
+   
