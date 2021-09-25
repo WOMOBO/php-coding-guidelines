@@ -428,4 +428,5 @@ class MSEController {
                     let currentOffset = this._sourceBuffers[type].timestampOffset;
                     let targetOffset = segment.timestampOffset / 1000;  // in seconds
 
-   
+                    let delta = Math.abs(currentOffset - targetOffset);
+      
