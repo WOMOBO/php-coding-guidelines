@@ -437,3 +437,6 @@ class MSEController {
                 }
 
                 if (!segment.data || segment.data.byteLength === 0) {
+                    // Ignore empty buffer
+                    continue;
+                
