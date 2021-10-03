@@ -434,4 +434,6 @@ class MSEController {
                         this._sourceBuffers[type].timestampOffset = targetOffset;
                     }
                     delete segment.timestampOffset;
-            
+                }
+
+                if (!segment.data || segment.data.byteLength === 0) {
