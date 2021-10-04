@@ -439,4 +439,7 @@ class MSEController {
                 if (!segment.data || segment.data.byteLength === 0) {
                     // Ignore empty buffer
                     continue;
-                
+                }
+
+                try {
+                    this._sourceBuffers[type].appendBuffer(segment.data);
