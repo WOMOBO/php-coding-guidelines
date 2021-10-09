@@ -447,4 +447,5 @@ class MSEController {
                     if (type === 'video' && segment.hasOwnProperty('info')) {
                         this._idrList.appendArray(segment.info.syncPoints);
                     }
-        
+                } catch (error) {
+                    this._pendingSegments[type].unsh
