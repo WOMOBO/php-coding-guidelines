@@ -448,4 +448,5 @@ class MSEController {
                         this._idrList.appendArray(segment.info.syncPoints);
                     }
                 } catch (error) {
-                    this._pendingSegments[type].unsh
+                    this._pendingSegments[type].unshift(segment);
+                    if (error.code === 22) {  // QuotaExceededError
