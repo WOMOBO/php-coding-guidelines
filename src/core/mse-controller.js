@@ -444,4 +444,5 @@ class MSEController {
                 try {
                     this._sourceBuffers[type].appendBuffer(segment.data);
                     this._isBufferFull = false;
-                    if
+                    if (type === 'video' && segment.hasOwnProperty('info')) {
+                     
