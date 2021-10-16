@@ -454,4 +454,5 @@ class MSEController {
                          * Currently we can only do lazy-load to avoid SourceBuffer become scattered.
                          * SourceBuffer eviction policy may be changed in future version of FireFox.
                          *
-               
+                         * Related issues:
+                         * https://bugzilla.mozilla.org
