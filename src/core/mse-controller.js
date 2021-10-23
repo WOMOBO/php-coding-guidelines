@@ -459,4 +459,6 @@ class MSEController {
                          * https://bugzilla.mozilla.org/show_bug.cgi?id=1280023
                          */
 
-                        // report bu
+                        // report buffer full, abort network IO
+                        if (!this._isBufferFull) {
+   
