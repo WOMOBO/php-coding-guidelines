@@ -456,4 +456,7 @@ class MSEController {
                          *
                          * Related issues:
                          * https://bugzilla.mozilla.org/show_bug.cgi?id=1279885
-                         * https://bugzilla.mozilla.or
+                         * https://bugzilla.mozilla.org/show_bug.cgi?id=1280023
+                         */
+
+                        // report bu
