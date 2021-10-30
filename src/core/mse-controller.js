@@ -464,4 +464,6 @@ class MSEController {
                             this._emitter.emit(MSEEvents.BUFFER_FULL);
                         }
                         this._isBufferFull = true;
-                    } els
+                    } else {
+                        Log.e(this.TAG, error.message);
+                        this._e
