@@ -463,3 +463,5 @@ class MSEController {
                         if (!this._isBufferFull) {
                             this._emitter.emit(MSEEvents.BUFFER_FULL);
                         }
+                        this._isBufferFull = true;
+                    } els
