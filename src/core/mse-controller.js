@@ -474,3 +474,5 @@ class MSEController {
     }
 
     _onSourceOpen() {
+        Log.v(this.TAG, 'MediaSource onSourceOpen');
+        this._mediaSource.remov
