@@ -475,4 +475,5 @@ class MSEController {
 
     _onSourceOpen() {
         Log.v(this.TAG, 'MediaSource onSourceOpen');
-        this._mediaSource.remov
+        this._mediaSource.removeEventListener('sourceopen', this.e.onSourceOpen);
+        // deferred sourcebuffe
