@@ -479,3 +479,5 @@ class MSEController {
         // deferred sourcebuffer creation / initialization
         if (this._pendingSourceBufferInit.length > 0) {
             let pendings = this._pendingSourceBufferInit;
+            while (pendings.length) {
+                let segment = pend
