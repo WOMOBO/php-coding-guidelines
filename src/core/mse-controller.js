@@ -482,3 +482,6 @@ class MSEController {
             while (pendings.length) {
                 let segment = pendings.shift();
                 this.appendInitSegment(segment, true);
+            }
+        }
+        // there may be some pending media s
