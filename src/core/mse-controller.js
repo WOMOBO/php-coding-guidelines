@@ -490,3 +490,7 @@ class MSEController {
         }
         this._emitter.emit(MSEEvents.SOURCE_OPEN);
     }
+
+    _onSourceEnded() {
+        // fired on endOfStream
+        Log.v(this.TAG, 'MediaS
