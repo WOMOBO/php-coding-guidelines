@@ -497,4 +497,6 @@ class MSEController {
     }
 
     _onSourceClose() {
-        // fired on detach
+        // fired on detaching from media element
+        Log.v(this.TAG, 'MediaSource onSourceClose');
+        if (this.
