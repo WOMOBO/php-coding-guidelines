@@ -493,4 +493,8 @@ class MSEController {
 
     _onSourceEnded() {
         // fired on endOfStream
-        Log.v(this.TAG, 'MediaS
+        Log.v(this.TAG, 'MediaSource onSourceEnded');
+    }
+
+    _onSourceClose() {
+        // fired on detach
