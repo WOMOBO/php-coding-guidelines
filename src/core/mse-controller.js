@@ -500,4 +500,5 @@ class MSEController {
         // fired on detaching from media element
         Log.v(this.TAG, 'MediaSource onSourceClose');
         if (this._mediaSource && this.e != null) {
-            this._mediaSource.removeEventLis
+            this._mediaSource.removeEventListener('sourceopen', this.e.onSourceOpen);
+            this._mediaSource.removeE
