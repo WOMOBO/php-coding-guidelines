@@ -506,4 +506,6 @@ class MSEController {
         }
     }
 
-    _hasPendingS
+    _hasPendingSegments() {
+        let ps = this._pendingSegments;
+        return ps.video.length > 0 || ps.
