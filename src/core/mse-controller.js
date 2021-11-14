@@ -508,4 +508,8 @@ class MSEController {
 
     _hasPendingSegments() {
         let ps = this._pendingSegments;
-        return ps.video.length > 0 || ps.
+        return ps.video.length > 0 || ps.audio.length > 0;
+    }
+
+    _hasPendingRemoveRanges() {
+        let prr = this._pen
