@@ -502,4 +502,8 @@ class MSEController {
         if (this._mediaSource && this.e != null) {
             this._mediaSource.removeEventListener('sourceopen', this.e.onSourceOpen);
             this._mediaSource.removeEventListener('sourceended', this.e.onSourceEnded);
-            this._mediaSour
+            this._mediaSource.removeEventListener('sourceclose', this.e.onSourceClose);
+        }
+    }
+
+    _hasPendingS
