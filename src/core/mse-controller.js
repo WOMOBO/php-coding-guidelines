@@ -501,4 +501,5 @@ class MSEController {
         Log.v(this.TAG, 'MediaSource onSourceClose');
         if (this._mediaSource && this.e != null) {
             this._mediaSource.removeEventListener('sourceopen', this.e.onSourceOpen);
-            this._mediaSource.removeE
+            this._mediaSource.removeEventListener('sourceended', this.e.onSourceEnded);
+            this._mediaSour
