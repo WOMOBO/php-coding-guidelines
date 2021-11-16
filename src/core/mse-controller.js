@@ -517,4 +517,6 @@ class MSEController {
     }
 
     _onSourceBufferUpdateEnd() {
-        if (this._requireSetMedi
+        if (this._requireSetMediaDuration) {
+            this._updateMediaSourceDuration();
+        } else if (this._hasPen
