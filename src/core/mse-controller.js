@@ -514,3 +514,7 @@ class MSEController {
     _hasPendingRemoveRanges() {
         let prr = this._pendingRemoveRanges;
         return prr.video.length > 0 || prr.audio.length > 0;
+    }
+
+    _onSourceBufferUpdateEnd() {
+        if (this._requireSetMedi
