@@ -523,4 +523,7 @@ class MSEController {
             this._doRemoveRanges();
         } else if (this._hasPendingSegments()) {
             this._doAppendSegments();
-        } else if (this._
+        } else if (this._hasPendingEos) {
+            this.endOfStream();
+        }
+        this._emitter.em
