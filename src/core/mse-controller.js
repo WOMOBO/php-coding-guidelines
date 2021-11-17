@@ -519,4 +519,6 @@ class MSEController {
     _onSourceBufferUpdateEnd() {
         if (this._requireSetMediaDuration) {
             this._updateMediaSourceDuration();
-        } else if (this._hasPen
+        } else if (this._hasPendingRemoveRanges()) {
+            this._doRemoveRanges();
+        } else if (this._hasPendi
