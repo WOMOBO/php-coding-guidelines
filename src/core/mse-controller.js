@@ -530,4 +530,5 @@ class MSEController {
     }
 
     _onSourceBufferError(e) {
-        Log.e(this.T
+        Log.e(this.TAG, `SourceBuffer Error: ${e}`);
+        // this error might not always be fatal, just 
