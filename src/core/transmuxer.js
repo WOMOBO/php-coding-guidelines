@@ -76,3 +76,93 @@ class Transmuxer {
                 LoggingControl.removeListener(this.e.onLoggingConfigChanged);
                 this.e = null;
             }
+        } else {
+            this._controller.destroy();
+            this._controller = null;
+        }
+        this._emitter.removeAllListeners();
+        this._emitter = null;
+    }
+
+    on(event, listener) {
+        this._emitter.addListener(event, listener);
+    }
+
+    off(event, listener) {
+        this._emitter.removeListener(event, listener);
+    }
+
+    hasWorker() {
+        return this._worker != null;
+    }
+
+    open() {
+        if (this._worker) {
+            this._worker.postMessage({cmd: 'start'});
+        } else {
+            this._controller.start();
+        }
+    }
+
+    close() {
+        if (this._worker) {
+            this._worker.postMessage({cmd: 'stop'});
+        } else {
+            this._controller.stop();
+        }
+    }
+
+    seek(milliseconds) {
+        if (this._worker) {
+            this._worker.postMessage({cmd: 'seek', param: milliseconds});
+        } else {
+            this._controller.seek(milliseconds);
+        }
+    }
+
+    pause() {
+        if (this._worker) {
+            this._worker.postMessage({cmd: 'pause'});
+        } else {
+            this._controller.pause();
+        }
+    }
+
+    resume() {
+        if (this._worker) {
+            this._worker.postMessage({cmd: 'resume'});
+        } else {
+            this._controller.resume();
+        }
+    }
+
+    _onInitSegment(type, initSegment) {
+        // do async invoke
+        Promise.resolve().then(() => {
+            this._emitter.emit(TransmuxingEvents.INIT_SEGMENT, type, initSegment);
+        });
+    }
+
+    _onMediaSegment(type, mediaSegment) {
+        Promise.resolve().then(() => {
+            this._emitter.emit(TransmuxingEvents.MEDIA_SEGMENT, type, mediaSegment);
+        });
+    }
+
+    _onLoadingComplete() {
+        Promise.resolve().then(() => {
+            this._emitter.emit(TransmuxingEvents.LOADING_COMPLETE);
+        });
+    }
+
+    _onRecoveredEarlyEof() {
+        Promise.resolve().then(() => {
+            this._emitter.emit(TransmuxingEvents.RECOVERED_EARLY_EOF);
+        });
+    }
+
+    _onMediaInfo(mediaInfo) {
+        Promise.resolve().then(() => {
+            this._emitter.emit(TransmuxingEvents.MEDIA_INFO, mediaInfo);
+        });
+    }
