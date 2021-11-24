@@ -70,3 +70,77 @@ class TransmuxingController {
                 segment.referrerPolicy = config.referrerPolicy;
             }
         });
+
+        if (!isNaN(totalDuration) && this._mediaDataSource.duration !== totalDuration) {
+            this._mediaDataSource.duration = totalDuration;
+        }
+
+        this._mediaInfo = null;
+        this._demuxer = null;
+        this._remuxer = null;
+        this._ioctl = null;
+
+        this._pendingSeekTime = null;
+        this._pendingResolveSeekPoint = null;
+
+        this._statisticsReporter = null;
+    }
+
+    destroy() {
+        this._mediaInfo = null;
+        this._mediaDataSource = null;
+
+        if (this._statisticsReporter) {
+            this._disableStatisticsReporter();
+        }
+        if (this._ioctl) {
+            this._ioctl.destroy();
+            this._ioctl = null;
+        }
+        if (this._demuxer) {
+            this._demuxer.destroy();
+            this._demuxer = null;
+        }
+        if (this._remuxer) {
+            this._remuxer.destroy();
+            this._remuxer = null;
+        }
+
+        this._emitter.removeAllListeners();
+        this._emitter = null;
+    }
+
+    on(event, listener) {
+        this._emitter.addListener(event, listener);
+    }
+
+    off(event, listener) {
+        this._emitter.removeListener(event, listener);
+    }
+
+    start() {
+        this._loadSegment(0);
+        this._enableStatisticsReporter();
+    }
+
+    _loadSegment(segmentIndex, optionalFrom) {
+        this._currentSegmentIndex = segmentIndex;
+        let dataSource = this._mediaDataSource.segments[segmentIndex];
+
+        let ioctl = this._ioctl = new IOController(dataSource, this._config, segmentIndex);
+        ioctl.onError = this._onIOException.bind(this);
+        ioctl.onSeeked = this._onIOSeeked.bind(this);
+        ioctl.onComplete = this._onIOComplete.bind(this);
+        ioctl.onRedirect = this._onIORedirect.bind(this);
+        ioctl.onRecoveredEarlyEof = this._onIORecoveredEarlyEof.bind(this);
+
+        if (optionalFrom) {
+            this._demuxer.bindDataSource(this._ioctl);
+        } else {
+            ioctl.onDataArrival = this._onInitChunkArrival.bind(this);
+        }
+
+        ioctl.open(optionalFrom);
+    }
+
+    stop() {
