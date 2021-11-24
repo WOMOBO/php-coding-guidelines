@@ -166,3 +166,83 @@ class Transmuxer {
             this._emitter.emit(TransmuxingEvents.MEDIA_INFO, mediaInfo);
         });
     }
+
+    _onMetaDataArrived(metadata) {
+        Promise.resolve().then(() => {
+            this._emitter.emit(TransmuxingEvents.METADATA_ARRIVED, metadata);
+        });
+    }
+
+    _onScriptDataArrived(data) {
+        Promise.resolve().then(() => {
+            this._emitter.emit(TransmuxingEvents.SCRIPTDATA_ARRIVED, data);
+        });
+    }
+
+    _onStatisticsInfo(statisticsInfo) {
+        Promise.resolve().then(() => {
+            this._emitter.emit(TransmuxingEvents.STATISTICS_INFO, statisticsInfo);
+        });
+    }
+
+    _onIOError(type, info) {
+        Promise.resolve().then(() => {
+            this._emitter.emit(TransmuxingEvents.IO_ERROR, type, info);
+        });
+    }
+
+    _onDemuxError(type, info) {
+        Promise.resolve().then(() => {
+            this._emitter.emit(TransmuxingEvents.DEMUX_ERROR, type, info);
+        });
+    }
+
+    _onRecommendSeekpoint(milliseconds) {
+        Promise.resolve().then(() => {
+            this._emitter.emit(TransmuxingEvents.RECOMMEND_SEEKPOINT, milliseconds);
+        });
+    }
+
+    _onLoggingConfigChanged(config) {
+        if (this._worker) {
+            this._worker.postMessage({cmd: 'logging_config', param: config});
+        }
+    }
+
+    _onWorkerMessage(e) {
+        let message = e.data;
+        let data = message.data;
+
+        if (message.msg === 'destroyed' || this._workerDestroying) {
+            this._workerDestroying = false;
+            this._worker.terminate();
+            this._worker = null;
+            return;
+        }
+
+        switch (message.msg) {
+            case TransmuxingEvents.INIT_SEGMENT:
+            case TransmuxingEvents.MEDIA_SEGMENT:
+                this._emitter.emit(message.msg, data.type, data.data);
+                break;
+            case TransmuxingEvents.LOADING_COMPLETE:
+            case TransmuxingEvents.RECOVERED_EARLY_EOF:
+                this._emitter.emit(message.msg);
+                break;
+            case TransmuxingEvents.MEDIA_INFO:
+                Object.setPrototypeOf(data, MediaInfo.prototype);
+                this._emitter.emit(message.msg, data);
+                break;
+            case TransmuxingEvents.METADATA_ARRIVED:
+            case TransmuxingEvents.SCRIPTDATA_ARRIVED:
+            case TransmuxingEvents.STATISTICS_INFO:
+                this._emitter.emit(message.msg, data);
+                break;
+            case TransmuxingEvents.IO_ERROR:
+            case TransmuxingEvents.DEMUX_ERROR:
+                this._emitter.emit(message.msg, data.type, data.info);
+                break;
+            case TransmuxingEvents.RECOMMEND_SEEKPOINT:
+                this._emitter.emit(message.msg, data);
+                break;
+            case 'logcat_callback':
