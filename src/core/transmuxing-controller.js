@@ -144,3 +144,78 @@ class TransmuxingController {
     }
 
     stop() {
+        this._internalAbort();
+        this._disableStatisticsReporter();
+    }
+
+    _internalAbort() {
+        if (this._ioctl) {
+            this._ioctl.destroy();
+            this._ioctl = null;
+        }
+    }
+
+    pause() {  // take a rest
+        if (this._ioctl && this._ioctl.isWorking()) {
+            this._ioctl.pause();
+            this._disableStatisticsReporter();
+        }
+    }
+
+    resume() {
+        if (this._ioctl && this._ioctl.isPaused()) {
+            this._ioctl.resume();
+            this._enableStatisticsReporter();
+        }
+    }
+
+    seek(milliseconds) {
+        if (this._mediaInfo == null || !this._mediaInfo.isSeekable()) {
+            return;
+        }
+
+        let targetSegmentIndex = this._searchSegmentIndexContains(milliseconds);
+
+        if (targetSegmentIndex === this._currentSegmentIndex) {
+            // intra-segment seeking
+            let segmentInfo = this._mediaInfo.segments[targetSegmentIndex];
+
+            if (segmentInfo == undefined) {
+                // current segment loading started, but mediainfo hasn't received yet
+                // wait for the metadata loaded, then seek to expected position
+                this._pendingSeekTime = milliseconds;
+            } else {
+                let keyframe = segmentInfo.getNearestKeyframe(milliseconds);
+                this._remuxer.seek(keyframe.milliseconds);
+                this._ioctl.seek(keyframe.fileposition);
+                // Will be resolved in _onRemuxerMediaSegmentArrival()
+                this._pendingResolveSeekPoint = keyframe.milliseconds;
+            }
+        } else {
+            // cross-segment seeking
+            let targetSegmentInfo = this._mediaInfo.segments[targetSegmentIndex];
+
+            if (targetSegmentInfo == undefined) {
+                // target segment hasn't been loaded. We need metadata then seek to expected time
+                this._pendingSeekTime = milliseconds;
+                this._internalAbort();
+                this._remuxer.seek();
+                this._remuxer.insertDiscontinuity();
+                this._loadSegment(targetSegmentIndex);
+                // Here we wait for the metadata loaded, then seek to expected position
+            } else {
+                // We have target segment's metadata, direct seek to target position
+                let keyframe = targetSegmentInfo.getNearestKeyframe(milliseconds);
+                this._internalAbort();
+                this._remuxer.seek(milliseconds);
+                this._remuxer.insertDiscontinuity();
+                this._demuxer.resetMediaInfo();
+                this._demuxer.timestampBase = this._mediaDataSource.segments[targetSegmentIndex].timestampBase;
+                this._loadSegment(targetSegmentIndex, keyframe.fileposition);
+                this._pendingResolveSeekPoint = keyframe.milliseconds;
+                this._reportSegmentMediaInfo(targetSegmentIndex);
+            }
+        }
+
+        this._enableStatisticsReporter();
+    }
