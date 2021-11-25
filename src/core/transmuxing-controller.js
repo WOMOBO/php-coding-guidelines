@@ -219,3 +219,98 @@ class TransmuxingController {
 
         this._enableStatisticsReporter();
     }
+
+    _searchSegmentIndexContains(milliseconds) {
+        let segments = this._mediaDataSource.segments;
+        let idx = segments.length - 1;
+
+        for (let i = 0; i < segments.length; i++) {
+            if (milliseconds < segments[i].timestampBase) {
+                idx = i - 1;
+                break;
+            }
+        }
+        return idx;
+    }
+
+    _onInitChunkArrival(data, byteStart) {
+        let probeData = null;
+        let consumed = 0;
+
+        if (byteStart > 0) {
+            // IOController seeked immediately after opened, byteStart > 0 callback may received
+            this._demuxer.bindDataSource(this._ioctl);
+            this._demuxer.timestampBase = this._mediaDataSource.segments[this._currentSegmentIndex].timestampBase;
+
+            consumed = this._demuxer.parseChunks(data, byteStart);
+        } else if ((probeData = FLVDemuxer.probe(data)).match) {
+            // Always create new FLVDemuxer
+            this._demuxer = new FLVDemuxer(probeData, this._config);
+
+            if (!this._remuxer) {
+                this._remuxer = new MP4Remuxer(this._config);
+            }
+
+            let mds = this._mediaDataSource;
+            if (mds.duration != undefined && !isNaN(mds.duration)) {
+                this._demuxer.overridedDuration = mds.duration;
+            }
+            if (typeof mds.hasAudio === 'boolean') {
+                this._demuxer.overridedHasAudio = mds.hasAudio;
+            }
+            if (typeof mds.hasVideo === 'boolean') {
+                this._demuxer.overridedHasVideo = mds.hasVideo;
+            }
+
+            this._demuxer.timestampBase = mds.segments[this._currentSegmentIndex].timestampBase;
+
+            this._demuxer.onError = this._onDemuxException.bind(this);
+            this._demuxer.onMediaInfo = this._onMediaInfo.bind(this);
+            this._demuxer.onMetaDataArrived = this._onMetaDataArrived.bind(this);
+            this._demuxer.onScriptDataArrived = this._onScriptDataArrived.bind(this);
+
+            this._remuxer.bindDataSource(this._demuxer
+                         .bindDataSource(this._ioctl
+            ));
+
+            this._remuxer.onInitSegment = this._onRemuxerInitSegmentArrival.bind(this);
+            this._remuxer.onMediaSegment = this._onRemuxerMediaSegmentArrival.bind(this);
+
+            consumed = this._demuxer.parseChunks(data, byteStart);
+        } else {
+            probeData = null;
+            Log.e(this.TAG, 'Non-FLV, Unsupported media type!');
+            Promise.resolve().then(() => {
+                this._internalAbort();
+            });
+            this._emitter.emit(TransmuxingEvents.DEMUX_ERROR, DemuxErrors.FORMAT_UNSUPPORTED, 'Non-FLV, Unsupported media type');
+
+            consumed = 0;
+        }
+
+        return consumed;
+    }
+
+    _onMediaInfo(mediaInfo) {
+        if (this._mediaInfo == null) {
+            // Store first segment's mediainfo as global mediaInfo
+            this._mediaInfo = Object.assign({}, mediaInfo);
+            this._mediaInfo.keyframesIndex = null;
+            this._mediaInfo.segments = [];
+            this._mediaInfo.segmentCount = this._mediaDataSource.segments.length;
+            Object.setPrototypeOf(this._mediaInfo, MediaInfo.prototype);
+        }
+
+        let segmentInfo = Object.assign({}, mediaInfo);
+        Object.setPrototypeOf(segmentInfo, MediaInfo.prototype);
+        this._mediaInfo.segments[this._currentSegmentIndex] = segmentInfo;
+
+        // notify mediaInfo update
+        this._reportSegmentMediaInfo(this._currentSegmentIndex);
+
+        if (this._pendingSeekTime != null) {
+            Promise.resolve().then(() => {
+                let target = this._pendingSeekTime;
+                this._pendingSeekTime = null;
+                this.seek(target);
+            });
