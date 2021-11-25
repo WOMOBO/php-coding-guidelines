@@ -314,3 +314,83 @@ class TransmuxingController {
                 this._pendingSeekTime = null;
                 this.seek(target);
             });
+        }
+    }
+
+    _onMetaDataArrived(metadata) {
+        this._emitter.emit(TransmuxingEvents.METADATA_ARRIVED, metadata);
+    }
+
+    _onScriptDataArrived(data) {
+        this._emitter.emit(TransmuxingEvents.SCRIPTDATA_ARRIVED, data);
+    }
+
+    _onIOSeeked() {
+        this._remuxer.insertDiscontinuity();
+    }
+
+    _onIOComplete(extraData) {
+        let segmentIndex = extraData;
+        let nextSegmentIndex = segmentIndex + 1;
+
+        if (nextSegmentIndex < this._mediaDataSource.segments.length) {
+            this._internalAbort();
+            this._remuxer.flushStashedSamples();
+            this._loadSegment(nextSegmentIndex);
+        } else {
+            this._remuxer.flushStashedSamples();
+            this._emitter.emit(TransmuxingEvents.LOADING_COMPLETE);
+            this._disableStatisticsReporter();
+        }
+    }
+
+    _onIORedirect(redirectedURL) {
+        let segmentIndex = this._ioctl.extraData;
+        this._mediaDataSource.segments[segmentIndex].redirectedURL = redirectedURL;
+    }
+
+    _onIORecoveredEarlyEof() {
+        this._emitter.emit(TransmuxingEvents.RECOVERED_EARLY_EOF);
+    }
+
+    _onIOException(type, info) {
+        Log.e(this.TAG, `IOException: type = ${type}, code = ${info.code}, msg = ${info.msg}`);
+        this._emitter.emit(TransmuxingEvents.IO_ERROR, type, info);
+        this._disableStatisticsReporter();
+    }
+
+    _onDemuxException(type, info) {
+        Log.e(this.TAG, `DemuxException: type = ${type}, info = ${info}`);
+        this._emitter.emit(TransmuxingEvents.DEMUX_ERROR, type, info);
+    }
+
+    _onRemuxerInitSegmentArrival(type, initSegment) {
+        this._emitter.emit(TransmuxingEvents.INIT_SEGMENT, type, initSegment);
+    }
+
+    _onRemuxerMediaSegmentArrival(type, mediaSegment) {
+        if (this._pendingSeekTime != null) {
+            // Media segments after new-segment cross-seeking should be dropped.
+            return;
+        }
+        this._emitter.emit(TransmuxingEvents.MEDIA_SEGMENT, type, mediaSegment);
+
+        // Resolve pending seekPoint
+        if (this._pendingResolveSeekPoint != null && type === 'video') {
+            let syncPoints = mediaSegment.info.syncPoints;
+            let seekpoint = this._pendingResolveSeekPoint;
+            this._pendingResolveSeekPoint = null;
+
+            // Safari: Pass PTS for recommend_seekpoint
+            if (Browser.safari && syncPoints.length > 0 && syncPoints[0].originalDts === seekpoint) {
+                seekpoint = syncPoints[0].pts;
+            }
+            // else: use original DTS (keyframe.milliseconds)
+
+            this._emitter.emit(TransmuxingEvents.RECOMMEND_SEEKPOINT, seekpoint);
+        }
+    }
+
+    _enableStatisticsReporter() {
+        if (this._statisticsReporter == null) {
+            this._statisticsReporter = self.setInterval(
