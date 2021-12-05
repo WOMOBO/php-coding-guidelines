@@ -17,4 +17,6 @@
  */
 
 import Log from '../utils/logger.js';
-import LoggingControl
+import LoggingControl from '../utils/logging-control.js';
+import Polyfill from '../utils/polyfill.js';
+import T
