@@ -25,3 +25,9 @@ import TransmuxingEvents from './transmuxing-events.js';
 /* post message to worker:
    data: {
        cmd: string
+       param: any
+   }
+
+   receive message from worker:
+   data: {
+       msg: str
