@@ -30,4 +30,11 @@ import TransmuxingEvents from './transmuxing-events.js';
 
    receive message from worker:
    data: {
-       msg: str
+       msg: string,
+       data: any
+   }
+ */
+
+let TransmuxingWorker = function (self) {
+
+    let TAG = 'Tran
