@@ -39,4 +39,8 @@ let TransmuxingWorker = function (self) {
 
     let TAG = 'TransmuxingWorker';
     let controller = null;
-    let logcatListener = onLogcatC
+    let logcatListener = onLogcatCallback.bind(this);
+
+    Polyfill.install();
+
+    self.addEventListener('messag
