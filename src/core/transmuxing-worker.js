@@ -43,4 +43,7 @@ let TransmuxingWorker = function (self) {
 
     Polyfill.install();
 
-    self.addEventListener('messag
+    self.addEventListener('message', function (e) {
+        switch (e.data.cmd) {
+            case 'init':
+                contro
