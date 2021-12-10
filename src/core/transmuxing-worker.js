@@ -37,4 +37,6 @@ import TransmuxingEvents from './transmuxing-events.js';
 
 let TransmuxingWorker = function (self) {
 
-    let TAG = 'Tran
+    let TAG = 'TransmuxingWorker';
+    let controller = null;
+    let logcatListener = onLogcatC
