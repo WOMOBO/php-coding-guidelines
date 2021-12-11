@@ -46,4 +46,5 @@ let TransmuxingWorker = function (self) {
     self.addEventListener('message', function (e) {
         switch (e.data.cmd) {
             case 'init':
-                contro
+                controller = new TransmuxingController(e.data.param[0], e.data.param[1]);
+                controlle
