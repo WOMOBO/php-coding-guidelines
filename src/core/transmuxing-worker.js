@@ -47,4 +47,5 @@ let TransmuxingWorker = function (self) {
         switch (e.data.cmd) {
             case 'init':
                 controller = new TransmuxingController(e.data.param[0], e.data.param[1]);
-                controlle
+                controller.on(TransmuxingEvents.IO_ERROR, onIOError.bind(this));
+                controller.on(T
