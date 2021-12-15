@@ -49,4 +49,5 @@ let TransmuxingWorker = function (self) {
                 controller = new TransmuxingController(e.data.param[0], e.data.param[1]);
                 controller.on(TransmuxingEvents.IO_ERROR, onIOError.bind(this));
                 controller.on(TransmuxingEvents.DEMUX_ERROR, onDemuxError.bind(this));
-                controller
+                controller.on(TransmuxingEvents.INIT_SEGMENT, onInitSegment.bind(this));
+                controlle
