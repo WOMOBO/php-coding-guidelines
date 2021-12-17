@@ -51,4 +51,5 @@ let TransmuxingWorker = function (self) {
                 controller.on(TransmuxingEvents.DEMUX_ERROR, onDemuxError.bind(this));
                 controller.on(TransmuxingEvents.INIT_SEGMENT, onInitSegment.bind(this));
                 controller.on(TransmuxingEvents.MEDIA_SEGMENT, onMediaSegment.bind(this));
-                controller.on(TransmuxingEvents.LOADING_COMPLETE, onLoadingComplete.bind(thi
+                controller.on(TransmuxingEvents.LOADING_COMPLETE, onLoadingComplete.bind(this));
+                controller.on(TransmuxingEvents.RECOVERED_EARLY_EOF,
