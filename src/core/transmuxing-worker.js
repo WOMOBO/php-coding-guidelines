@@ -53,4 +53,5 @@ let TransmuxingWorker = function (self) {
                 controller.on(TransmuxingEvents.MEDIA_SEGMENT, onMediaSegment.bind(this));
                 controller.on(TransmuxingEvents.LOADING_COMPLETE, onLoadingComplete.bind(this));
                 controller.on(TransmuxingEvents.RECOVERED_EARLY_EOF, onRecoveredEarlyEof.bind(this));
-                controller.on(TransmuxingEvents.MEDIA_INFO, onMe
+                controller.on(TransmuxingEvents.MEDIA_INFO, onMediaInfo.bind(this));
+                controller.on(TransmuxingEvents
