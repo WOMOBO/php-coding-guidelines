@@ -55,4 +55,5 @@ let TransmuxingWorker = function (self) {
                 controller.on(TransmuxingEvents.RECOVERED_EARLY_EOF, onRecoveredEarlyEof.bind(this));
                 controller.on(TransmuxingEvents.MEDIA_INFO, onMediaInfo.bind(this));
                 controller.on(TransmuxingEvents.METADATA_ARRIVED, onMetaDataArrived.bind(this));
-                controller.on(T
+                controller.on(TransmuxingEvents.SCRIPTDATA_ARRIVED, onScriptDataArrived.bind(this));
+   
