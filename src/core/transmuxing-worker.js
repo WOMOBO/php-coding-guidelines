@@ -60,3 +60,5 @@ let TransmuxingWorker = function (self) {
                 controller.on(TransmuxingEvents.RECOMMEND_SEEKPOINT, onRecommendSeekpoint.bind(this));
                 break;
             case 'destroy':
+                if (controller) {
+                    controller.destroy(
