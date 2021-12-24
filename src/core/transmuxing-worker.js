@@ -70,4 +70,7 @@ let TransmuxingWorker = function (self) {
                 controller.start();
                 break;
             case 'stop':
-     
+                controller.stop();
+                break;
+            case 'seek':
+    
