@@ -67,4 +67,7 @@ let TransmuxingWorker = function (self) {
                 self.postMessage({msg: 'destroyed'});
                 break;
             case 'start':
-                control
+                controller.start();
+                break;
+            case 'stop':
+     
