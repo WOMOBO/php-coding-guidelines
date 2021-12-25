@@ -77,4 +77,7 @@ let TransmuxingWorker = function (self) {
                 break;
             case 'pause':
                 controller.pause();
-                break
+                break;
+            case 'resume':
+                controller.resume();
+       
