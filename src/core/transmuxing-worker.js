@@ -75,4 +75,6 @@ let TransmuxingWorker = function (self) {
             case 'seek':
                 controller.seek(e.data.param);
                 break;
-            
+            case 'pause':
+                controller.pause();
+                break
