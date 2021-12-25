@@ -80,4 +80,6 @@ let TransmuxingWorker = function (self) {
                 break;
             case 'resume':
                 controller.resume();
-       
+                break;
+            case 'logging_config': {
+                
