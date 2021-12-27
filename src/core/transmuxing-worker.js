@@ -85,4 +85,5 @@ let TransmuxingWorker = function (self) {
                 let config = e.data.param;
                 LoggingControl.applyConfig(config);
 
-     
+                if (config.enableCallback === true) {
+                    LoggingControl.a
