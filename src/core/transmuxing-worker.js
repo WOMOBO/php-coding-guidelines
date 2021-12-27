@@ -82,4 +82,7 @@ let TransmuxingWorker = function (self) {
                 controller.resume();
                 break;
             case 'logging_config': {
-                
+                let config = e.data.param;
+                LoggingControl.applyConfig(config);
+
+     
