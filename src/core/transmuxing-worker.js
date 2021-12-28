@@ -88,4 +88,7 @@ let TransmuxingWorker = function (self) {
                 if (config.enableCallback === true) {
                     LoggingControl.addLogListener(logcatListener);
                 } else {
-                    LoggingCont
+                    LoggingControl.removeLogListener(logcatListener);
+                }
+                break;
+     
