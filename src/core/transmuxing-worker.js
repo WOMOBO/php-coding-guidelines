@@ -91,4 +91,8 @@ let TransmuxingWorker = function (self) {
                     LoggingControl.removeLogListener(logcatListener);
                 }
                 break;
-     
+            }
+        }
+    });
+
+    function onInitSegment(type, initSegment
