@@ -95,4 +95,7 @@ let TransmuxingWorker = function (self) {
         }
     });
 
-    function onInitSegment(type, initSegment
+    function onInitSegment(type, initSegment) {
+        let obj = {
+            msg: TransmuxingEvents.INIT_SEGMENT,
+            da
