@@ -101,4 +101,6 @@ let TransmuxingWorker = function (self) {
             data: {
                 type: type,
                 data: initSegment
-         
+            }
+        };
+        self.postMessage(obj, [initSegment.data]);  // data: ArrayBuffe
