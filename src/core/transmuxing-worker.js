@@ -111,4 +111,7 @@ let TransmuxingWorker = function (self) {
             msg: TransmuxingEvents.MEDIA_SEGMENT,
             data: {
                 type: type,
-         
+                data: mediaSegment
+            }
+        };
+        self.postMessage(obj, [m
