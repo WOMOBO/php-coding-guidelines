@@ -108,4 +108,7 @@ let TransmuxingWorker = function (self) {
 
     function onMediaSegment(type, mediaSegment) {
         let obj = {
-            
+            msg: TransmuxingEvents.MEDIA_SEGMENT,
+            data: {
+                type: type,
+         
