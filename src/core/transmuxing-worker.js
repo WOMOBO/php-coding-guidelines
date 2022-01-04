@@ -114,4 +114,8 @@ let TransmuxingWorker = function (self) {
                 data: mediaSegment
             }
         };
-        self.postMessage(obj, [m
+        self.postMessage(obj, [mediaSegment.data]);  // data: ArrayBuffer
+    }
+
+    function onLoadingComplete() {
+        l
