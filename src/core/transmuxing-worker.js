@@ -118,4 +118,7 @@ let TransmuxingWorker = function (self) {
     }
 
     function onLoadingComplete() {
-        l
+        let obj = {
+            msg: TransmuxingEvents.LOADING_COMPLETE
+        };
+        self.p
