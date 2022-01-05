@@ -126,4 +126,6 @@ let TransmuxingWorker = function (self) {
 
     function onRecoveredEarlyEof() {
         let obj = {
-     
+            msg: TransmuxingEvents.RECOVERED_EARLY_EOF
+        };
+        self.p
