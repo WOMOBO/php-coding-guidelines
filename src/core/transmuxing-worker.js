@@ -121,4 +121,9 @@ let TransmuxingWorker = function (self) {
         let obj = {
             msg: TransmuxingEvents.LOADING_COMPLETE
         };
-        self.p
+        self.postMessage(obj);
+    }
+
+    function onRecoveredEarlyEof() {
+        let obj = {
+     
