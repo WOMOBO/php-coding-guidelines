@@ -128,4 +128,9 @@ let TransmuxingWorker = function (self) {
         let obj = {
             msg: TransmuxingEvents.RECOVERED_EARLY_EOF
         };
-        self.p
+        self.postMessage(obj);
+    }
+
+    function onMediaInfo(mediaInfo) {
+        let obj = {
+            msg: Tran
