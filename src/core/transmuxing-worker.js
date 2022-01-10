@@ -133,4 +133,7 @@ let TransmuxingWorker = function (self) {
 
     function onMediaInfo(mediaInfo) {
         let obj = {
-            msg: Tran
+            msg: TransmuxingEvents.MEDIA_INFO,
+            data: mediaInfo
+        };
+        self.pos
