@@ -140,4 +140,7 @@ let TransmuxingWorker = function (self) {
     }
 
     function onMetaDataArrived(metadata) {
-        let obj = 
+        let obj = {
+            msg: TransmuxingEvents.METADATA_ARRIVED,
+            data: metadata
+ 
