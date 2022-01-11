@@ -143,4 +143,8 @@ let TransmuxingWorker = function (self) {
         let obj = {
             msg: TransmuxingEvents.METADATA_ARRIVED,
             data: metadata
- 
+        };
+        self.postMessage(obj);
+    }
+
+    function onScriptDataArrived(dat
