@@ -136,4 +136,8 @@ let TransmuxingWorker = function (self) {
             msg: TransmuxingEvents.MEDIA_INFO,
             data: mediaInfo
         };
-        self.pos
+        self.postMessage(obj);
+    }
+
+    function onMetaDataArrived(metadata) {
+        let obj = 
