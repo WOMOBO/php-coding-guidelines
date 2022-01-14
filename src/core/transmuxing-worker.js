@@ -151,4 +151,8 @@ let TransmuxingWorker = function (self) {
         let obj = {
             msg: TransmuxingEvents.SCRIPTDATA_ARRIVED,
             data: data
-  
+        };
+        self.postMessage(obj);
+    }
+
+    function onStatisticsInfo(statI
