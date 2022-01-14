@@ -147,4 +147,8 @@ let TransmuxingWorker = function (self) {
         self.postMessage(obj);
     }
 
-    function onScriptDataArrived(dat
+    function onScriptDataArrived(data) {
+        let obj = {
+            msg: TransmuxingEvents.SCRIPTDATA_ARRIVED,
+            data: data
+  
