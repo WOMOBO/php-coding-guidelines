@@ -173,4 +173,7 @@ let TransmuxingWorker = function (self) {
         });
     }
 
-    function onDemuxError(type, info
+    function onDemuxError(type, info) {
+        self.postMessage({
+            msg: TransmuxingEvents.DEMUX_ERROR,
+           
