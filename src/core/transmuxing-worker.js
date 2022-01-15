@@ -168,4 +168,9 @@ let TransmuxingWorker = function (self) {
             msg: TransmuxingEvents.IO_ERROR,
             data: {
                 type: type,
-                info:
+                info: info
+            }
+        });
+    }
+
+    function onDemuxError(type, info
