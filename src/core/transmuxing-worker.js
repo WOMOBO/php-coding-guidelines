@@ -163,4 +163,6 @@ let TransmuxingWorker = function (self) {
         self.postMessage(obj);
     }
 
-    function onIOEr
+    function onIOError(type, info) {
+        self.postMessage({
+            msg: TransmuxingEvents.IO
