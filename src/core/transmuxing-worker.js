@@ -176,4 +176,9 @@ let TransmuxingWorker = function (self) {
     function onDemuxError(type, info) {
         self.postMessage({
             msg: TransmuxingEvents.DEMUX_ERROR,
-           
+            data: {
+                type: type,
+                info: info
+            }
+        });
+    
