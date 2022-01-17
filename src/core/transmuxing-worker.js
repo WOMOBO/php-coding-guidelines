@@ -181,4 +181,7 @@ let TransmuxingWorker = function (self) {
                 info: info
             }
         });
-    
+    }
+
+    function onRecommendSeekpoint(milliseconds) {
+        self.postMessage
