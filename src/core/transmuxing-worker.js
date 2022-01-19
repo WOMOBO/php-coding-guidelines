@@ -184,4 +184,6 @@ let TransmuxingWorker = function (self) {
     }
 
     function onRecommendSeekpoint(milliseconds) {
-        self.postMessage
+        self.postMessage({
+            msg: TransmuxingEvents.RECOMMEND_SEEKPOINT,
+            d
