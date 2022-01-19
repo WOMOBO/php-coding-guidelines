@@ -191,4 +191,7 @@ let TransmuxingWorker = function (self) {
     }
 
     function onLogcatCallback(type, str) {
-        s
+        self.postMessage({
+            msg: 'logcat_callback',
+            data: {
+    
