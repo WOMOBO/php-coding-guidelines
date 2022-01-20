@@ -108,3 +108,72 @@ class AMF {
 
     static parseDate(arrayBuffer, dataOffset, dataSize) {
         if (dataSize < 10) {
+            throw new IllegalStateException('Data size invalid when parse Date');
+        }
+        let v = new DataView(arrayBuffer, dataOffset, dataSize);
+        let timestamp = v.getFloat64(0, !le);
+        let localTimeOffset = v.getInt16(8, !le);
+        timestamp += localTimeOffset * 60 * 1000;  // get UTC time
+
+        return {
+            data: new Date(timestamp),
+            size: 8 + 2
+        };
+    }
+
+    static parseValue(arrayBuffer, dataOffset, dataSize) {
+        if (dataSize < 1) {
+            throw new IllegalStateException('Data not enough when parse Value');
+        }
+
+        let v = new DataView(arrayBuffer, dataOffset, dataSize);
+
+        let offset = 1;
+        let type = v.getUint8(0);
+        let value;
+        let objectEnd = false;
+
+        try {
+            switch (type) {
+                case 0:  // Number(Double) type
+                    value = v.getFloat64(1, !le);
+                    offset += 8;
+                    break;
+                case 1: {  // Boolean type
+                    let b = v.getUint8(1);
+                    value = b ? true : false;
+                    offset += 1;
+                    break;
+                }
+                case 2: {  // String type
+                    let amfstr = AMF.parseString(arrayBuffer, dataOffset + 1, dataSize - 1);
+                    value = amfstr.data;
+                    offset += amfstr.size;
+                    break;
+                }
+                case 3: { // Object(s) type
+                    value = {};
+                    let terminal = 0;  // workaround for malformed Objects which has missing ScriptDataObjectEnd
+                    if ((v.getUint32(dataSize - 4, !le) & 0x00FFFFFF) === 9) {
+                        terminal = 3;
+                    }
+                    while (offset < dataSize - 4) {  // 4 === type(UI8) + ScriptDataObjectEnd(UI24)
+                        let amfobj = AMF.parseObject(arrayBuffer, dataOffset + offset, dataSize - offset - terminal);
+                        if (amfobj.objectEnd)
+                            break;
+                        value[amfobj.data.name] = amfobj.data.value;
+                        offset += amfobj.size;
+                    }
+                    if (offset <= dataSize - 3) {
+                        let marker = v.getUint32(offset - 1, !le) & 0x00FFFFFF;
+                        if (marker === 9) {
+                            offset += 3;
+                        }
+                    }
+                    break;
+                }
+                case 8: { // ECMA array type (Mixed array)
+                    value = {};
+                    offset += 4;  // ECMAArrayLength(UI32)
+                    let terminal = 0;  // workaround for malformed MixedArrays which has missing ScriptDataObjectEnd
+                    if ((v.getUint32(dataSize - 4, !le) & 0x00FFFFFF) === 9) {
