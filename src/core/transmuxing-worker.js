@@ -197,4 +197,9 @@ let TransmuxingWorker = function (self) {
                 type: type,
                 logcat: str
             }
-        })
+        });
+    }
+
+};
+
+export default TransmuxingWorker;
