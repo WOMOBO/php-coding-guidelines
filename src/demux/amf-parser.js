@@ -34,3 +34,77 @@ class AMF {
 
         try {
             let name = AMF.parseValue(arrayBuffer, dataOffset, dataSize);
+            let value = AMF.parseValue(arrayBuffer, dataOffset + name.size, dataSize - name.size);
+
+            data[name.data] = value.data;
+        } catch (e) {
+            Log.e('AMF', e.toString());
+        }
+
+        return data;
+    }
+
+    static parseObject(arrayBuffer, dataOffset, dataSize) {
+        if (dataSize < 3) {
+            throw new IllegalStateException('Data not enough when parse ScriptDataObject');
+        }
+        let name = AMF.parseString(arrayBuffer, dataOffset, dataSize);
+        let value = AMF.parseValue(arrayBuffer, dataOffset + name.size, dataSize - name.size);
+        let isObjectEnd = value.objectEnd;
+
+        return {
+            data: {
+                name: name.data,
+                value: value.data
+            },
+            size: name.size + value.size,
+            objectEnd: isObjectEnd
+        };
+    }
+
+    static parseVariable(arrayBuffer, dataOffset, dataSize) {
+        return AMF.parseObject(arrayBuffer, dataOffset, dataSize);
+    }
+
+    static parseString(arrayBuffer, dataOffset, dataSize) {
+        if (dataSize < 2) {
+            throw new IllegalStateException('Data not enough when parse String');
+        }
+        let v = new DataView(arrayBuffer, dataOffset, dataSize);
+        let length = v.getUint16(0, !le);
+
+        let str;
+        if (length > 0) {
+            str = decodeUTF8(new Uint8Array(arrayBuffer, dataOffset + 2, length));
+        } else {
+            str = '';
+        }
+
+        return {
+            data: str,
+            size: 2 + length
+        };
+    }
+
+    static parseLongString(arrayBuffer, dataOffset, dataSize) {
+        if (dataSize < 4) {
+            throw new IllegalStateException('Data not enough when parse LongString');
+        }
+        let v = new DataView(arrayBuffer, dataOffset, dataSize);
+        let length = v.getUint32(0, !le);
+
+        let str;
+        if (length > 0) {
+            str = decodeUTF8(new Uint8Array(arrayBuffer, dataOffset + 4, length));
+        } else {
+            str = '';
+        }
+
+        return {
+            data: str,
+            size: 4 + length
+        };
+    }
+
+    static parseDate(arrayBuffer, dataOffset, dataSize) {
+        if (dataSize < 10) {
