@@ -68,3 +68,50 @@ class ExpGolomb {
 
         this._fillCurrentWord();
         let bits_read_next = Math.min(bits_need_left, this._current_word_bits_left);
+
+        let result2 = this._current_word >>> (32 - bits_read_next);
+        this._current_word <<= bits_read_next;
+        this._current_word_bits_left -= bits_read_next;
+
+        result = (result << bits_read_next) | result2;
+        return result;
+    }
+
+    readBool() {
+        return this.readBits(1) === 1;
+    }
+
+    readByte() {
+        return this.readBits(8);
+    }
+
+    _skipLeadingZero() {
+        let zero_count;
+        for (zero_count = 0; zero_count < this._current_word_bits_left; zero_count++) {
+            if (0 !== (this._current_word & (0x80000000 >>> zero_count))) {
+                this._current_word <<= zero_count;
+                this._current_word_bits_left -= zero_count;
+                return zero_count;
+            }
+        }
+        this._fillCurrentWord();
+        return zero_count + this._skipLeadingZero();
+    }
+
+    readUEG() {  // unsigned exponential golomb
+        let leading_zeros = this._skipLeadingZero();
+        return this.readBits(leading_zeros + 1) - 1;
+    }
+
+    readSEG() {  // signed exponential golomb
+        let value = this.readUEG();
+        if (value & 0x01) {
+            return (value + 1) >>> 1;
+        } else {
+            return -1 * (value >>> 1);
+        }
+    }
+
+}
+
+export default ExpGolomb;
