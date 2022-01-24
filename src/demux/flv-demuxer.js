@@ -122,3 +122,87 @@ class FLVDemuxer {
         this._videoMetadata = null;
         this._videoTrack = null;
         this._audioTrack = null;
+
+        this._onError = null;
+        this._onMediaInfo = null;
+        this._onMetaDataArrived = null;
+        this._onScriptDataArrived = null;
+        this._onTrackMetadata = null;
+        this._onDataAvailable = null;
+    }
+
+    static probe(buffer) {
+        let data = new Uint8Array(buffer);
+        let mismatch = {match: false};
+
+        if (data[0] !== 0x46 || data[1] !== 0x4C || data[2] !== 0x56 || data[3] !== 0x01) {
+            return mismatch;
+        }
+
+        let hasAudio = ((data[4] & 4) >>> 2) !== 0;
+        let hasVideo = (data[4] & 1) !== 0;
+
+        let offset = ReadBig32(data, 5);
+
+        if (offset < 9) {
+            return mismatch;
+        }
+
+        return {
+            match: true,
+            consumed: offset,
+            dataOffset: offset,
+            hasAudioTrack: hasAudio,
+            hasVideoTrack: hasVideo
+        };
+    }
+
+    bindDataSource(loader) {
+        loader.onDataArrival = this.parseChunks.bind(this);
+        return this;
+    }
+
+    // prototype: function(type: string, metadata: any): void
+    get onTrackMetadata() {
+        return this._onTrackMetadata;
+    }
+
+    set onTrackMetadata(callback) {
+        this._onTrackMetadata = callback;
+    }
+
+    // prototype: function(mediaInfo: MediaInfo): void
+    get onMediaInfo() {
+        return this._onMediaInfo;
+    }
+
+    set onMediaInfo(callback) {
+        this._onMediaInfo = callback;
+    }
+
+    get onMetaDataArrived() {
+        return this._onMetaDataArrived;
+    }
+
+    set onMetaDataArrived(callback) {
+        this._onMetaDataArrived = callback;
+    }
+
+    get onScriptDataArrived() {
+        return this._onScriptDataArrived;
+    }
+
+    set onScriptDataArrived(callback) {
+        this._onScriptDataArrived = callback;
+    }
+
+    // prototype: function(type: number, info: string): void
+    get onError() {
+        return this._onError;
+    }
+
+    set onError(callback) {
+        this._onError = callback;
+    }
+
+    // prototype: function(videoTrack: any, audioTrack: any): void
