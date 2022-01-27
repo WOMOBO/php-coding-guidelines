@@ -299,3 +299,83 @@ class FLVDemuxer {
 
         while (offset < chunk.byteLength) {
             this._dispatch = true;
+
+            let v = new DataView(chunk, offset);
+
+            if (offset + 11 + 4 > chunk.byteLength) {
+                // data not enough for parsing an flv tag
+                break;
+            }
+
+            let tagType = v.getUint8(0);
+            let dataSize = v.getUint32(0, !le) & 0x00FFFFFF;
+
+            if (offset + 11 + dataSize + 4 > chunk.byteLength) {
+                // data not enough for parsing actual data body
+                break;
+            }
+
+            if (tagType !== 8 && tagType !== 9 && tagType !== 18) {
+                Log.w(this.TAG, `Unsupported tag type ${tagType}, skipped`);
+                // consume the whole tag (skip it)
+                offset += 11 + dataSize + 4;
+                continue;
+            }
+
+            let ts2 = v.getUint8(4);
+            let ts1 = v.getUint8(5);
+            let ts0 = v.getUint8(6);
+            let ts3 = v.getUint8(7);
+
+            let timestamp = ts0 | (ts1 << 8) | (ts2 << 16) | (ts3 << 24);
+
+            let streamId = v.getUint32(7, !le) & 0x00FFFFFF;
+            if (streamId !== 0) {
+                Log.w(this.TAG, 'Meet tag which has StreamID != 0!');
+            }
+
+            let dataOffset = offset + 11;
+
+            switch (tagType) {
+                case 8:  // Audio
+                    this._parseAudioData(chunk, dataOffset, dataSize, timestamp);
+                    break;
+                case 9:  // Video
+                    this._parseVideoData(chunk, dataOffset, dataSize, timestamp, byteStart + offset);
+                    break;
+                case 18:  // ScriptDataObject
+                    this._parseScriptData(chunk, dataOffset, dataSize);
+                    break;
+            }
+
+            let prevTagSize = v.getUint32(11 + dataSize, !le);
+            if (prevTagSize !== 11 + dataSize) {
+                Log.w(this.TAG, `Invalid PrevTagSize ${prevTagSize}`);
+            }
+
+            offset += 11 + dataSize + 4;  // tagBody + dataSize + prevTagSize
+        }
+
+        // dispatch parsed frames to consumer (typically, the remuxer)
+        if (this._isInitialMetadataDispatched()) {
+            if (this._dispatch && (this._audioTrack.length || this._videoTrack.length)) {
+                this._onDataAvailable(this._audioTrack, this._videoTrack);
+            }
+        }
+
+        return offset;  // consumed bytes, just equals latest offset index
+    }
+
+    _parseScriptData(arrayBuffer, dataOffset, dataSize) {
+        let scriptData = AMF.parseScriptData(arrayBuffer, dataOffset, dataSize);
+
+        if (scriptData.hasOwnProperty('onMetaData')) {
+            if (scriptData.onMetaData == null || typeof scriptData.onMetaData !== 'object') {
+                Log.w(this.TAG, 'Invalid onMetaData structure!');
+                return;
+            }
+            if (this._metadata) {
+                Log.w(this.TAG, 'Found another onMetaData tag!');
+            }
+            this._metadata = scriptData;
+            let onMetaData = this._metadata.onMetaData;
