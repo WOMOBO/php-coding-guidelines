@@ -206,3 +206,96 @@ class FLVDemuxer {
     }
 
     // prototype: function(videoTrack: any, audioTrack: any): void
+    get onDataAvailable() {
+        return this._onDataAvailable;
+    }
+
+    set onDataAvailable(callback) {
+        this._onDataAvailable = callback;
+    }
+
+    // timestamp base for output samples, must be in milliseconds
+    get timestampBase() {
+        return this._timestampBase;
+    }
+
+    set timestampBase(base) {
+        this._timestampBase = base;
+    }
+
+    get overridedDuration() {
+        return this._duration;
+    }
+
+    // Force-override media duration. Must be in milliseconds, int32
+    set overridedDuration(duration) {
+        this._durationOverrided = true;
+        this._duration = duration;
+        this._mediaInfo.duration = duration;
+    }
+
+    // Force-override audio track present flag, boolean
+    set overridedHasAudio(hasAudio) {
+        this._hasAudioFlagOverrided = true;
+        this._hasAudio = hasAudio;
+        this._mediaInfo.hasAudio = hasAudio;
+    }
+
+    // Force-override video track present flag, boolean
+    set overridedHasVideo(hasVideo) {
+        this._hasVideoFlagOverrided = true;
+        this._hasVideo = hasVideo;
+        this._mediaInfo.hasVideo = hasVideo;
+    }
+
+    resetMediaInfo() {
+        this._mediaInfo = new MediaInfo();
+    }
+
+    _isInitialMetadataDispatched() {
+        if (this._hasAudio && this._hasVideo) {  // both audio & video
+            return this._audioInitialMetadataDispatched && this._videoInitialMetadataDispatched;
+        }
+        if (this._hasAudio && !this._hasVideo) {  // audio only
+            return this._audioInitialMetadataDispatched;
+        }
+        if (!this._hasAudio && this._hasVideo) {  // video only
+            return this._videoInitialMetadataDispatched;
+        }
+        return false;
+    }
+
+    // function parseChunks(chunk: ArrayBuffer, byteStart: number): number;
+    parseChunks(chunk, byteStart) {
+        if (!this._onError || !this._onMediaInfo || !this._onTrackMetadata || !this._onDataAvailable) {
+            throw new IllegalStateException('Flv: onError & onMediaInfo & onTrackMetadata & onDataAvailable callback must be specified');
+        }
+
+        let offset = 0;
+        let le = this._littleEndian;
+
+        if (byteStart === 0) {  // buffer with FLV header
+            if (chunk.byteLength > 13) {
+                let probeData = FLVDemuxer.probe(chunk);
+                offset = probeData.dataOffset;
+            } else {
+                return 0;
+            }
+        }
+
+        if (this._firstParse) {  // handle PreviousTagSize0 before Tag1
+            this._firstParse = false;
+            if (byteStart + offset !== this._dataOffset) {
+                Log.w(this.TAG, 'First time parsing but chunk byteStart invalid!');
+            }
+
+            let v = new DataView(chunk, offset);
+            let prevTagSize0 = v.getUint32(0, !le);
+            if (prevTagSize0 !== 0) {
+                Log.w(this.TAG, 'PrevTagSize0 !== 0 !!!');
+            }
+            offset += 4;
+        }
+
+        while (offset < chunk.byteLength) {
+            this._dispatch = true;
