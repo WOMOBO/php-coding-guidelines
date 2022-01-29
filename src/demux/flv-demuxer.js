@@ -620,3 +620,79 @@ class FLVDemuxer {
             let dts = this._timestampBase + tagTimestamp;
             let mp3Sample = {unit: data, length: data.byteLength, dts: dts, pts: dts};
             track.samples.push(mp3Sample);
+            track.length += data.length;
+        }
+    }
+
+    _parseAACAudioData(arrayBuffer, dataOffset, dataSize) {
+        if (dataSize <= 1) {
+            Log.w(this.TAG, 'Flv: Invalid AAC packet, missing AACPacketType or/and Data!');
+            return;
+        }
+
+        let result = {};
+        let array = new Uint8Array(arrayBuffer, dataOffset, dataSize);
+
+        result.packetType = array[0];
+
+        if (array[0] === 0) {
+            result.data = this._parseAACAudioSpecificConfig(arrayBuffer, dataOffset + 1, dataSize - 1);
+        } else {
+            result.data = array.subarray(1);
+        }
+
+        return result;
+    }
+
+    _parseAACAudioSpecificConfig(arrayBuffer, dataOffset, dataSize) {
+        let array = new Uint8Array(arrayBuffer, dataOffset, dataSize);
+        let config = null;
+
+        /* Audio Object Type:
+           0: Null
+           1: AAC Main
+           2: AAC LC
+           3: AAC SSR (Scalable Sample Rate)
+           4: AAC LTP (Long Term Prediction)
+           5: HE-AAC / SBR (Spectral Band Replication)
+           6: AAC Scalable
+        */
+
+        let audioObjectType = 0;
+        let originalAudioObjectType = 0;
+        let audioExtensionObjectType = null;
+        let samplingIndex = 0;
+        let extensionSamplingIndex = null;
+
+        // 5 bits
+        audioObjectType = originalAudioObjectType = array[0] >>> 3;
+        // 4 bits
+        samplingIndex = ((array[0] & 0x07) << 1) | (array[1] >>> 7);
+        if (samplingIndex < 0 || samplingIndex >= this._mpegSamplingRates.length) {
+            this._onError(DemuxErrors.FORMAT_ERROR, 'Flv: AAC invalid sampling frequency index!');
+            return;
+        }
+
+        let samplingFrequence = this._mpegSamplingRates[samplingIndex];
+
+        // 4 bits
+        let channelConfig = (array[1] & 0x78) >>> 3;
+        if (channelConfig < 0 || channelConfig >= 8) {
+            this._onError(DemuxErrors.FORMAT_ERROR, 'Flv: AAC invalid channel configuration');
+            return;
+        }
+
+        if (audioObjectType === 5) {  // HE-AAC?
+            // 4 bits
+            extensionSamplingIndex = ((array[1] & 0x07) << 1) | (array[2] >>> 7);
+            // 5 bits
+            audioExtensionObjectType = (array[2] & 0x7C) >>> 2;
+        }
+
+        // workarounds for various browsers
+        let userAgent = self.navigator.userAgent.toLowerCase();
+
+        if (userAgent.indexOf('firefox') !== -1) {
+            // firefox: use SBR (HE-AAC) if freq less than 24kHz
+            if (samplingIndex >= 6) {
+                audioObjectType = 5;
