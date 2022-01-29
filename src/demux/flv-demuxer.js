@@ -537,3 +537,86 @@ class FLVDemuxer {
                 meta.audioSampleRate = misc.samplingRate;
                 meta.channelCount = misc.channelCount;
                 meta.codec = misc.codec;
+                meta.originalCodec = misc.originalCodec;
+                meta.config = misc.config;
+                // The decode result of an aac sample is 1024 PCM samples
+                meta.refSampleDuration = 1024 / meta.audioSampleRate * meta.timescale;
+                Log.v(this.TAG, 'Parsed AudioSpecificConfig');
+
+                if (this._isInitialMetadataDispatched()) {
+                    // Non-initial metadata, force dispatch (or flush) parsed frames to remuxer
+                    if (this._dispatch && (this._audioTrack.length || this._videoTrack.length)) {
+                        this._onDataAvailable(this._audioTrack, this._videoTrack);
+                    }
+                } else {
+                    this._audioInitialMetadataDispatched = true;
+                }
+                // then notify new metadata
+                this._dispatch = false;
+                this._onTrackMetadata('audio', meta);
+
+                let mi = this._mediaInfo;
+                mi.audioCodec = meta.originalCodec;
+                mi.audioSampleRate = meta.audioSampleRate;
+                mi.audioChannelCount = meta.channelCount;
+                if (mi.hasVideo) {
+                    if (mi.videoCodec != null) {
+                        mi.mimeType = 'video/x-flv; codecs="' + mi.videoCodec + ',' + mi.audioCodec + '"';
+                    }
+                } else {
+                    mi.mimeType = 'video/x-flv; codecs="' + mi.audioCodec + '"';
+                }
+                if (mi.isComplete()) {
+                    this._onMediaInfo(mi);
+                }
+            } else if (aacData.packetType === 1) {  // AAC raw frame data
+                let dts = this._timestampBase + tagTimestamp;
+                let aacSample = {unit: aacData.data, length: aacData.data.byteLength, dts: dts, pts: dts};
+                track.samples.push(aacSample);
+                track.length += aacData.data.length;
+            } else {
+                Log.e(this.TAG, `Flv: Unsupported AAC data type ${aacData.packetType}`);
+            }
+        } else if (soundFormat === 2) {  // MP3
+            if (!meta.codec) {
+                // We need metadata for mp3 audio track, extract info from frame header
+                let misc = this._parseMP3AudioData(arrayBuffer, dataOffset + 1, dataSize - 1, true);
+                if (misc == undefined) {
+                    return;
+                }
+                meta.audioSampleRate = misc.samplingRate;
+                meta.channelCount = misc.channelCount;
+                meta.codec = misc.codec;
+                meta.originalCodec = misc.originalCodec;
+                // The decode result of an mp3 sample is 1152 PCM samples
+                meta.refSampleDuration = 1152 / meta.audioSampleRate * meta.timescale;
+                Log.v(this.TAG, 'Parsed MPEG Audio Frame Header');
+
+                this._audioInitialMetadataDispatched = true;
+                this._onTrackMetadata('audio', meta);
+
+                let mi = this._mediaInfo;
+                mi.audioCodec = meta.codec;
+                mi.audioSampleRate = meta.audioSampleRate;
+                mi.audioChannelCount = meta.channelCount;
+                mi.audioDataRate = misc.bitRate;
+                if (mi.hasVideo) {
+                    if (mi.videoCodec != null) {
+                        mi.mimeType = 'video/x-flv; codecs="' + mi.videoCodec + ',' + mi.audioCodec + '"';
+                    }
+                } else {
+                    mi.mimeType = 'video/x-flv; codecs="' + mi.audioCodec + '"';
+                }
+                if (mi.isComplete()) {
+                    this._onMediaInfo(mi);
+                }
+            }
+
+            // This packet is always a valid audio packet, extract it
+            let data = this._parseMP3AudioData(arrayBuffer, dataOffset + 1, dataSize - 1, false);
+            if (data == undefined) {
+                return;
+            }
+            let dts = this._timestampBase + tagTimestamp;
+            let mp3Sample = {unit: data, length: data.byteLength, dts: dts, pts: dts};
+            track.samples.push(mp3Sample);
