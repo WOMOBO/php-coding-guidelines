@@ -460,3 +460,80 @@ class FLVDemuxer {
             let time = this._timestampBase + Math.floor(keyframes.times[i] * 1000);
             times.push(time);
             filepositions.push(keyframes.filepositions[i]);
+        }
+
+        return {
+            times: times,
+            filepositions: filepositions
+        };
+    }
+
+    _parseAudioData(arrayBuffer, dataOffset, dataSize, tagTimestamp) {
+        if (dataSize <= 1) {
+            Log.w(this.TAG, 'Flv: Invalid audio packet, missing SoundData payload!');
+            return;
+        }
+
+        if (this._hasAudioFlagOverrided === true && this._hasAudio === false) {
+            // If hasAudio: false indicated explicitly in MediaDataSource,
+            // Ignore all the audio packets
+            return;
+        }
+
+        let le = this._littleEndian;
+        let v = new DataView(arrayBuffer, dataOffset, dataSize);
+
+        let soundSpec = v.getUint8(0);
+
+        let soundFormat = soundSpec >>> 4;
+        if (soundFormat !== 2 && soundFormat !== 10) {  // MP3 or AAC
+            this._onError(DemuxErrors.CODEC_UNSUPPORTED, 'Flv: Unsupported audio codec idx: ' + soundFormat);
+            return;
+        }
+
+        let soundRate = 0;
+        let soundRateIndex = (soundSpec & 12) >>> 2;
+        if (soundRateIndex >= 0 && soundRateIndex <= 4) {
+            soundRate = this._flvSoundRateTable[soundRateIndex];
+        } else {
+            this._onError(DemuxErrors.FORMAT_ERROR, 'Flv: Invalid audio sample rate idx: ' + soundRateIndex);
+            return;
+        }
+
+        let soundSize = (soundSpec & 2) >>> 1;  // unused
+        let soundType = (soundSpec & 1);
+
+
+        let meta = this._audioMetadata;
+        let track = this._audioTrack;
+
+        if (!meta) {
+            if (this._hasAudio === false && this._hasAudioFlagOverrided === false) {
+                this._hasAudio = true;
+                this._mediaInfo.hasAudio = true;
+            }
+
+            // initial metadata
+            meta = this._audioMetadata = {};
+            meta.type = 'audio';
+            meta.id = track.id;
+            meta.timescale = this._timescale;
+            meta.duration = this._duration;
+            meta.audioSampleRate = soundRate;
+            meta.channelCount = (soundType === 0 ? 1 : 2);
+        }
+
+        if (soundFormat === 10) {  // AAC
+            let aacData = this._parseAACAudioData(arrayBuffer, dataOffset + 1, dataSize - 1);
+            if (aacData == undefined) {
+                return;
+            }
+
+            if (aacData.packetType === 0) {  // AAC sequence header (AudioSpecificConfig)
+                if (meta.config) {
+                    Log.w(this.TAG, 'Found another AudioSpecificConfig!');
+                }
+                let misc = aacData.data;
+                meta.audioSampleRate = misc.samplingRate;
+                meta.channelCount = misc.channelCount;
+                meta.codec = misc.codec;
