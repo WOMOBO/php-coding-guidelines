@@ -776,3 +776,87 @@ class FLVDemuxer {
 
             switch (ver) {
                 case 0:  // MPEG 2.5
+                    sample_rate = this._mpegAudioV25SampleRateTable[sampling_freq_index];
+                    break;
+                case 2:  // MPEG 2
+                    sample_rate = this._mpegAudioV20SampleRateTable[sampling_freq_index];
+                    break;
+                case 3:  // MPEG 1
+                    sample_rate = this._mpegAudioV10SampleRateTable[sampling_freq_index];
+                    break;
+            }
+
+            switch (layer) {
+                case 1:  // Layer 3
+                    object_type = 34;
+                    if (bitrate_index < this._mpegAudioL3BitRateTable.length) {
+                        bit_rate = this._mpegAudioL3BitRateTable[bitrate_index];
+                    }
+                    break;
+                case 2:  // Layer 2
+                    object_type = 33;
+                    if (bitrate_index < this._mpegAudioL2BitRateTable.length) {
+                        bit_rate = this._mpegAudioL2BitRateTable[bitrate_index];
+                    }
+                    break;
+                case 3:  // Layer 1
+                    object_type = 32;
+                    if (bitrate_index < this._mpegAudioL1BitRateTable.length) {
+                        bit_rate = this._mpegAudioL1BitRateTable[bitrate_index];
+                    }
+                    break;
+            }
+
+            result = {
+                bitRate: bit_rate,
+                samplingRate: sample_rate,
+                channelCount: channel_count,
+                codec: codec,
+                originalCodec: codec
+            };
+        } else {
+            result = array;
+        }
+
+        return result;
+    }
+
+    _parseVideoData(arrayBuffer, dataOffset, dataSize, tagTimestamp, tagPosition) {
+        if (dataSize <= 1) {
+            Log.w(this.TAG, 'Flv: Invalid video packet, missing VideoData payload!');
+            return;
+        }
+
+        if (this._hasVideoFlagOverrided === true && this._hasVideo === false) {
+            // If hasVideo: false indicated explicitly in MediaDataSource,
+            // Ignore all the video packets
+            return;
+        }
+
+        let spec = (new Uint8Array(arrayBuffer, dataOffset, dataSize))[0];
+
+        let frameType = (spec & 240) >>> 4;
+        let codecId = spec & 15;
+
+        if (codecId !== 7) {
+            this._onError(DemuxErrors.CODEC_UNSUPPORTED, `Flv: Unsupported codec in video frame: ${codecId}`);
+            return;
+        }
+
+        this._parseAVCVideoPacket(arrayBuffer, dataOffset + 1, dataSize - 1, tagTimestamp, tagPosition, frameType);
+    }
+
+    _parseAVCVideoPacket(arrayBuffer, dataOffset, dataSize, tagTimestamp, tagPosition, frameType) {
+        if (dataSize < 4) {
+            Log.w(this.TAG, 'Flv: Invalid AVC packet, missing AVCPacketType or/and CompositionTime');
+            return;
+        }
+
+        let le = this._littleEndian;
+        let v = new DataView(arrayBuffer, dataOffset, dataSize);
+
+        let packetType = v.getUint8(0);
+        let cts_unsigned = v.getUint32(0, !le) & 0x00FFFFFF;
+        let cts = (cts_unsigned << 8) >> 8;  // convert to 24-bit signed int
+
+        if (packetType === 0) {  // AVCDecoderConfigurationRecord
