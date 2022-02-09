@@ -696,3 +696,83 @@ class FLVDemuxer {
             // firefox: use SBR (HE-AAC) if freq less than 24kHz
             if (samplingIndex >= 6) {
                 audioObjectType = 5;
+                config = new Array(4);
+                extensionSamplingIndex = samplingIndex - 3;
+            } else {  // use LC-AAC
+                audioObjectType = 2;
+                config = new Array(2);
+                extensionSamplingIndex = samplingIndex;
+            }
+        } else if (userAgent.indexOf('android') !== -1) {
+            // android: always use LC-AAC
+            audioObjectType = 2;
+            config = new Array(2);
+            extensionSamplingIndex = samplingIndex;
+        } else {
+            // for other browsers, e.g. chrome...
+            // Always use HE-AAC to make it easier to switch aac codec profile
+            audioObjectType = 5;
+            extensionSamplingIndex = samplingIndex;
+            config = new Array(4);
+
+            if (samplingIndex >= 6) {
+                extensionSamplingIndex = samplingIndex - 3;
+            } else if (channelConfig === 1) {  // Mono channel
+                audioObjectType = 2;
+                config = new Array(2);
+                extensionSamplingIndex = samplingIndex;
+            }
+        }
+
+        config[0]  = audioObjectType << 3;
+        config[0] |= (samplingIndex & 0x0F) >>> 1;
+        config[1]  = (samplingIndex & 0x0F) << 7;
+        config[1] |= (channelConfig & 0x0F) << 3;
+        if (audioObjectType === 5) {
+            config[1] |= ((extensionSamplingIndex & 0x0F) >>> 1);
+            config[2]  = (extensionSamplingIndex & 0x01) << 7;
+            // extended audio object type: force to 2 (LC-AAC)
+            config[2] |= (2 << 2);
+            config[3]  = 0;
+        }
+
+        return {
+            config: config,
+            samplingRate: samplingFrequence,
+            channelCount: channelConfig,
+            codec: 'mp4a.40.' + audioObjectType,
+            originalCodec: 'mp4a.40.' + originalAudioObjectType
+        };
+    }
+
+    _parseMP3AudioData(arrayBuffer, dataOffset, dataSize, requestHeader) {
+        if (dataSize < 4) {
+            Log.w(this.TAG, 'Flv: Invalid MP3 packet, header missing!');
+            return;
+        }
+
+        let le = this._littleEndian;
+        let array = new Uint8Array(arrayBuffer, dataOffset, dataSize);
+        let result = null;
+
+        if (requestHeader) {
+            if (array[0] !== 0xFF) {
+                return;
+            }
+            let ver = (array[1] >>> 3) & 0x03;
+            let layer = (array[1] & 0x06) >> 1;
+
+            let bitrate_index = (array[2] & 0xF0) >>> 4;
+            let sampling_freq_index = (array[2] & 0x0C) >>> 2;
+
+            let channel_mode = (array[3] >>> 6) & 0x03;
+            let channel_count = channel_mode !== 3 ? 2 : 1;
+
+            let sample_rate = 0;
+            let bit_rate = 0;
+            let object_type = 34;  // Layer-3, listed in MPEG-4 Audio Object Types
+
+            let codec = 'mp3';
+
+            switch (ver) {
+                case 0:  // MPEG 2.5
