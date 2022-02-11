@@ -860,3 +860,185 @@ class FLVDemuxer {
         let cts = (cts_unsigned << 8) >> 8;  // convert to 24-bit signed int
 
         if (packetType === 0) {  // AVCDecoderConfigurationRecord
+            this._parseAVCDecoderConfigurationRecord(arrayBuffer, dataOffset + 4, dataSize - 4);
+        } else if (packetType === 1) {  // One or more Nalus
+            this._parseAVCVideoData(arrayBuffer, dataOffset + 4, dataSize - 4, tagTimestamp, tagPosition, frameType, cts);
+        } else if (packetType === 2) {
+            // empty, AVC end of sequence
+        } else {
+            this._onError(DemuxErrors.FORMAT_ERROR, `Flv: Invalid video packet type ${packetType}`);
+            return;
+        }
+    }
+
+    _parseAVCDecoderConfigurationRecord(arrayBuffer, dataOffset, dataSize) {
+        if (dataSize < 7) {
+            Log.w(this.TAG, 'Flv: Invalid AVCDecoderConfigurationRecord, lack of data!');
+            return;
+        }
+
+        let meta = this._videoMetadata;
+        let track = this._videoTrack;
+        let le = this._littleEndian;
+        let v = new DataView(arrayBuffer, dataOffset, dataSize);
+
+        if (!meta) {
+            if (this._hasVideo === false && this._hasVideoFlagOverrided === false) {
+                this._hasVideo = true;
+                this._mediaInfo.hasVideo = true;
+            }
+
+            meta = this._videoMetadata = {};
+            meta.type = 'video';
+            meta.id = track.id;
+            meta.timescale = this._timescale;
+            meta.duration = this._duration;
+        } else {
+            if (typeof meta.avcc !== 'undefined') {
+                Log.w(this.TAG, 'Found another AVCDecoderConfigurationRecord!');
+            }
+        }
+
+        let version = v.getUint8(0);  // configurationVersion
+        let avcProfile = v.getUint8(1);  // avcProfileIndication
+        let profileCompatibility = v.getUint8(2);  // profile_compatibility
+        let avcLevel = v.getUint8(3);  // AVCLevelIndication
+
+        if (version !== 1 || avcProfile === 0) {
+            this._onError(DemuxErrors.FORMAT_ERROR, 'Flv: Invalid AVCDecoderConfigurationRecord');
+            return;
+        }
+
+        this._naluLengthSize = (v.getUint8(4) & 3) + 1;  // lengthSizeMinusOne
+        if (this._naluLengthSize !== 3 && this._naluLengthSize !== 4) {  // holy shit!!!
+            this._onError(DemuxErrors.FORMAT_ERROR, `Flv: Strange NaluLengthSizeMinusOne: ${this._naluLengthSize - 1}`);
+            return;
+        }
+
+        let spsCount = v.getUint8(5) & 31;  // numOfSequenceParameterSets
+        if (spsCount === 0) {
+            this._onError(DemuxErrors.FORMAT_ERROR, 'Flv: Invalid AVCDecoderConfigurationRecord: No SPS');
+            return;
+        } else if (spsCount > 1) {
+            Log.w(this.TAG, `Flv: Strange AVCDecoderConfigurationRecord: SPS Count = ${spsCount}`);
+        }
+
+        let offset = 6;
+
+        for (let i = 0; i < spsCount; i++) {
+            let len = v.getUint16(offset, !le);  // sequenceParameterSetLength
+            offset += 2;
+
+            if (len === 0) {
+                continue;
+            }
+
+            // Notice: Nalu without startcode header (00 00 00 01)
+            let sps = new Uint8Array(arrayBuffer, dataOffset + offset, len);
+            offset += len;
+
+            let config = SPSParser.parseSPS(sps);
+            if (i !== 0) {
+                // ignore other sps's config
+                continue;
+            }
+
+            meta.codecWidth = config.codec_size.width;
+            meta.codecHeight = config.codec_size.height;
+            meta.presentWidth = config.present_size.width;
+            meta.presentHeight = config.present_size.height;
+
+            meta.profile = config.profile_string;
+            meta.level = config.level_string;
+            meta.bitDepth = config.bit_depth;
+            meta.chromaFormat = config.chroma_format;
+            meta.sarRatio = config.sar_ratio;
+            meta.frameRate = config.frame_rate;
+
+            if (config.frame_rate.fixed === false ||
+                config.frame_rate.fps_num === 0 ||
+                config.frame_rate.fps_den === 0) {
+                meta.frameRate = this._referenceFrameRate;
+            }
+
+            let fps_den = meta.frameRate.fps_den;
+            let fps_num = meta.frameRate.fps_num;
+            meta.refSampleDuration = meta.timescale * (fps_den / fps_num);
+
+            let codecArray = sps.subarray(1, 4);
+            let codecString = 'avc1.';
+            for (let j = 0; j < 3; j++) {
+                let h = codecArray[j].toString(16);
+                if (h.length < 2) {
+                    h = '0' + h;
+                }
+                codecString += h;
+            }
+            meta.codec = codecString;
+
+            let mi = this._mediaInfo;
+            mi.width = meta.codecWidth;
+            mi.height = meta.codecHeight;
+            mi.fps = meta.frameRate.fps;
+            mi.profile = meta.profile;
+            mi.level = meta.level;
+            mi.refFrames = config.ref_frames;
+            mi.chromaFormat = config.chroma_format_string;
+            mi.sarNum = meta.sarRatio.width;
+            mi.sarDen = meta.sarRatio.height;
+            mi.videoCodec = codecString;
+
+            if (mi.hasAudio) {
+                if (mi.audioCodec != null) {
+                    mi.mimeType = 'video/x-flv; codecs="' + mi.videoCodec + ',' + mi.audioCodec + '"';
+                }
+            } else {
+                mi.mimeType = 'video/x-flv; codecs="' + mi.videoCodec + '"';
+            }
+            if (mi.isComplete()) {
+                this._onMediaInfo(mi);
+            }
+        }
+
+        let ppsCount = v.getUint8(offset);  // numOfPictureParameterSets
+        if (ppsCount === 0) {
+            this._onError(DemuxErrors.FORMAT_ERROR, 'Flv: Invalid AVCDecoderConfigurationRecord: No PPS');
+            return;
+        } else if (ppsCount > 1) {
+            Log.w(this.TAG, `Flv: Strange AVCDecoderConfigurationRecord: PPS Count = ${ppsCount}`);
+        }
+
+        offset++;
+
+        for (let i = 0; i < ppsCount; i++) {
+            let len = v.getUint16(offset, !le);  // pictureParameterSetLength
+            offset += 2;
+
+            if (len === 0) {
+                continue;
+            }
+
+            // pps is useless for extracting video information
+            offset += len;
+        }
+
+        meta.avcc = new Uint8Array(dataSize);
+        meta.avcc.set(new Uint8Array(arrayBuffer, dataOffset, dataSize), 0);
+        Log.v(this.TAG, 'Parsed AVCDecoderConfigurationRecord');
+
+        if (this._isInitialMetadataDispatched()) {
+            // flush parsed frames
+            if (this._dispatch && (this._audioTrack.length || this._videoTrack.length)) {
+                this._onDataAvailable(this._audioTrack, this._videoTrack);
+            }
+        } else {
+            this._videoInitialMetadataDispatched = true;
+        }
+        // notify new metadata
+        this._dispatch = false;
+        this._onTrackMetadata('video', meta);
+    }
+
+    _parseAVCVideoData(arrayBuffer, dataOffset, dataSize, tagTimestamp, tagPosition, frameType, cts) {
+        let le = this._littleEndian;
+        let v = new DataView(arrayBuffer, dataOffset, dataSize);
