@@ -89,3 +89,88 @@ class SPSParser {
         }
         gb.readUEG();  // log2_max_frame_num_minus4
         let pic_order_cnt_type = gb.readUEG();
+        if (pic_order_cnt_type === 0) {
+            gb.readUEG();  // log2_max_pic_order_cnt_lsb_minus_4
+        } else if (pic_order_cnt_type === 1) {
+            gb.readBits(1);  // delta_pic_order_always_zero_flag
+            gb.readSEG();  // offset_for_non_ref_pic
+            gb.readSEG();  // offset_for_top_to_bottom_field
+            let num_ref_frames_in_pic_order_cnt_cycle = gb.readUEG();
+            for (let i = 0; i < num_ref_frames_in_pic_order_cnt_cycle; i++) {
+                gb.readSEG();  // offset_for_ref_frame
+            }
+        }
+        let ref_frames = gb.readUEG();  // max_num_ref_frames
+        gb.readBits(1);  // gaps_in_frame_num_value_allowed_flag
+
+        let pic_width_in_mbs_minus1 = gb.readUEG();
+        let pic_height_in_map_units_minus1 = gb.readUEG();
+
+        let frame_mbs_only_flag = gb.readBits(1);
+        if (frame_mbs_only_flag === 0) {
+            gb.readBits(1);  // mb_adaptive_frame_field_flag
+        }
+        gb.readBits(1);  // direct_8x8_inference_flag
+
+        let frame_crop_left_offset = 0;
+        let frame_crop_right_offset = 0;
+        let frame_crop_top_offset = 0;
+        let frame_crop_bottom_offset = 0;
+
+        let frame_cropping_flag = gb.readBool();
+        if (frame_cropping_flag) {
+            frame_crop_left_offset = gb.readUEG();
+            frame_crop_right_offset = gb.readUEG();
+            frame_crop_top_offset = gb.readUEG();
+            frame_crop_bottom_offset = gb.readUEG();
+        }
+
+        let sar_width = 1, sar_height = 1;
+        let fps = 0, fps_fixed = true, fps_num = 0, fps_den = 0;
+
+        let vui_parameters_present_flag = gb.readBool();
+        if (vui_parameters_present_flag) {
+            if (gb.readBool()) {  // aspect_ratio_info_present_flag
+                let aspect_ratio_idc = gb.readByte();
+                let sar_w_table = [1, 12, 10, 16, 40, 24, 20, 32, 80, 18, 15, 64, 160, 4, 3, 2];
+                let sar_h_table = [1, 11, 11, 11, 33, 11, 11, 11, 33, 11, 11, 33,  99, 3, 2, 1];
+
+                if (aspect_ratio_idc > 0 && aspect_ratio_idc < 16) {
+                    sar_width = sar_w_table[aspect_ratio_idc - 1];
+                    sar_height = sar_h_table[aspect_ratio_idc - 1];
+                } else if (aspect_ratio_idc === 255) {
+                    sar_width = gb.readByte() << 8 | gb.readByte();
+                    sar_height = gb.readByte() << 8 | gb.readByte();
+                }
+            }
+
+            if (gb.readBool()) {  // overscan_info_present_flag
+                gb.readBool();  // overscan_appropriate_flag
+            }
+            if (gb.readBool()) {  // video_signal_type_present_flag
+                gb.readBits(4);  // video_format & video_full_range_flag
+                if (gb.readBool()) {  // colour_description_present_flag
+                    gb.readBits(24);  // colour_primaries & transfer_characteristics & matrix_coefficients
+                }
+            }
+            if (gb.readBool()) {  // chroma_loc_info_present_flag
+                gb.readUEG();  // chroma_sample_loc_type_top_field
+                gb.readUEG();  // chroma_sample_loc_type_bottom_field
+            }
+            if (gb.readBool()) {  // timing_info_present_flag
+                let num_units_in_tick = gb.readBits(32);
+                let time_scale = gb.readBits(32);
+                fps_fixed = gb.readBool();  // fixed_frame_rate_flag
+
+                fps_num = time_scale;
+                fps_den = num_units_in_tick * 2;
+                fps = fps_num / fps_den;
+            }
+        }
+
+        let sarScale = 1;
+        if (sar_width !== 1 || sar_height !== 1) {
+            sarScale = sar_width / sar_height;
+        }
+
+        let crop_unit_x = 0, crop_unit_y = 0;
