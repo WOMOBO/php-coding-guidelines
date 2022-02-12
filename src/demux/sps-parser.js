@@ -174,3 +174,100 @@ class SPSParser {
         }
 
         let crop_unit_x = 0, crop_unit_y = 0;
+        if (chroma_format_idc === 0) {
+            crop_unit_x = 1;
+            crop_unit_y = 2 - frame_mbs_only_flag;
+        } else {
+            let sub_wc = (chroma_format_idc === 3) ? 1 : 2;
+            let sub_hc = (chroma_format_idc === 1) ? 2 : 1;
+            crop_unit_x = sub_wc;
+            crop_unit_y = sub_hc * (2 - frame_mbs_only_flag);
+        }
+
+        let codec_width = (pic_width_in_mbs_minus1 + 1) * 16;
+        let codec_height = (2 - frame_mbs_only_flag) * ((pic_height_in_map_units_minus1 + 1) * 16);
+
+        codec_width -= (frame_crop_left_offset + frame_crop_right_offset) * crop_unit_x;
+        codec_height -= (frame_crop_top_offset + frame_crop_bottom_offset) * crop_unit_y;
+
+        let present_width = Math.ceil(codec_width * sarScale);
+
+        gb.destroy();
+        gb = null;
+
+        return {
+            profile_string: profile_string,  // baseline, high, high10, ...
+            level_string: level_string,  // 3, 3.1, 4, 4.1, 5, 5.1, ...
+            bit_depth: bit_depth,  // 8bit, 10bit, ...
+            ref_frames: ref_frames,
+            chroma_format: chroma_format,  // 4:2:0, 4:2:2, ...
+            chroma_format_string: SPSParser.getChromaFormatString(chroma_format),
+
+            frame_rate: {
+                fixed: fps_fixed,
+                fps: fps,
+                fps_den: fps_den,
+                fps_num: fps_num
+            },
+
+            sar_ratio: {
+                width: sar_width,
+                height: sar_height
+            },
+
+            codec_size: {
+                width: codec_width,
+                height: codec_height
+            },
+
+            present_size: {
+                width: present_width,
+                height: codec_height
+            }
+        };
+    }
+
+    static _skipScalingList(gb, count) {
+        let last_scale = 8, next_scale = 8;
+        let delta_scale = 0;
+        for (let i = 0; i < count; i++) {
+            if (next_scale !== 0) {
+                delta_scale = gb.readSEG();
+                next_scale = (last_scale + delta_scale + 256) % 256;
+            }
+            last_scale = (next_scale === 0) ? last_scale : next_scale;
+        }
+    }
+
+    static getProfileString(profile_idc) {
+        switch (profile_idc) {
+            case 66:
+                return 'Baseline';
+            case 77:
+                return 'Main';
+            case 88:
+                return 'Extended';
+            case 100:
+                return 'High';
+            case 110:
+                return 'High10';
+            case 122:
+                return 'High422';
+            case 244:
+                return 'High444';
+            default:
+                return 'Unknown';
+        }
+    }
+
+    static getLevelString(level_idc) {
+        return (level_idc / 10).toFixed(1);
+    }
+
+    static getChromaFormatString(chroma) {
+        switch (chroma) {
+            case 420:
+                return '4:2:0';
+            case 422:
+                return '4:2:2';
+            case 444:
