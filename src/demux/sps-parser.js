@@ -271,3 +271,12 @@ class SPSParser {
             case 422:
                 return '4:2:2';
             case 444:
+                return '4:4:4';
+            default:
+                return 'Unknown';
+        }
+    }
+
+}
+
+export default SPSParser;
