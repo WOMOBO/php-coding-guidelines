@@ -16,4 +16,5 @@
  * limitations under the License.
  */
 
-import Polyfil
+import Polyfill from './utils/polyfill.js';
+import Features from './core/features.js
