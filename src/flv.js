@@ -34,4 +34,6 @@ Polyfill.install();
 
 // factory method
 function createPlayer(mediaDataSource, optionalConfig) {
-    let mds = me
+    let mds = mediaDataSource;
+    if (mds == null || typeof mds !== 'object') {
+        throw new Invalid
