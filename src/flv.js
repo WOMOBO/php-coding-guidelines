@@ -31,3 +31,7 @@ import {InvalidArgumentException} from './utils/exception.js';
 // install polyfills
 Polyfill.install();
 
+
+// factory method
+function createPlayer(mediaDataSource, optionalConfig) {
+    let mds = me
