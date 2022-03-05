@@ -43,4 +43,6 @@ function createPlayer(mediaDataSource, optionalConfig) {
         throw new InvalidArgumentException('MediaDataSource must has type field to indicate video file type!');
     }
 
-    swi
+    switch (mds.type) {
+        case 'flv':
+            return new FlvPlayer(mds, opt
