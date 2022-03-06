@@ -54,4 +54,13 @@ function createPlayer(mediaDataSource, optionalConfig) {
 
 // feature detection
 function isSupported() {
-    return Features.supportMSEH264Playback
+    return Features.supportMSEH264Playback();
+}
+
+function getFeatureList() {
+    return Features.getFeatureList();
+}
+
+
+// interfaces
+le
