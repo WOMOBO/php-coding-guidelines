@@ -48,4 +48,10 @@ function createPlayer(mediaDataSource, optionalConfig) {
             return new FlvPlayer(mds, optionalConfig);
         default:
             return new NativePlayer(mds, optionalConfig);
-   
+    }
+}
+
+
+// feature detection
+function isSupported() {
+    return Features.supportMSEH264Playback
