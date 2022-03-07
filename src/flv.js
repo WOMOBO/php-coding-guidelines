@@ -63,4 +63,8 @@ function getFeatureList() {
 
 
 // interfaces
-le
+let flvjs = {};
+
+flvjs.createPlayer = createPlayer;
+flvjs.isSupported = isSupported;
+flvjs.
