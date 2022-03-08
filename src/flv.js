@@ -67,4 +67,7 @@ let flvjs = {};
 
 flvjs.createPlayer = createPlayer;
 flvjs.isSupported = isSupported;
-flvjs.
+flvjs.getFeatureList = getFeatureList;
+
+flvjs.BaseLoader = BaseLoader;
+flvjs.LoaderStatus = 
