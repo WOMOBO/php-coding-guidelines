@@ -70,4 +70,7 @@ flvjs.isSupported = isSupported;
 flvjs.getFeatureList = getFeatureList;
 
 flvjs.BaseLoader = BaseLoader;
-flvjs.LoaderStatus = 
+flvjs.LoaderStatus = LoaderStatus;
+flvjs.LoaderErrors = LoaderErrors;
+
+flvjs.Events = Player
