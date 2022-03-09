@@ -73,4 +73,6 @@ flvjs.BaseLoader = BaseLoader;
 flvjs.LoaderStatus = LoaderStatus;
 flvjs.LoaderErrors = LoaderErrors;
 
-flvjs.Events = Player
+flvjs.Events = PlayerEvents;
+flvjs.ErrorTypes = ErrorTypes;
+flvjs.ErrorDetails = ErrorDetails;
