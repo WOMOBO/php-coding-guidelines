@@ -76,3 +76,7 @@ flvjs.LoaderErrors = LoaderErrors;
 flvjs.Events = PlayerEvents;
 flvjs.ErrorTypes = ErrorTypes;
 flvjs.ErrorDetails = ErrorDetails;
+
+flvjs.FlvPlayer = FlvPlayer;
+flvjs.NativePlayer = NativePlayer;
+flvjs.L
