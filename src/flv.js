@@ -79,4 +79,7 @@ flvjs.ErrorDetails = ErrorDetails;
 
 flvjs.FlvPlayer = FlvPlayer;
 flvjs.NativePlayer = NativePlayer;
-flvjs.L
+flvjs.LoggingControl = LoggingControl;
+
+Object.defineProperty(flvjs, 'version', {
+    enumerable: true,
