@@ -85,4 +85,8 @@ Object.defineProperty(flvjs, 'version', {
     enumerable: true,
     get: function () {
         // replace by webpack.DefinePlugin
-        return __VE
+        return __VERSION__;
+    }
+});
+
+export default flvjs;
