@@ -82,3 +82,95 @@ class FetchStreamLoader extends BaseLoader {
                 if (configHeaders.hasOwnProperty(key)) {
                     headers.append(key, configHeaders[key]);
                 }
+            }
+        }
+
+        let params = {
+            method: 'GET',
+            headers: headers,
+            mode: 'cors',
+            cache: 'default',
+            // The default policy of Fetch API in the whatwg standard
+            // Safari incorrectly indicates 'no-referrer' as default policy, fuck it
+            referrerPolicy: 'no-referrer-when-downgrade'
+        };
+
+        // add additional headers
+        if (typeof this._config.headers === 'object') {
+            for (let key in this._config.headers) {
+                headers.append(key, this._config.headers[key]);
+            }
+        }
+
+        // cors is enabled by default
+        if (dataSource.cors === false) {
+            // no-cors means 'disregard cors policy', which can only be used in ServiceWorker
+            params.mode = 'same-origin';
+        }
+
+        // withCredentials is disabled by default
+        if (dataSource.withCredentials) {
+            params.credentials = 'include';
+        }
+
+        // referrerPolicy from config
+        if (dataSource.referrerPolicy) {
+            params.referrerPolicy = dataSource.referrerPolicy;
+        }
+
+        // add abort controller, by wmlgl 2019-5-10 12:21:27
+        if (self.AbortController) {
+            this._abortController = new self.AbortController();
+            params.signal = this._abortController.signal;     
+        }
+
+        this._status = LoaderStatus.kConnecting;
+        self.fetch(seekConfig.url, params).then((res) => {
+            if (this._requestAbort) {
+                this._status = LoaderStatus.kIdle;
+                res.body.cancel();
+                return;
+            }
+            if (res.ok && (res.status >= 200 && res.status <= 299)) {
+                if (res.url !== seekConfig.url) {
+                    if (this._onURLRedirect) {
+                        let redirectedURL = this._seekHandler.removeURLParameters(res.url);
+                        this._onURLRedirect(redirectedURL);
+                    }
+                }
+
+                let lengthHeader = res.headers.get('Content-Length');
+                if (lengthHeader != null) {
+                    this._contentLength = parseInt(lengthHeader);
+                    if (this._contentLength !== 0) {
+                        if (this._onContentLengthKnown) {
+                            this._onContentLengthKnown(this._contentLength);
+                        }
+                    }
+                }
+
+                return this._pump.call(this, res.body.getReader());
+            } else {
+                this._status = LoaderStatus.kError;
+                if (this._onError) {
+                    this._onError(LoaderErrors.HTTP_STATUS_CODE_INVALID, {code: res.status, msg: res.statusText});
+                } else {
+                    throw new RuntimeException('FetchStreamLoader: Http code invalid, ' + res.status + ' ' + res.statusText);
+                }
+            }
+        }).catch((e) => {
+            if (this._abortController && this._abortController.signal.aborted) {
+                return;
+            }
+
+            this._status = LoaderStatus.kError;
+            if (this._onError) {
+                this._onError(LoaderErrors.EXCEPTION, {code: -1, msg: e.message});
+            } else {
+                throw e;
+            }
+        });
+    }
+
+    abort() {
+        this._requestAbort = true;
