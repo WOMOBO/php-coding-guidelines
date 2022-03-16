@@ -259,3 +259,9 @@ class FetchStreamLoader extends BaseLoader {
             } else {
                 throw new RuntimeException(info.msg);
             }
+        });
+    }
+
+}
+
+export default FetchStreamLoader;
