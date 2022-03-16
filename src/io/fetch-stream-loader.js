@@ -174,3 +174,88 @@ class FetchStreamLoader extends BaseLoader {
 
     abort() {
         this._requestAbort = true;
+
+        if (this._status !== LoaderStatus.kBuffering || !Browser.chrome) {
+            // Chrome may throw Exception-like things here, avoid using if is buffering
+            if (this._abortController) {
+                try {
+                    this._abortController.abort();
+                } catch (e) {}
+            }
+        }
+    }
+
+    _pump(reader) {  // ReadableStreamReader
+        return reader.read().then((result) => {
+            if (result.done) {
+                // First check received length
+                if (this._contentLength !== null && this._receivedLength < this._contentLength) {
+                    // Report Early-EOF
+                    this._status = LoaderStatus.kError;
+                    let type = LoaderErrors.EARLY_EOF;
+                    let info = {code: -1, msg: 'Fetch stream meet Early-EOF'};
+                    if (this._onError) {
+                        this._onError(type, info);
+                    } else {
+                        throw new RuntimeException(info.msg);
+                    }
+                } else {
+                    // OK. Download complete
+                    this._status = LoaderStatus.kComplete;
+                    if (this._onComplete) {
+                        this._onComplete(this._range.from, this._range.from + this._receivedLength - 1);
+                    }
+                }
+            } else {
+                if (this._abortController && this._abortController.signal.aborted) {
+                    this._status = LoaderStatus.kComplete;
+                    return;
+                } else if (this._requestAbort === true) {
+                    this._status = LoaderStatus.kComplete;
+                    return reader.cancel();
+                }
+
+                this._status = LoaderStatus.kBuffering;
+
+                let chunk = result.value.buffer;
+                let byteStart = this._range.from + this._receivedLength;
+                this._receivedLength += chunk.byteLength;
+
+                if (this._onDataArrival) {
+                    this._onDataArrival(chunk, byteStart, this._receivedLength);
+                }
+
+                this._pump(reader);
+            }
+        }).catch((e) => {
+            if (this._abortController && this._abortController.signal.aborted) {
+                this._status = LoaderStatus.kComplete;
+                return;
+            }
+
+            if (e.code === 11 && Browser.msedge) {  // InvalidStateError on Microsoft Edge
+                // Workaround: Edge may throw InvalidStateError after ReadableStreamReader.cancel() call
+                // Ignore the unknown exception.
+                // Related issue: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11265202/
+                return;
+            }
+
+            this._status = LoaderStatus.kError;
+            let type = 0;
+            let info = null;
+
+            if ((e.code === 19 || e.message === 'network error') && // NETWORK_ERR
+                (this._contentLength === null ||
+                (this._contentLength !== null && this._receivedLength < this._contentLength))) {
+                type = LoaderErrors.EARLY_EOF;
+                info = {code: e.code, msg: 'Fetch stream meet Early-EOF'};
+            } else {
+                type = LoaderErrors.EXCEPTION;
+                info = {code: e.code, msg: e.message};
+            }
+
+            if (this._onError) {
+                this._onError(type, info);
+            } else {
+                throw new RuntimeException(info.msg);
+            }
