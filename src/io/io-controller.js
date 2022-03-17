@@ -60,3 +60,97 @@ class IOController {
         this._stashBuffer = new ArrayBuffer(this._bufferSize);
         this._stashByteStart = 0;
         this._enableStash = true;
+        if (config.enableStashBuffer === false) {
+            this._enableStash = false;
+        }
+
+        this._loader = null;
+        this._loaderClass = null;
+        this._seekHandler = null;
+
+        this._dataSource = dataSource;
+        this._isWebSocketURL = /wss?:\/\/(.+?)/.test(dataSource.url);
+        this._refTotalLength = dataSource.filesize ? dataSource.filesize : null;
+        this._totalLength = this._refTotalLength;
+        this._fullRequestFlag = false;
+        this._currentRange = null;
+        this._redirectedURL = null;
+
+        this._speedNormalized = 0;
+        this._speedSampler = new SpeedSampler();
+        this._speedNormalizeList = [64, 128, 256, 384, 512, 768, 1024, 1536, 2048, 3072, 4096];
+
+        this._isEarlyEofReconnecting = false;
+
+        this._paused = false;
+        this._resumeFrom = 0;
+
+        this._onDataArrival = null;
+        this._onSeeked = null;
+        this._onError = null;
+        this._onComplete = null;
+        this._onRedirect = null;
+        this._onRecoveredEarlyEof = null;
+
+        this._selectSeekHandler();
+        this._selectLoader();
+        this._createLoader();
+    }
+
+    destroy() {
+        if (this._loader.isWorking()) {
+            this._loader.abort();
+        }
+        this._loader.destroy();
+        this._loader = null;
+        this._loaderClass = null;
+        this._dataSource = null;
+        this._stashBuffer = null;
+        this._stashUsed = this._stashSize = this._bufferSize = this._stashByteStart = 0;
+        this._currentRange = null;
+        this._speedSampler = null;
+
+        this._isEarlyEofReconnecting = false;
+
+        this._onDataArrival = null;
+        this._onSeeked = null;
+        this._onError = null;
+        this._onComplete = null;
+        this._onRedirect = null;
+        this._onRecoveredEarlyEof = null;
+
+        this._extraData = null;
+    }
+
+    isWorking() {
+        return this._loader && this._loader.isWorking() && !this._paused;
+    }
+
+    isPaused() {
+        return this._paused;
+    }
+
+    get status() {
+        return this._loader.status;
+    }
+
+    get extraData() {
+        return this._extraData;
+    }
+
+    set extraData(data) {
+        this._extraData = data;
+    }
+
+    // prototype: function onDataArrival(chunks: ArrayBuffer, byteStart: number): number
+    get onDataArrival() {
+        return this._onDataArrival;
+    }
+
+    set onDataArrival(callback) {
+        this._onDataArrival = callback;
+    }
+
+    get onSeeked() {
+        return this._onSeeked;
+    }
