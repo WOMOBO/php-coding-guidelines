@@ -154,3 +154,101 @@ class IOController {
     get onSeeked() {
         return this._onSeeked;
     }
+
+    set onSeeked(callback) {
+        this._onSeeked = callback;
+    }
+
+    // prototype: function onError(type: number, info: {code: number, msg: string}): void
+    get onError() {
+        return this._onError;
+    }
+
+    set onError(callback) {
+        this._onError = callback;
+    }
+
+    get onComplete() {
+        return this._onComplete;
+    }
+
+    set onComplete(callback) {
+        this._onComplete = callback;
+    }
+
+    get onRedirect() {
+        return this._onRedirect;
+    }
+
+    set onRedirect(callback) {
+        this._onRedirect = callback;
+    }
+
+    get onRecoveredEarlyEof() {
+        return this._onRecoveredEarlyEof;
+    }
+
+    set onRecoveredEarlyEof(callback) {
+        this._onRecoveredEarlyEof = callback;
+    }
+
+    get currentURL() {
+        return this._dataSource.url;
+    }
+
+    get hasRedirect() {
+        return (this._redirectedURL != null || this._dataSource.redirectedURL != undefined);
+    }
+
+    get currentRedirectedURL() {
+        return this._redirectedURL || this._dataSource.redirectedURL;
+    }
+
+    // in KB/s
+    get currentSpeed() {
+        if (this._loaderClass === RangeLoader) {
+            // SpeedSampler is inaccuracy if loader is RangeLoader
+            return this._loader.currentSpeed;
+        }
+        return this._speedSampler.lastSecondKBps;
+    }
+
+    get loaderType() {
+        return this._loader.type;
+    }
+
+    _selectSeekHandler() {
+        let config = this._config;
+
+        if (config.seekType === 'range') {
+            this._seekHandler = new RangeSeekHandler(this._config.rangeLoadZeroStart);
+        } else if (config.seekType === 'param') {
+            let paramStart = config.seekParamStart || 'bstart';
+            let paramEnd = config.seekParamEnd || 'bend';
+
+            this._seekHandler = new ParamSeekHandler(paramStart, paramEnd);
+        } else if (config.seekType === 'custom') {
+            if (typeof config.customSeekHandler !== 'function') {
+                throw new InvalidArgumentException('Custom seekType specified in config but invalid customSeekHandler!');
+            }
+            this._seekHandler = new config.customSeekHandler();
+        } else {
+            throw new InvalidArgumentException(`Invalid seekType in config: ${config.seekType}`);
+        }
+    }
+
+    _selectLoader() {
+        if (this._config.customLoader != null) {
+            this._loaderClass = this._config.customLoader;
+        } else if (this._isWebSocketURL) {
+            this._loaderClass = WebSocketLoader;
+        } else if (FetchStreamLoader.isSupported()) {
+            this._loaderClass = FetchStreamLoader;
+        } else if (MozChunkedLoader.isSupported()) {
+            this._loaderClass = MozChunkedLoader;
+        } else if (RangeLoader.isSupported()) {
+            this._loaderClass = RangeLoader;
+        } else {
+            throw new RuntimeException('Your browser doesn\'t support xhr with arraybuffer responseType!');
+        }
+    }
