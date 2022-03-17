@@ -252,3 +252,95 @@ class IOController {
             throw new RuntimeException('Your browser doesn\'t support xhr with arraybuffer responseType!');
         }
     }
+
+    _createLoader() {
+        this._loader = new this._loaderClass(this._seekHandler, this._config);
+        if (this._loader.needStashBuffer === false) {
+            this._enableStash = false;
+        }
+        this._loader.onContentLengthKnown = this._onContentLengthKnown.bind(this);
+        this._loader.onURLRedirect = this._onURLRedirect.bind(this);
+        this._loader.onDataArrival = this._onLoaderChunkArrival.bind(this);
+        this._loader.onComplete = this._onLoaderComplete.bind(this);
+        this._loader.onError = this._onLoaderError.bind(this);
+    }
+
+    open(optionalFrom) {
+        this._currentRange = {from: 0, to: -1};
+        if (optionalFrom) {
+            this._currentRange.from = optionalFrom;
+        }
+
+        this._speedSampler.reset();
+        if (!optionalFrom) {
+            this._fullRequestFlag = true;
+        }
+
+        this._loader.open(this._dataSource, Object.assign({}, this._currentRange));
+    }
+
+    abort() {
+        this._loader.abort();
+
+        if (this._paused) {
+            this._paused = false;
+            this._resumeFrom = 0;
+        }
+    }
+
+    pause() {
+        if (this.isWorking()) {
+            this._loader.abort();
+
+            if (this._stashUsed !== 0) {
+                this._resumeFrom = this._stashByteStart;
+                this._currentRange.to = this._stashByteStart - 1;
+            } else {
+                this._resumeFrom = this._currentRange.to + 1;
+            }
+            this._stashUsed = 0;
+            this._stashByteStart = 0;
+            this._paused = true;
+        }
+    }
+
+    resume() {
+        if (this._paused) {
+            this._paused = false;
+            let bytes = this._resumeFrom;
+            this._resumeFrom = 0;
+            this._internalSeek(bytes, true);
+        }
+    }
+
+    seek(bytes) {
+        this._paused = false;
+        this._stashUsed = 0;
+        this._stashByteStart = 0;
+        this._internalSeek(bytes, true);
+    }
+
+    /**
+     * When seeking request is from media seeking, unconsumed stash data should be dropped
+     * However, stash data shouldn't be dropped if seeking requested from http reconnection
+     *
+     * @dropUnconsumed: Ignore and discard all unconsumed data in stash buffer
+     */
+    _internalSeek(bytes, dropUnconsumed) {
+        if (this._loader.isWorking()) {
+            this._loader.abort();
+        }
+
+        // dispatch & flush stash buffer before seek
+        this._flushStashBuffer(dropUnconsumed);
+
+        this._loader.destroy();
+        this._loader = null;
+
+        let requestRange = {from: bytes, to: -1};
+        this._currentRange = {from: requestRange.from, to: -1};
+
+        this._speedSampler.reset();
+        this._stashSize = this._stashInitialSize;
+        this._createLoader();
+        this._loader.open(this._dataSource, requestRange);
