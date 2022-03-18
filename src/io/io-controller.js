@@ -344,3 +344,83 @@ class IOController {
         this._stashSize = this._stashInitialSize;
         this._createLoader();
         this._loader.open(this._dataSource, requestRange);
+
+        if (this._onSeeked) {
+            this._onSeeked();
+        }
+    }
+
+    updateUrl(url) {
+        if (!url || typeof url !== 'string' || url.length === 0) {
+            throw new InvalidArgumentException('Url must be a non-empty string!');
+        }
+
+        this._dataSource.url = url;
+
+        // TODO: replace with new url
+    }
+
+    _expandBuffer(expectedBytes) {
+        let bufferNewSize = this._stashSize;
+        while (bufferNewSize + 1024 * 1024 * 1 < expectedBytes) {
+            bufferNewSize *= 2;
+        }
+
+        bufferNewSize += 1024 * 1024 * 1;  // bufferSize = stashSize + 1MB
+        if (bufferNewSize === this._bufferSize) {
+            return;
+        }
+
+        let newBuffer = new ArrayBuffer(bufferNewSize);
+
+        if (this._stashUsed > 0) {  // copy existing data into new buffer
+            let stashOldArray = new Uint8Array(this._stashBuffer, 0, this._stashUsed);
+            let stashNewArray = new Uint8Array(newBuffer, 0, bufferNewSize);
+            stashNewArray.set(stashOldArray, 0);
+        }
+
+        this._stashBuffer = newBuffer;
+        this._bufferSize = bufferNewSize;
+    }
+
+    _normalizeSpeed(input) {
+        let list = this._speedNormalizeList;
+        let last = list.length - 1;
+        let mid = 0;
+        let lbound = 0;
+        let ubound = last;
+
+        if (input < list[0]) {
+            return list[0];
+        }
+
+        // binary search
+        while (lbound <= ubound) {
+            mid = lbound + Math.floor((ubound - lbound) / 2);
+            if (mid === last || (input >= list[mid] && input < list[mid + 1])) {
+                return list[mid];
+            } else if (list[mid] < input) {
+                lbound = mid + 1;
+            } else {
+                ubound = mid - 1;
+            }
+        }
+    }
+
+    _adjustStashSize(normalized) {
+        let stashSizeKB = 0;
+
+        if (this._config.isLive) {
+            // live stream: always use single normalized speed for size of stashSizeKB
+            stashSizeKB = normalized;
+        } else {
+            if (normalized < 512) {
+                stashSizeKB = normalized;
+            } else if (normalized >= 512 && normalized <= 1024) {
+                stashSizeKB = Math.floor(normalized * 1.5);
+            } else {
+                stashSizeKB = normalized * 2;
+            }
+        }
+
+        if (stashSizeKB > 8192) {
