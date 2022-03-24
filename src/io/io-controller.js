@@ -424,3 +424,72 @@ class IOController {
         }
 
         if (stashSizeKB > 8192) {
+            stashSizeKB = 8192;
+        }
+
+        let bufferSize = stashSizeKB * 1024 + 1024 * 1024 * 1;  // stashSize + 1MB
+        if (this._bufferSize < bufferSize) {
+            this._expandBuffer(bufferSize);
+        }
+        this._stashSize = stashSizeKB * 1024;
+    }
+
+    _dispatchChunks(chunks, byteStart) {
+        this._currentRange.to = byteStart + chunks.byteLength - 1;
+        return this._onDataArrival(chunks, byteStart);
+    }
+
+    _onURLRedirect(redirectedURL) {
+        this._redirectedURL = redirectedURL;
+        if (this._onRedirect) {
+            this._onRedirect(redirectedURL);
+        }
+    }
+
+    _onContentLengthKnown(contentLength) {
+        if (contentLength && this._fullRequestFlag) {
+            this._totalLength = contentLength;
+            this._fullRequestFlag = false;
+        }
+    }
+
+    _onLoaderChunkArrival(chunk, byteStart, receivedLength) {
+        if (!this._onDataArrival) {
+            throw new IllegalStateException('IOController: No existing consumer (onDataArrival) callback!');
+        }
+        if (this._paused) {
+            return;
+        }
+        if (this._isEarlyEofReconnecting) {
+            // Auto-reconnect for EarlyEof succeed, notify to upper-layer by callback
+            this._isEarlyEofReconnecting = false;
+            if (this._onRecoveredEarlyEof) {
+                this._onRecoveredEarlyEof();
+            }
+        }
+
+        this._speedSampler.addBytes(chunk.byteLength);
+
+        // adjust stash buffer size according to network speed dynamically
+        let KBps = this._speedSampler.lastSecondKBps;
+        if (KBps !== 0) {
+            let normalized = this._normalizeSpeed(KBps);
+            if (this._speedNormalized !== normalized) {
+                this._speedNormalized = normalized;
+                this._adjustStashSize(normalized);
+            }
+        }
+
+        if (!this._enableStash) {  // disable stash
+            if (this._stashUsed === 0) {
+                // dispatch chunk directly to consumer;
+                // check ret value (consumed bytes) and stash unconsumed to stashBuffer
+                let consumed = this._dispatchChunks(chunk, byteStart);
+                if (consumed < chunk.byteLength) {  // unconsumed data remain.
+                    let remain = chunk.byteLength - consumed;
+                    if (remain > this._bufferSize) {
+                        this._expandBuffer(remain);
+                    }
+                    let stashArray = new Uint8Array(this._stashBuffer, 0, this._bufferSize);
+                    stashArray.set(new Uint8Array(chunk, consumed), 0);
+                    this._stashUsed += remain;
