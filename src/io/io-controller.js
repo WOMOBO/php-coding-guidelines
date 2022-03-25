@@ -576,3 +576,73 @@ class IOController {
                     if (consumed > 0) {
                         let stashArray = new Uint8Array(this._stashBuffer, 0, this._bufferSize);
                         let remainArray = new Uint8Array(buffer, consumed);
+                        stashArray.set(remainArray, 0);
+                        this._stashUsed = remainArray.byteLength;
+                        this._stashByteStart += consumed;
+                    }
+                    return 0;
+                }
+            }
+            this._stashUsed = 0;
+            this._stashByteStart = 0;
+            return remain;
+        }
+        return 0;
+    }
+
+    _onLoaderComplete(from, to) {
+        // Force-flush stash buffer, and drop unconsumed data
+        this._flushStashBuffer(true);
+
+        if (this._onComplete) {
+            this._onComplete(this._extraData);
+        }
+    }
+
+    _onLoaderError(type, data) {
+        Log.e(this.TAG, `Loader error, code = ${data.code}, msg = ${data.msg}`);
+
+        this._flushStashBuffer(false);
+
+        if (this._isEarlyEofReconnecting) {
+            // Auto-reconnect for EarlyEof failed, throw UnrecoverableEarlyEof error to upper-layer
+            this._isEarlyEofReconnecting = false;
+            type = LoaderErrors.UNRECOVERABLE_EARLY_EOF;
+        }
+
+        switch (type) {
+            case LoaderErrors.EARLY_EOF: {
+                if (!this._config.isLive) {
+                    // Do internal http reconnect if not live stream
+                    if (this._totalLength) {
+                        let nextFrom = this._currentRange.to + 1;
+                        if (nextFrom < this._totalLength) {
+                            Log.w(this.TAG, 'Connection lost, trying reconnect...');
+                            this._isEarlyEofReconnecting = true;
+                            this._internalSeek(nextFrom, false);
+                        }
+                        return;
+                    }
+                    // else: We don't know totalLength, throw UnrecoverableEarlyEof
+                }
+                // live stream: throw UnrecoverableEarlyEof error to upper-layer
+                type = LoaderErrors.UNRECOVERABLE_EARLY_EOF;
+                break;
+            }
+            case LoaderErrors.UNRECOVERABLE_EARLY_EOF:
+            case LoaderErrors.CONNECTING_TIMEOUT:
+            case LoaderErrors.HTTP_STATUS_CODE_INVALID:
+            case LoaderErrors.EXCEPTION:
+                break;
+        }
+
+        if (this._onError) {
+            this._onError(type, data);
+        } else {
+            throw new RuntimeException('IOException: ' + data.msg);
+        }
+    }
+
+}
+
+export default IOController;
