@@ -76,3 +76,60 @@ export class BaseLoader {
 
     get status() {
         return this._status;
+    }
+
+    get needStashBuffer() {
+        return this._needStash;
+    }
+
+    get onContentLengthKnown() {
+        return this._onContentLengthKnown;
+    }
+
+    set onContentLengthKnown(callback) {
+        this._onContentLengthKnown = callback;
+    }
+
+    get onURLRedirect() {
+        return this._onURLRedirect;
+    }
+
+    set onURLRedirect(callback) {
+        this._onURLRedirect = callback;
+    }
+
+    get onDataArrival() {
+        return this._onDataArrival;
+    }
+
+    set onDataArrival(callback) {
+        this._onDataArrival = callback;
+    }
+
+    get onError() {
+        return this._onError;
+    }
+
+    set onError(callback) {
+        this._onError = callback;
+    }
+
+    get onComplete() {
+        return this._onComplete;
+    }
+
+    set onComplete(callback) {
+        this._onComplete = callback;
+    }
+
+    // pure virtual
+    open(dataSource, range) {
+        throw new NotImplementedException('Unimplemented abstract function!');
+    }
+
+    abort() {
+        throw new NotImplementedException('Unimplemented abstract function!');
+    }
+
+
+}
