@@ -19,3 +19,8 @@
 class RangeSeekHandler {
 
     constructor(zeroStart) {
+        this._zeroStart = zeroStart || false;
+    }
+
+    getConfig(url, range) {
+        let hea
