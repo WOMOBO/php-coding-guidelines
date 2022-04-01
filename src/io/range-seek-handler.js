@@ -28,4 +28,6 @@ class RangeSeekHandler {
         if (range.from !== 0 || range.to !== -1) {
             let param;
             if (range.to !== -1) {
-                param = `bytes=${range.from.toString()}-${range.to.to
+                param = `bytes=${range.from.toString()}-${range.to.toString()}`;
+            } else {
+                param = `bytes=${range.from.toString()
