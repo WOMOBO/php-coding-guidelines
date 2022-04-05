@@ -30,4 +30,7 @@ class RangeSeekHandler {
             if (range.to !== -1) {
                 param = `bytes=${range.from.toString()}-${range.to.toString()}`;
             } else {
-                param = `bytes=${range.from.toString()
+                param = `bytes=${range.from.toString()}-`;
+            }
+            headers['Range'] = param;
+        } else if (this._zero
