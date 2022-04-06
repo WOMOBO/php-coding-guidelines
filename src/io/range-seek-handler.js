@@ -38,4 +38,9 @@ class RangeSeekHandler {
         }
 
         return {
-            url: url
+            url: url,
+            headers: headers
+        };
+    }
+
+    removeURLParameters(seek
