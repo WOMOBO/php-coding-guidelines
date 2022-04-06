@@ -33,4 +33,9 @@ class RangeSeekHandler {
                 param = `bytes=${range.from.toString()}-`;
             }
             headers['Range'] = param;
-        } else if (this._zero
+        } else if (this._zeroStart) {
+            headers['Range'] = 'bytes=0-';
+        }
+
+        return {
+            url: url
