@@ -43,4 +43,10 @@ class RangeSeekHandler {
         };
     }
 
-    removeURLParameters(seek
+    removeURLParameters(seekedURL) {
+        return seekedURL;
+    }
+
+}
+
+export default RangeSeekHandler;
