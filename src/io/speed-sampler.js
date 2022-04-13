@@ -19,4 +19,7 @@
 // Utility class to calculate realtime network I/O speed
 class SpeedSampler {
 
-    
+    constructor() {
+        // milliseconds
+        this._firstCheckpoint = 0;
+        this._las
