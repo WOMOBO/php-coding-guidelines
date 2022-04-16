@@ -25,4 +25,7 @@ class SpeedSampler {
         this._lastCheckpoint = 0;
         this._intervalBytes = 0;
         this._totalBytes = 0;
-       
+        this._lastSecondBytes = 0;
+
+        // compatibility detection
+        if (self.performanc
