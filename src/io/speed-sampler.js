@@ -22,4 +22,7 @@ class SpeedSampler {
     constructor() {
         // milliseconds
         this._firstCheckpoint = 0;
-        this._las
+        this._lastCheckpoint = 0;
+        this._intervalBytes = 0;
+        this._totalBytes = 0;
+       
