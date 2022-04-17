@@ -28,4 +28,5 @@ class SpeedSampler {
         this._lastSecondBytes = 0;
 
         // compatibility detection
-        if (self.performanc
+        if (self.performance && self.performance.now) {
+            this._now = self.performance.now.bind(self.pe
