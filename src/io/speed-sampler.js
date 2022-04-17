@@ -29,4 +29,10 @@ class SpeedSampler {
 
         // compatibility detection
         if (self.performance && self.performance.now) {
-            this._now = self.performance.now.bind(self.pe
+            this._now = self.performance.now.bind(self.performance);
+        } else {
+            this._now = Date.now;
+        }
+    }
+
+    reset
