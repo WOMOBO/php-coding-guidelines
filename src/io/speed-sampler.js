@@ -35,4 +35,6 @@ class SpeedSampler {
         }
     }
 
-    reset
+    reset() {
+        this._firstCheckpoint = this._lastCheckpoint = 0;
+        thi
