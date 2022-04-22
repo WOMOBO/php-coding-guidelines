@@ -45,4 +45,5 @@ class SpeedSampler {
         if (this._firstCheckpoint === 0) {
             this._firstCheckpoint = this._now();
             this._lastCheckpoint = this._firstCheckpoint;
-  
+            this._intervalBytes += bytes;
+            this._totalBytes += bytes
