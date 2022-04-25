@@ -51,4 +51,6 @@ class SpeedSampler {
             this._intervalBytes += bytes;
             this._totalBytes += bytes;
         } else {  // duration >= 1000
-            this._lastSeco
+            this._lastSecondBytes = this._intervalBytes;
+            this._intervalBytes = bytes;
+            this.
