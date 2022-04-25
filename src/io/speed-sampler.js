@@ -53,4 +53,7 @@ class SpeedSampler {
         } else {  // duration >= 1000
             this._lastSecondBytes = this._intervalBytes;
             this._intervalBytes = bytes;
-            this.
+            this._totalBytes += bytes;
+            this._lastCheckpoint = this._now();
+        }
+ 
