@@ -56,4 +56,9 @@ class SpeedSampler {
             this._totalBytes += bytes;
             this._lastCheckpoint = this._now();
         }
- 
+    }
+
+    get currentKBps() {
+        this.addBytes(0);
+
+        le
