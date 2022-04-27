@@ -61,4 +61,5 @@ class SpeedSampler {
     get currentKBps() {
         this.addBytes(0);
 
-        le
+        let durationSeconds = (this._now() - this._lastCheckpoint) / 1000;
+     
