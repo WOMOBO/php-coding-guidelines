@@ -63,4 +63,8 @@ class SpeedSampler {
 
         let durationSeconds = (this._now() - this._lastCheckpoint) / 1000;
         if (durationSeconds == 0) durationSeconds = 1;
-        return (this._intervalBytes / du
+        return (this._intervalBytes / durationSeconds) / 1024;
+    }
+
+    get lastSecondKBps() {
+        this.add
