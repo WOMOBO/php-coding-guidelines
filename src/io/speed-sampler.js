@@ -67,4 +67,7 @@ class SpeedSampler {
     }
 
     get lastSecondKBps() {
-        this.add
+        this.addBytes(0);
+
+        if (this._lastSecondBytes !== 0) {
+            return 
