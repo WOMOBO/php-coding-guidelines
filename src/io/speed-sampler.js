@@ -70,4 +70,6 @@ class SpeedSampler {
         this.addBytes(0);
 
         if (this._lastSecondBytes !== 0) {
-            return 
+            return this._lastSecondBytes / 1024;
+        } else {  // lastSecondBytes === 0
+            if (
