@@ -72,4 +72,5 @@ class SpeedSampler {
         if (this._lastSecondBytes !== 0) {
             return this._lastSecondBytes / 1024;
         } else {  // lastSecondBytes === 0
-            if (
+            if (this._now() - this._lastCheckpoint >= 500) {
+                // if time interval since
