@@ -58,3 +58,84 @@ class WebSocketLoader extends BaseLoader {
             ws.onclose = this._onWebSocketClose.bind(this);
             ws.onmessage = this._onWebSocketMessage.bind(this);
             ws.onerror = this._onWebSocketError.bind(this);
+
+            this._status = LoaderStatus.kConnecting;
+        } catch (e) {
+            this._status = LoaderStatus.kError;
+
+            let info = {code: e.code, msg: e.message};
+
+            if (this._onError) {
+                this._onError(LoaderErrors.EXCEPTION, info);
+            } else {
+                throw new RuntimeException(info.msg);
+            }
+        }
+    }
+
+    abort() {
+        let ws = this._ws;
+        if (ws && (ws.readyState === 0 || ws.readyState === 1)) {  // CONNECTING || OPEN
+            this._requestAbort = true;
+            ws.close();
+        }
+
+        this._ws = null;
+        this._status = LoaderStatus.kComplete;
+    }
+
+    _onWebSocketOpen(e) {
+        this._status = LoaderStatus.kBuffering;
+    }
+
+    _onWebSocketClose(e) {
+        if (this._requestAbort === true) {
+            this._requestAbort = false;
+            return;
+        }
+
+        this._status = LoaderStatus.kComplete;
+
+        if (this._onComplete) {
+            this._onComplete(0, this._receivedLength - 1);
+        }
+    }
+
+    _onWebSocketMessage(e) {
+        if (e.data instanceof ArrayBuffer) {
+            this._dispatchArrayBuffer(e.data);
+        } else if (e.data instanceof Blob) {
+            let reader = new FileReader();
+            reader.onload = () => {
+                this._dispatchArrayBuffer(reader.result);
+            };
+            reader.readAsArrayBuffer(e.data);
+        } else {
+            this._status = LoaderStatus.kError;
+            let info = {code: -1, msg: 'Unsupported WebSocket message type: ' + e.data.constructor.name};
+
+            if (this._onError) {
+                this._onError(LoaderErrors.EXCEPTION, info);
+            } else {
+                throw new RuntimeException(info.msg);
+            }
+        }
+    }
+
+    _dispatchArrayBuffer(arraybuffer) {
+        let chunk = arraybuffer;
+        let byteStart = this._receivedLength;
+        this._receivedLength += chunk.byteLength;
+
+        if (this._onDataArrival) {
+            this._onDataArrival(chunk, byteStart, this._receivedLength);
+        }
+    }
+
+    _onWebSocketError(e) {
+        this._status = LoaderStatus.kError;
+
+        let info = {
+            code: e.code,
+            msg: e.message
+        };
