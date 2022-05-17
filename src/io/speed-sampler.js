@@ -75,4 +75,6 @@ class SpeedSampler {
             if (this._now() - this._lastCheckpoint >= 500) {
                 // if time interval since last checkpoint has exceeded 500ms
                 // the speed is nearly accurate
-     
+                return this.currentKBps;
+            } else {
+                
