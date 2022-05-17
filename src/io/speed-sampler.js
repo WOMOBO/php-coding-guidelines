@@ -77,4 +77,10 @@ class SpeedSampler {
                 // the speed is nearly accurate
                 return this.currentKBps;
             } else {
-                
+                // We don't know
+                return 0;
+            }
+        }
+    }
+
+    get averageKBps() {
