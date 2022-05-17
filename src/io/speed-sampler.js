@@ -84,3 +84,4 @@ class SpeedSampler {
     }
 
     get averageKBps() {
+        let durationSeconds = (this._now() - this._firstCheckpoint) / 1000
