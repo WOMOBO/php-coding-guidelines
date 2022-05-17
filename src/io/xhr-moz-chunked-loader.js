@@ -68,3 +68,95 @@ class MozChunkedLoader extends BaseLoader {
     open(dataSource, range) {
         this._dataSource = dataSource;
         this._range = range;
+
+        let sourceURL = dataSource.url;
+        if (this._config.reuseRedirectedURL && dataSource.redirectedURL != undefined) {
+            sourceURL = dataSource.redirectedURL;
+        }
+
+        let seekConfig = this._seekHandler.getConfig(sourceURL, range);
+        this._requestURL = seekConfig.url;
+
+        let xhr = this._xhr = new XMLHttpRequest();
+        xhr.open('GET', seekConfig.url, true);
+        xhr.responseType = 'moz-chunked-arraybuffer';
+        xhr.onreadystatechange = this._onReadyStateChange.bind(this);
+        xhr.onprogress = this._onProgress.bind(this);
+        xhr.onloadend = this._onLoadEnd.bind(this);
+        xhr.onerror = this._onXhrError.bind(this);
+
+        // cors is auto detected and enabled by xhr
+
+        // withCredentials is disabled by default
+        if (dataSource.withCredentials) {
+            xhr.withCredentials = true;
+        }
+
+        if (typeof seekConfig.headers === 'object') {
+            let headers = seekConfig.headers;
+
+            for (let key in headers) {
+                if (headers.hasOwnProperty(key)) {
+                    xhr.setRequestHeader(key, headers[key]);
+                }
+            }
+        }
+
+        // add additional headers
+        if (typeof this._config.headers === 'object') {
+            let headers = this._config.headers;
+
+            for (let key in headers) {
+                if (headers.hasOwnProperty(key)) {
+                    xhr.setRequestHeader(key, headers[key]);
+                }
+            }
+        }
+
+        this._status = LoaderStatus.kConnecting;
+        xhr.send();
+    }
+
+    abort() {
+        this._requestAbort = true;
+        if (this._xhr) {
+            this._xhr.abort();
+        }
+        this._status = LoaderStatus.kComplete;
+    }
+
+    _onReadyStateChange(e) {
+        let xhr = e.target;
+
+        if (xhr.readyState === 2) {  // HEADERS_RECEIVED
+            if (xhr.responseURL != undefined && xhr.responseURL !== this._requestURL) {
+                if (this._onURLRedirect) {
+                    let redirectedURL = this._seekHandler.removeURLParameters(xhr.responseURL);
+                    this._onURLRedirect(redirectedURL);
+                }
+            }
+
+            if (xhr.status !== 0 && (xhr.status < 200 || xhr.status > 299)) {
+                this._status = LoaderStatus.kError;
+                if (this._onError) {
+                    this._onError(LoaderErrors.HTTP_STATUS_CODE_INVALID, {code: xhr.status, msg: xhr.statusText});
+                } else {
+                    throw new RuntimeException('MozChunkedLoader: Http code invalid, ' + xhr.status + ' ' + xhr.statusText);
+                }
+            } else {
+                this._status = LoaderStatus.kBuffering;
+            }
+        }
+    }
+
+    _onProgress(e) {
+        if (this._status === LoaderStatus.kError) {
+            // Ignore error response
+            return;
+        }
+
+        if (this._contentLength === null) {
+            if (e.total !== null && e.total !== 0) {
+                this._contentLength = e.total;
+                if (this._onContentLengthKnown) {
+                    this._onContentLengthKnown(this._contentLength);
