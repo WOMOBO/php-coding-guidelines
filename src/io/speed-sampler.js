@@ -90,4 +90,4 @@ class SpeedSampler {
 
 }
 
-expo
+export default SpeedSampler;
