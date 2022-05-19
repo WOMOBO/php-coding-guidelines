@@ -160,3 +160,53 @@ class MozChunkedLoader extends BaseLoader {
                 this._contentLength = e.total;
                 if (this._onContentLengthKnown) {
                     this._onContentLengthKnown(this._contentLength);
+                }
+            }
+        }
+
+        let chunk = e.target.response;
+        let byteStart = this._range.from + this._receivedLength;
+        this._receivedLength += chunk.byteLength;
+
+        if (this._onDataArrival) {
+            this._onDataArrival(chunk, byteStart, this._receivedLength);
+        }
+    }
+
+    _onLoadEnd(e) {
+        if (this._requestAbort === true) {
+            this._requestAbort = false;
+            return;
+        } else if (this._status === LoaderStatus.kError) {
+            return;
+        }
+
+        this._status = LoaderStatus.kComplete;
+        if (this._onComplete) {
+            this._onComplete(this._range.from, this._range.from + this._receivedLength - 1);
+        }
+    }
+
+    _onXhrError(e) {
+        this._status = LoaderStatus.kError;
+        let type = 0;
+        let info = null;
+
+        if (this._contentLength && e.loaded < this._contentLength) {
+            type = LoaderErrors.EARLY_EOF;
+            info = {code: -1, msg: 'Moz-Chunked stream meet Early-Eof'};
+        } else {
+            type = LoaderErrors.EXCEPTION;
+            info = {code: -1, msg: e.constructor.name + ' ' + e.type};
+        }
+
+        if (this._onError) {
+            this._onError(type, info);
+        } else {
+            throw new RuntimeException(info.msg);
+        }
+    }
+
+}
+
+export default MozChunkedLoader;
