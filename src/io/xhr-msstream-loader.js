@@ -112,3 +112,80 @@ class MSStreamLoader extends BaseLoader {
             } else if (dataSource.redirectedURL != undefined) {
                 sourceURL = dataSource.redirectedURL;
             }
+        }
+
+        let seekConfig = this._seekHandler.getConfig(sourceURL, range);
+        this._currentRequestURL = seekConfig.url;
+
+        let reader = this._reader = new self.MSStreamReader();
+        reader.onprogress = this._msrOnProgress.bind(this);
+        reader.onload = this._msrOnLoad.bind(this);
+        reader.onerror = this._msrOnError.bind(this);
+
+        let xhr = this._xhr = new XMLHttpRequest();
+        xhr.open('GET', seekConfig.url, true);
+        xhr.responseType = 'ms-stream';
+        xhr.onreadystatechange = this._xhrOnReadyStateChange.bind(this);
+        xhr.onerror = this._xhrOnError.bind(this);
+
+        if (dataSource.withCredentials) {
+            xhr.withCredentials = true;
+        }
+
+        if (typeof seekConfig.headers === 'object') {
+            let headers = seekConfig.headers;
+
+            for (let key in headers) {
+                if (headers.hasOwnProperty(key)) {
+                    xhr.setRequestHeader(key, headers[key]);
+                }
+            }
+        }
+
+        // add additional headers
+        if (typeof this._config.headers === 'object') {
+            let headers = this._config.headers;
+
+            for (let key in headers) {
+                if (headers.hasOwnProperty(key)) {
+                    xhr.setRequestHeader(key, headers[key]);
+                }
+            }
+        }
+
+        if (this._isReconnecting) {
+            this._isReconnecting = false;
+        } else {
+            this._status = LoaderStatus.kConnecting;
+        }
+        xhr.send();
+    }
+
+    abort() {
+        this._internalAbort();
+        this._status = LoaderStatus.kComplete;
+    }
+
+    _internalAbort() {
+        if (this._reader) {
+            if (this._reader.readyState === 1) {  // LOADING
+                this._reader.abort();
+            }
+            this._reader.onprogress = null;
+            this._reader.onload = null;
+            this._reader.onerror = null;
+            this._reader = null;
+        }
+        if (this._xhr) {
+            this._xhr.abort();
+            this._xhr.onreadystatechange = null;
+            this._xhr = null;
+        }
+    }
+
+    _xhrOnReadyStateChange(e) {
+        let xhr = e.target;
+
+        if (xhr.readyState === 2) {  // HEADERS_RECEIVED
+            if (xhr.status >= 200 && xhr.status <= 299) {
+                this._status = LoaderStatus.kBuffering;
