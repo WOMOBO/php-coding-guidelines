@@ -189,3 +189,88 @@ class MSStreamLoader extends BaseLoader {
         if (xhr.readyState === 2) {  // HEADERS_RECEIVED
             if (xhr.status >= 200 && xhr.status <= 299) {
                 this._status = LoaderStatus.kBuffering;
+
+                if (xhr.responseURL != undefined) {
+                    let redirectedURL = this._seekHandler.removeURLParameters(xhr.responseURL);
+                    if (xhr.responseURL !== this._currentRequestURL && redirectedURL !== this._currentRedirectedURL) {
+                        this._currentRedirectedURL = redirectedURL;
+                        if (this._onURLRedirect) {
+                            this._onURLRedirect(redirectedURL);
+                        }
+                    }
+                }
+
+                let lengthHeader = xhr.getResponseHeader('Content-Length');
+                if (lengthHeader != null && this._contentLength == null) {
+                    let length = parseInt(lengthHeader);
+                    if (length > 0) {
+                        this._contentLength = length;
+                        if (this._onContentLengthKnown) {
+                            this._onContentLengthKnown(this._contentLength);
+                        }
+                    }
+                }
+            } else {
+                this._status = LoaderStatus.kError;
+                if (this._onError) {
+                    this._onError(LoaderErrors.HTTP_STATUS_CODE_INVALID, {code: xhr.status, msg: xhr.statusText});
+                } else {
+                    throw new RuntimeException('MSStreamLoader: Http code invalid, ' + xhr.status + ' ' + xhr.statusText);
+                }
+            }
+        } else if (xhr.readyState === 3) {  // LOADING
+            if (xhr.status >= 200 && xhr.status <= 299) {
+                this._status = LoaderStatus.kBuffering;
+
+                let msstream = xhr.response;
+                this._reader.readAsArrayBuffer(msstream);
+            }
+        }
+    }
+
+    _xhrOnError(e) {
+        this._status = LoaderStatus.kError;
+        let type = LoaderErrors.EXCEPTION;
+        let info = {code: -1, msg: e.constructor.name + ' ' + e.type};
+
+        if (this._onError) {
+            this._onError(type, info);
+        } else {
+            throw new RuntimeException(info.msg);
+        }
+    }
+
+    _msrOnProgress(e) {
+        let reader = e.target;
+        let bigbuffer = reader.result;
+        if (bigbuffer == null) {  // result may be null, workaround for buggy M$
+            this._doReconnectIfNeeded();
+            return;
+        }
+
+        let slice = bigbuffer.slice(this._lastTimeBufferSize);
+        this._lastTimeBufferSize = bigbuffer.byteLength;
+        let byteStart = this._totalRange.from + this._receivedLength;
+        this._receivedLength += slice.byteLength;
+
+        if (this._onDataArrival) {
+            this._onDataArrival(slice, byteStart, this._receivedLength);
+        }
+
+        if (bigbuffer.byteLength >= this._bufferLimit) {
+            Log.v(this.TAG, `MSStream buffer exceeded max size near ${byteStart + slice.byteLength}, reconnecting...`);
+            this._doReconnectIfNeeded();
+        }
+    }
+
+    _doReconnectIfNeeded() {
+        if (this._contentLength == null || this._receivedLength < this._contentLength) {
+            this._isReconnecting = true;
+            this._lastTimeBufferSize = 0;
+            this._internalAbort();
+
+            let range = {
+                from: this._totalRange.from + this._receivedLength,
+                to: -1
+            };
+            this._internalOpen(this._dataSource, range, true);
