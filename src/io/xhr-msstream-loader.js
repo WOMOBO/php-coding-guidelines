@@ -274,3 +274,35 @@ class MSStreamLoader extends BaseLoader {
                 to: -1
             };
             this._internalOpen(this._dataSource, range, true);
+        }
+    }
+
+    _msrOnLoad(e) {  // actually it is onComplete event
+        this._status = LoaderStatus.kComplete;
+        if (this._onComplete) {
+            this._onComplete(this._totalRange.from, this._totalRange.from + this._receivedLength - 1);
+        }
+    }
+
+    _msrOnError(e) {
+        this._status = LoaderStatus.kError;
+        let type = 0;
+        let info = null;
+
+        if (this._contentLength && this._receivedLength < this._contentLength) {
+            type = LoaderErrors.EARLY_EOF;
+            info = {code: -1, msg: 'MSStream meet Early-Eof'};
+        } else {
+            type = LoaderErrors.EARLY_EOF;
+            info = {code: -1, msg: e.constructor.name + ' ' + e.type};
+        }
+
+        if (this._onError) {
+            this._onError(type, info);
+        } else {
+            throw new RuntimeException(info.msg);
+        }
+    }
+}
+
+export default MSStreamLoader;
