@@ -118,3 +118,80 @@ class RangeLoader extends BaseLoader {
                 to = this._range.from + this._contentLength - 1;
             }
         }
+
+        this._currentRequestRange = {from, to};
+        this._internalOpen(this._dataSource, this._currentRequestRange);
+    }
+
+    _internalOpen(dataSource, range) {
+        this._lastTimeLoaded = 0;
+
+        let sourceURL = dataSource.url;
+        if (this._config.reuseRedirectedURL) {
+            if (this._currentRedirectedURL != undefined) {
+                sourceURL = this._currentRedirectedURL;
+            } else if (dataSource.redirectedURL != undefined) {
+                sourceURL = dataSource.redirectedURL;
+            }
+        }
+
+        let seekConfig = this._seekHandler.getConfig(sourceURL, range);
+        this._currentRequestURL = seekConfig.url;
+
+        let xhr = this._xhr = new XMLHttpRequest();
+        xhr.open('GET', seekConfig.url, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onreadystatechange = this._onReadyStateChange.bind(this);
+        xhr.onprogress = this._onProgress.bind(this);
+        xhr.onload = this._onLoad.bind(this);
+        xhr.onerror = this._onXhrError.bind(this);
+
+        if (dataSource.withCredentials) {
+            xhr.withCredentials = true;
+        }
+
+        if (typeof seekConfig.headers === 'object') {
+            let headers = seekConfig.headers;
+
+            for (let key in headers) {
+                if (headers.hasOwnProperty(key)) {
+                    xhr.setRequestHeader(key, headers[key]);
+                }
+            }
+        }
+
+        // add additional headers
+        if (typeof this._config.headers === 'object') {
+            let headers = this._config.headers;
+
+            for (let key in headers) {
+                if (headers.hasOwnProperty(key)) {
+                    xhr.setRequestHeader(key, headers[key]);
+                }
+            }
+        }
+
+        xhr.send();
+    }
+
+    abort() {
+        this._requestAbort = true;
+        this._internalAbort();
+        this._status = LoaderStatus.kComplete;
+    }
+
+    _internalAbort() {
+        if (this._xhr) {
+            this._xhr.onreadystatechange = null;
+            this._xhr.onprogress = null;
+            this._xhr.onload = null;
+            this._xhr.onerror = null;
+            this._xhr.abort();
+            this._xhr = null;
+        }
+    }
+
+    _onReadyStateChange(e) {
+        let xhr = e.target;
+
+        if (xhr.readyState === 2) {  // HEADERS_RECEIVED
