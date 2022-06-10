@@ -285,3 +285,77 @@ class RangeLoader extends BaseLoader {
             }
         }
     }
+
+    _onLoad(e) {
+        if (this._status === LoaderStatus.kError) {
+            // Ignore error response
+            return;
+        }
+
+        if (this._waitForTotalLength) {
+            this._waitForTotalLength = false;
+            return;
+        }
+
+        this._lastTimeLoaded = 0;
+        let KBps = this._speedSampler.lastSecondKBps;
+        if (KBps === 0) {
+            this._zeroSpeedChunkCount++;
+            if (this._zeroSpeedChunkCount >= 3) {
+                // Try get currentKBps after 3 chunks
+                KBps = this._speedSampler.currentKBps;
+            }
+        }
+
+        if (KBps !== 0) {
+            let normalized = this._normalizeSpeed(KBps);
+            if (this._currentSpeedNormalized !== normalized) {
+                this._currentSpeedNormalized = normalized;
+                this._currentChunkSizeKB = normalized;
+            }
+        }
+
+        let chunk = e.target.response;
+        let byteStart = this._range.from + this._receivedLength;
+        this._receivedLength += chunk.byteLength;
+
+        let reportComplete = false;
+
+        if (this._contentLength != null && this._receivedLength < this._contentLength) {
+            // continue load next chunk
+            this._openSubRange();
+        } else {
+            reportComplete = true;
+        }
+
+        // dispatch received chunk
+        if (this._onDataArrival) {
+            this._onDataArrival(chunk, byteStart, this._receivedLength);
+        }
+
+        if (reportComplete) {
+            this._status = LoaderStatus.kComplete;
+            if (this._onComplete) {
+                this._onComplete(this._range.from, this._range.from + this._receivedLength - 1);
+            }
+        }
+    }
+
+    _onXhrError(e) {
+        this._status = LoaderStatus.kError;
+        let type = 0;
+        let info = null;
+
+        if (this._contentLength && this._receivedLength > 0
+                                && this._receivedLength < this._contentLength) {
+            type = LoaderErrors.EARLY_EOF;
+            info = {code: -1, msg: 'RangeLoader meet Early-Eof'};
+        } else {
+            type = LoaderErrors.EXCEPTION;
+            info = {code: -1, msg: e.constructor.name + ' ' + e.type};
+        }
+
+        if (this._onError) {
+            this._onError(type, info);
+        } else {
+            throw new RuntimeException(info.msg);
