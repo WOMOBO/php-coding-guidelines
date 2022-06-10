@@ -155,3 +155,107 @@ class FlvPlayer {
                                info
             );
         });
+
+        this._msectl.attachMediaElement(mediaElement);
+
+        if (this._pendingSeekTime != null) {
+            try {
+                mediaElement.currentTime = this._pendingSeekTime;
+                this._pendingSeekTime = null;
+            } catch (e) {
+                // IE11 may throw InvalidStateError if readyState === 0
+                // We can defer set currentTime operation after loadedmetadata
+            }
+        }
+    }
+
+    detachMediaElement() {
+        if (this._mediaElement) {
+            this._msectl.detachMediaElement();
+            this._mediaElement.removeEventListener('loadedmetadata', this.e.onvLoadedMetadata);
+            this._mediaElement.removeEventListener('seeking', this.e.onvSeeking);
+            this._mediaElement.removeEventListener('canplay', this.e.onvCanPlay);
+            this._mediaElement.removeEventListener('stalled', this.e.onvStalled);
+            this._mediaElement.removeEventListener('progress', this.e.onvProgress);
+            this._mediaElement = null;
+        }
+        if (this._msectl) {
+            this._msectl.destroy();
+            this._msectl = null;
+        }
+    }
+
+    load() {
+        if (!this._mediaElement) {
+            throw new IllegalStateException('HTMLMediaElement must be attached before load()!');
+        }
+        if (this._transmuxer) {
+            throw new IllegalStateException('FlvPlayer.load() has been called, please call unload() first!');
+        }
+        if (this._hasPendingLoad) {
+            return;
+        }
+
+        if (this._config.deferLoadAfterSourceOpen && this._mseSourceOpened === false) {
+            this._hasPendingLoad = true;
+            return;
+        }
+
+        if (this._mediaElement.readyState > 0) {
+            this._requestSetTime = true;
+            // IE11 may throw InvalidStateError if readyState === 0
+            this._mediaElement.currentTime = 0;
+        }
+
+        this._transmuxer = new Transmuxer(this._mediaDataSource, this._config);
+
+        this._transmuxer.on(TransmuxingEvents.INIT_SEGMENT, (type, is) => {
+            this._msectl.appendInitSegment(is);
+        });
+        this._transmuxer.on(TransmuxingEvents.MEDIA_SEGMENT, (type, ms) => {
+            this._msectl.appendMediaSegment(ms);
+
+            // lazyLoad check
+            if (this._config.lazyLoad && !this._config.isLive) {
+                let currentTime = this._mediaElement.currentTime;
+                if (ms.info.endDts >= (currentTime + this._config.lazyLoadMaxDuration) * 1000) {
+                    if (this._progressChecker == null) {
+                        Log.v(this.TAG, 'Maximum buffering duration exceeded, suspend transmuxing task');
+                        this._suspendTransmuxer();
+                    }
+                }
+            }
+        });
+        this._transmuxer.on(TransmuxingEvents.LOADING_COMPLETE, () => {
+            this._msectl.endOfStream();
+            this._emitter.emit(PlayerEvents.LOADING_COMPLETE);
+        });
+        this._transmuxer.on(TransmuxingEvents.RECOVERED_EARLY_EOF, () => {
+            this._emitter.emit(PlayerEvents.RECOVERED_EARLY_EOF);
+        });
+        this._transmuxer.on(TransmuxingEvents.IO_ERROR, (detail, info) => {
+            this._emitter.emit(PlayerEvents.ERROR, ErrorTypes.NETWORK_ERROR, detail, info);
+        });
+        this._transmuxer.on(TransmuxingEvents.DEMUX_ERROR, (detail, info) => {
+            this._emitter.emit(PlayerEvents.ERROR, ErrorTypes.MEDIA_ERROR, detail, {code: -1, msg: info});
+        });
+        this._transmuxer.on(TransmuxingEvents.MEDIA_INFO, (mediaInfo) => {
+            this._mediaInfo = mediaInfo;
+            this._emitter.emit(PlayerEvents.MEDIA_INFO, Object.assign({}, mediaInfo));
+        });
+        this._transmuxer.on(TransmuxingEvents.METADATA_ARRIVED, (metadata) => {
+            this._emitter.emit(PlayerEvents.METADATA_ARRIVED, metadata);
+        });
+        this._transmuxer.on(TransmuxingEvents.SCRIPTDATA_ARRIVED, (data) => {
+            this._emitter.emit(PlayerEvents.SCRIPTDATA_ARRIVED, data);
+        });
+        this._transmuxer.on(TransmuxingEvents.STATISTICS_INFO, (statInfo) => {
+            this._statisticsInfo = this._fillStatisticsInfo(statInfo);
+            this._emitter.emit(PlayerEvents.STATISTICS_INFO, Object.assign({}, this._statisticsInfo));
+        });
+        this._transmuxer.on(TransmuxingEvents.RECOMMEND_SEEKPOINT, (milliseconds) => {
+            if (this._mediaElement && !this._config.accurateSeek) {
+                this._requestSetTime = true;
+                this._mediaElement.currentTime = milliseconds / 1000;
+            }
+        });
