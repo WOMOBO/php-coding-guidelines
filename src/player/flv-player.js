@@ -67,3 +67,91 @@ class FlvPlayer {
         this._requestSetTime = false;
         this._seekpointRecord = null;
         this._progressChecker = null;
+
+        this._mediaDataSource = mediaDataSource;
+        this._mediaElement = null;
+        this._msectl = null;
+        this._transmuxer = null;
+
+        this._mseSourceOpened = false;
+        this._hasPendingLoad = false;
+        this._receivedCanPlay = false;
+
+        this._mediaInfo = null;
+        this._statisticsInfo = null;
+
+        let chromeNeedIDRFix = (Browser.chrome &&
+                               (Browser.version.major < 50 ||
+                               (Browser.version.major === 50 && Browser.version.build < 2661)));
+        this._alwaysSeekKeyframe = (chromeNeedIDRFix || Browser.msedge || Browser.msie) ? true : false;
+
+        if (this._alwaysSeekKeyframe) {
+            this._config.accurateSeek = false;
+        }
+    }
+
+    destroy() {
+        if (this._progressChecker != null) {
+            window.clearInterval(this._progressChecker);
+            this._progressChecker = null;
+        }
+        if (this._transmuxer) {
+            this.unload();
+        }
+        if (this._mediaElement) {
+            this.detachMediaElement();
+        }
+        this.e = null;
+        this._mediaDataSource = null;
+
+        this._emitter.removeAllListeners();
+        this._emitter = null;
+    }
+
+    on(event, listener) {
+        if (event === PlayerEvents.MEDIA_INFO) {
+            if (this._mediaInfo != null) {
+                Promise.resolve().then(() => {
+                    this._emitter.emit(PlayerEvents.MEDIA_INFO, this.mediaInfo);
+                });
+            }
+        } else if (event === PlayerEvents.STATISTICS_INFO) {
+            if (this._statisticsInfo != null) {
+                Promise.resolve().then(() => {
+                    this._emitter.emit(PlayerEvents.STATISTICS_INFO, this.statisticsInfo);
+                });
+            }
+        }
+        this._emitter.addListener(event, listener);
+    }
+
+    off(event, listener) {
+        this._emitter.removeListener(event, listener);
+    }
+
+    attachMediaElement(mediaElement) {
+        this._mediaElement = mediaElement;
+        mediaElement.addEventListener('loadedmetadata', this.e.onvLoadedMetadata);
+        mediaElement.addEventListener('seeking', this.e.onvSeeking);
+        mediaElement.addEventListener('canplay', this.e.onvCanPlay);
+        mediaElement.addEventListener('stalled', this.e.onvStalled);
+        mediaElement.addEventListener('progress', this.e.onvProgress);
+
+        this._msectl = new MSEController(this._config);
+
+        this._msectl.on(MSEEvents.UPDATE_END, this._onmseUpdateEnd.bind(this));
+        this._msectl.on(MSEEvents.BUFFER_FULL, this._onmseBufferFull.bind(this));
+        this._msectl.on(MSEEvents.SOURCE_OPEN, () => {
+            this._mseSourceOpened = true;
+            if (this._hasPendingLoad) {
+                this._hasPendingLoad = false;
+                this.load();
+            }
+        });
+        this._msectl.on(MSEEvents.ERROR, (info) => {
+            this._emitter.emit(PlayerEvents.ERROR,
+                               ErrorTypes.MEDIA_ERROR,
+                               ErrorDetails.MEDIA_MSE_ERROR,
+                               info
+            );
+        });
