@@ -423,3 +423,104 @@ class FlvPlayer {
             let from = buffered.start(i);
             let to = buffered.end(i);
             if (currentTime >= from && currentTime < to) {
+                if (currentTime >= to - this._config.lazyLoadRecoverDuration) {
+                    needResume = true;
+                }
+                break;
+            }
+        }
+
+        if (needResume) {
+            window.clearInterval(this._progressChecker);
+            this._progressChecker = null;
+            if (needResume) {
+                Log.v(this.TAG, 'Continue loading from paused position');
+                this._transmuxer.resume();
+            }
+        }
+    }
+
+    _isTimepointBuffered(seconds) {
+        let buffered = this._mediaElement.buffered;
+
+        for (let i = 0; i < buffered.length; i++) {
+            let from = buffered.start(i);
+            let to = buffered.end(i);
+            if (seconds >= from && seconds < to) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    _internalSeek(seconds) {
+        let directSeek = this._isTimepointBuffered(seconds);
+
+        let directSeekBegin = false;
+        let directSeekBeginTime = 0;
+
+        if (seconds < 1.0 && this._mediaElement.buffered.length > 0) {
+            let videoBeginTime = this._mediaElement.buffered.start(0);
+            if ((videoBeginTime < 1.0 && seconds < videoBeginTime) || Browser.safari) {
+                directSeekBegin = true;
+                // also workaround for Safari: Seek to 0 may cause video stuck, use 0.1 to avoid
+                directSeekBeginTime = Browser.safari ? 0.1 : videoBeginTime;
+            }
+        }
+
+        if (directSeekBegin) {  // seek to video begin, set currentTime directly if beginPTS buffered
+            this._requestSetTime = true;
+            this._mediaElement.currentTime = directSeekBeginTime;
+        }  else if (directSeek) {  // buffered position
+            if (!this._alwaysSeekKeyframe) {
+                this._requestSetTime = true;
+                this._mediaElement.currentTime = seconds;
+            } else {
+                let idr = this._msectl.getNearestKeyframe(Math.floor(seconds * 1000));
+                this._requestSetTime = true;
+                if (idr != null) {
+                    this._mediaElement.currentTime = idr.dts / 1000;
+                } else {
+                    this._mediaElement.currentTime = seconds;
+                }
+            }
+            if (this._progressChecker != null) {
+                this._checkProgressAndResume();
+            }
+        } else {
+            if (this._progressChecker != null) {
+                window.clearInterval(this._progressChecker);
+                this._progressChecker = null;
+            }
+            this._msectl.seek(seconds);
+            this._transmuxer.seek(Math.floor(seconds * 1000));  // in milliseconds
+            // no need to set mediaElement.currentTime if non-accurateSeek,
+            // just wait for the recommend_seekpoint callback
+            if (this._config.accurateSeek) {
+                this._requestSetTime = true;
+                this._mediaElement.currentTime = seconds;
+            }
+        }
+    }
+
+    _checkAndApplyUnbufferedSeekpoint() {
+        if (this._seekpointRecord) {
+            if (this._seekpointRecord.recordTime <= this._now() - 100) {
+                let target = this._mediaElement.currentTime;
+                this._seekpointRecord = null;
+                if (!this._isTimepointBuffered(target)) {
+                    if (this._progressChecker != null) {
+                        window.clearTimeout(this._progressChecker);
+                        this._progressChecker = null;
+                    }
+                    // .currentTime is consists with .buffered timestamp
+                    // Chrome/Edge use DTS, while FireFox/Safari use PTS
+                    this._msectl.seek(target);
+                    this._transmuxer.seek(Math.floor(target * 1000));
+                    // set currentTime if accurateSeek, or wait for recommend_seekpoint callback
+                    if (this._config.accurateSeek) {
+                        this._requestSetTime = true;
+                        this._mediaElement.currentTime = target;
+                    }
+                }
+            } else {
