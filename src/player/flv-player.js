@@ -348,3 +348,78 @@ class FlvPlayer {
         }
 
         let hasQualityInfo = true;
+        let decoded = 0;
+        let dropped = 0;
+
+        if (this._mediaElement.getVideoPlaybackQuality) {
+            let quality = this._mediaElement.getVideoPlaybackQuality();
+            decoded = quality.totalVideoFrames;
+            dropped = quality.droppedVideoFrames;
+        } else if (this._mediaElement.webkitDecodedFrameCount != undefined) {
+            decoded = this._mediaElement.webkitDecodedFrameCount;
+            dropped = this._mediaElement.webkitDroppedFrameCount;
+        } else {
+            hasQualityInfo = false;
+        }
+
+        if (hasQualityInfo) {
+            statInfo.decodedFrames = decoded;
+            statInfo.droppedFrames = dropped;
+        }
+
+        return statInfo;
+    }
+
+    _onmseUpdateEnd() {
+        if (!this._config.lazyLoad || this._config.isLive) {
+            return;
+        }
+
+        let buffered = this._mediaElement.buffered;
+        let currentTime = this._mediaElement.currentTime;
+        let currentRangeStart = 0;
+        let currentRangeEnd = 0;
+
+        for (let i = 0; i < buffered.length; i++) {
+            let start = buffered.start(i);
+            let end = buffered.end(i);
+            if (start <= currentTime && currentTime < end) {
+                currentRangeStart = start;
+                currentRangeEnd = end;
+                break;
+            }
+        }
+
+        if (currentRangeEnd >= currentTime + this._config.lazyLoadMaxDuration && this._progressChecker == null) {
+            Log.v(this.TAG, 'Maximum buffering duration exceeded, suspend transmuxing task');
+            this._suspendTransmuxer();
+        }
+    }
+
+    _onmseBufferFull() {
+        Log.v(this.TAG, 'MSE SourceBuffer is full, suspend transmuxing task');
+        if (this._progressChecker == null) {
+            this._suspendTransmuxer();
+        }
+    }
+
+    _suspendTransmuxer() {
+        if (this._transmuxer) {
+            this._transmuxer.pause();
+
+            if (this._progressChecker == null) {
+                this._progressChecker = window.setInterval(this._checkProgressAndResume.bind(this), 1000);
+            }
+        }
+    }
+
+    _checkProgressAndResume() {
+        let currentTime = this._mediaElement.currentTime;
+        let buffered = this._mediaElement.buffered;
+
+        let needResume = false;
+
+        for (let i = 0; i < buffered.length; i++) {
+            let from = buffered.start(i);
+            let to = buffered.end(i);
+            if (currentTime >= from && currentTime < to) {
