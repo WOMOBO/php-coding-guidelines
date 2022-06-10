@@ -524,3 +524,88 @@ class FlvPlayer {
                     }
                 }
             } else {
+                window.setTimeout(this._checkAndApplyUnbufferedSeekpoint.bind(this), 50);
+            }
+        }
+    }
+
+    _checkAndResumeStuckPlayback(stalled) {
+        let media = this._mediaElement;
+        if (stalled || !this._receivedCanPlay || media.readyState < 2) {  // HAVE_CURRENT_DATA
+            let buffered = media.buffered;
+            if (buffered.length > 0 && media.currentTime < buffered.start(0)) {
+                Log.w(this.TAG, `Playback seems stuck at ${media.currentTime}, seek to ${buffered.start(0)}`);
+                this._requestSetTime = true;
+                this._mediaElement.currentTime = buffered.start(0);
+                this._mediaElement.removeEventListener('progress', this.e.onvProgress);
+            }
+        } else {
+            // Playback didn't stuck, remove progress event listener
+            this._mediaElement.removeEventListener('progress', this.e.onvProgress);
+        }
+    }
+
+    _onvLoadedMetadata(e) {
+        if (this._pendingSeekTime != null) {
+            this._mediaElement.currentTime = this._pendingSeekTime;
+            this._pendingSeekTime = null;
+        }
+    }
+
+    _onvSeeking(e) {  // handle seeking request from browser's progress bar
+        let target = this._mediaElement.currentTime;
+        let buffered = this._mediaElement.buffered;
+
+        if (this._requestSetTime) {
+            this._requestSetTime = false;
+            return;
+        }
+
+        if (target < 1.0 && buffered.length > 0) {
+            // seek to video begin, set currentTime directly if beginPTS buffered
+            let videoBeginTime = buffered.start(0);
+            if ((videoBeginTime < 1.0 && target < videoBeginTime) || Browser.safari) {
+                this._requestSetTime = true;
+                // also workaround for Safari: Seek to 0 may cause video stuck, use 0.1 to avoid
+                this._mediaElement.currentTime = Browser.safari ? 0.1 : videoBeginTime;
+                return;
+            }
+        }
+
+        if (this._isTimepointBuffered(target)) {
+            if (this._alwaysSeekKeyframe) {
+                let idr = this._msectl.getNearestKeyframe(Math.floor(target * 1000));
+                if (idr != null) {
+                    this._requestSetTime = true;
+                    this._mediaElement.currentTime = idr.dts / 1000;
+                }
+            }
+            if (this._progressChecker != null) {
+                this._checkProgressAndResume();
+            }
+            return;
+        }
+
+        this._seekpointRecord = {
+            seekPoint: target,
+            recordTime: this._now()
+        };
+        window.setTimeout(this._checkAndApplyUnbufferedSeekpoint.bind(this), 50);
+    }
+
+    _onvCanPlay(e) {
+        this._receivedCanPlay = true;
+        this._mediaElement.removeEventListener('canplay', this.e.onvCanPlay);
+    }
+
+    _onvStalled(e) {
+        this._checkAndResumeStuckPlayback(true);
+    }
+
+    _onvProgress(e) {
+        this._checkAndResumeStuckPlayback();
+    }
+
+}
+
+export default FlvPlayer;
