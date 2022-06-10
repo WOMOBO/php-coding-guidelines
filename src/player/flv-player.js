@@ -259,3 +259,92 @@ class FlvPlayer {
                 this._mediaElement.currentTime = milliseconds / 1000;
             }
         });
+
+        this._transmuxer.open();
+    }
+
+    unload() {
+        if (this._mediaElement) {
+            this._mediaElement.pause();
+        }
+        if (this._msectl) {
+            this._msectl.seek(0);
+        }
+        if (this._transmuxer) {
+            this._transmuxer.close();
+            this._transmuxer.destroy();
+            this._transmuxer = null;
+        }
+    }
+
+    play() {
+        return this._mediaElement.play();
+    }
+
+    pause() {
+        this._mediaElement.pause();
+    }
+
+    get type() {
+        return this._type;
+    }
+
+    get buffered() {
+        return this._mediaElement.buffered;
+    }
+
+    get duration() {
+        return this._mediaElement.duration;
+    }
+
+    get volume() {
+        return this._mediaElement.volume;
+    }
+
+    set volume(value) {
+        this._mediaElement.volume = value;
+    }
+
+    get muted() {
+        return this._mediaElement.muted;
+    }
+
+    set muted(muted) {
+        this._mediaElement.muted = muted;
+    }
+
+    get currentTime() {
+        if (this._mediaElement) {
+            return this._mediaElement.currentTime;
+        }
+        return 0;
+    }
+
+    set currentTime(seconds) {
+        if (this._mediaElement) {
+            this._internalSeek(seconds);
+        } else {
+            this._pendingSeekTime = seconds;
+        }
+    }
+
+    get mediaInfo() {
+        return Object.assign({}, this._mediaInfo);
+    }
+
+    get statisticsInfo() {
+        if (this._statisticsInfo == null) {
+            this._statisticsInfo = {};
+        }
+        this._statisticsInfo = this._fillStatisticsInfo(this._statisticsInfo);
+        return Object.assign({}, this._statisticsInfo);
+    }
+
+    _fillStatisticsInfo(statInfo) {
+        statInfo.playerType = this._type;
+
+        if (!(this._mediaElement instanceof HTMLVideoElement)) {
+            return statInfo;
+        }
+
+        let hasQualityInfo = true;
