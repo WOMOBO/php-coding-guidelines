@@ -84,3 +84,95 @@ class NativePlayer {
     off(event, listener) {
         this._emitter.removeListener(event, listener);
     }
+
+    attachMediaElement(mediaElement) {
+        this._mediaElement = mediaElement;
+        mediaElement.addEventListener('loadedmetadata', this.e.onvLoadedMetadata);
+
+        if (this._pendingSeekTime != null) {
+            try {
+                mediaElement.currentTime = this._pendingSeekTime;
+                this._pendingSeekTime = null;
+            } catch (e) {
+                // IE11 may throw InvalidStateError if readyState === 0
+                // Defer set currentTime operation after loadedmetadata
+            }
+        }
+    }
+
+    detachMediaElement() {
+        if (this._mediaElement) {
+            this._mediaElement.src = '';
+            this._mediaElement.removeAttribute('src');
+            this._mediaElement.removeEventListener('loadedmetadata', this.e.onvLoadedMetadata);
+            this._mediaElement = null;
+        }
+        if (this._statisticsReporter != null) {
+            window.clearInterval(this._statisticsReporter);
+            this._statisticsReporter = null;
+        }
+    }
+
+    load() {
+        if (!this._mediaElement) {
+            throw new IllegalStateException('HTMLMediaElement must be attached before load()!');
+        }
+        this._mediaElement.src = this._mediaDataSource.url;
+
+        if (this._mediaElement.readyState > 0) {
+            this._mediaElement.currentTime = 0;
+        }
+
+        this._mediaElement.preload = 'auto';
+        this._mediaElement.load();
+        this._statisticsReporter = window.setInterval(
+            this._reportStatisticsInfo.bind(this),
+        this._config.statisticsInfoReportInterval);
+    }
+
+    unload() {
+        if (this._mediaElement) {
+            this._mediaElement.src = '';
+            this._mediaElement.removeAttribute('src');
+        }
+        if (this._statisticsReporter != null) {
+            window.clearInterval(this._statisticsReporter);
+            this._statisticsReporter = null;
+        }
+    }
+
+    play() {
+        return this._mediaElement.play();
+    }
+
+    pause() {
+        this._mediaElement.pause();
+    }
+
+    get type() {
+        return this._type;
+    }
+
+    get buffered() {
+        return this._mediaElement.buffered;
+    }
+
+    get duration() {
+        return this._mediaElement.duration;
+    }
+
+    get volume() {
+        return this._mediaElement.volume;
+    }
+
+    set volume(value) {
+        this._mediaElement.volume = value;
+    }
+
+    get muted() {
+        return this._mediaElement.muted;
+    }
+
+    set muted(muted) {
+        this._mediaElement.muted = muted;
+    }
