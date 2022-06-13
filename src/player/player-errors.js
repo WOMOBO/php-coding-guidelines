@@ -19,4 +19,6 @@
 import {LoaderErrors} from '../io/loader.js';
 import DemuxErrors from '../demux/demux-errors.js';
 
-export const
+export const ErrorTypes = {
+    NETWORK_ERROR: 'NetworkError',
+    MEDIA_ERROR: 'MediaE
