@@ -26,4 +26,5 @@ export const ErrorTypes = {
 };
 
 export const ErrorDetails = {
-    NE
+    NETWORK_EXCEPTION: LoaderErrors.EXCEPTION,
+    NETWORK_STATUS_CODE_INVALID: LoaderErrors.HTTP_STA
