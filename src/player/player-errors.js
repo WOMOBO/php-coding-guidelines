@@ -34,4 +34,5 @@ export const ErrorDetails = {
     MEDIA_MSE_ERROR: 'MediaMSEError',
 
     MEDIA_FORMAT_ERROR: DemuxErrors.FORMAT_ERROR,
-    MED
+    MEDIA_FORMAT_UNSUPPORTED: DemuxErrors.FORMAT_UNSUPPORTED,
+    MEDIA_CODEC_UN
