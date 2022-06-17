@@ -22,4 +22,8 @@ const PlayerEvents = {
     RECOVERED_EARLY_EOF: 'recovered_early_eof',
     MEDIA_INFO: 'media_info',
     METADATA_ARRIVED: 'metadata_arrived',
-    SCRIPTDATA_ARRIVED: 'scriptdata_arri
+    SCRIPTDATA_ARRIVED: 'scriptdata_arrived',
+    STATISTICS_INFO: 'statistics_info'
+};
+
+export default PlayerEvents;
