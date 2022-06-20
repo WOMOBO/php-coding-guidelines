@@ -20,4 +20,6 @@
 class AAC {
 
     static getSilentFrame(codec, channelCount) {
-       
+        if (codec === 'mp4a.40.2') {
+            // handle LC-AAC
+            if (channelCount ===
