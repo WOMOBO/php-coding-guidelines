@@ -25,4 +25,5 @@ class AAC {
             if (channelCount === 1) {
                 return new Uint8Array([0x00, 0xc8, 0x00, 0x80, 0x23, 0x80]);
             } else if (channelCount === 2) {
-                return new Uint8A
+                return new Uint8Array([0x21, 0x00, 0x49, 0x90, 0x02, 0x19, 0x00, 0x23, 0x80]);
+            } else if (channelCou
