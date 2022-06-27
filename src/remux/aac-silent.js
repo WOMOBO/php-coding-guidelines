@@ -38,4 +38,5 @@ class AAC {
         } else {
             // handle HE-AAC (mp4a.40.5 / mp4a.40.29)
             if (channelCount === 1) {
-                // ffmpeg -y -f lavfi -i "aevalsrc=0:d=0.05" -c:a libfdk_aac -profile:a aac_he -b:a 4k output.
+                // ffmpeg -y -f lavfi -i "aevalsrc=0:d=0.05" -c:a libfdk_aac -profile:a aac_he -b:a 4k output.aac && hexdump -v -e '16/1 "0x%x," "\n"' -v output.aac
+                return new Uint8A
