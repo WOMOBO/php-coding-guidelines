@@ -132,3 +132,78 @@ class MP4 {
 
         result = new Uint8Array(size);
         result[0] = (size >>> 24) & 0xFF;  // size
+        result[1] = (size >>> 16) & 0xFF;
+        result[2] = (size >>>  8) & 0xFF;
+        result[3] = (size) & 0xFF;
+
+        result.set(type, 4);  // type
+
+        let offset = 8;
+        for (let i = 0; i < arrayCount; i++) {  // data body
+            result.set(datas[i], offset);
+            offset += datas[i].byteLength;
+        }
+
+        return result;
+    }
+
+    // emit ftyp & moov
+    static generateInitSegment(meta) {
+        let ftyp = MP4.box(MP4.types.ftyp, MP4.constants.FTYP);
+        let moov = MP4.moov(meta);
+
+        let result = new Uint8Array(ftyp.byteLength + moov.byteLength);
+        result.set(ftyp, 0);
+        result.set(moov, ftyp.byteLength);
+        return result;
+    }
+
+    // Movie metadata box
+    static moov(meta) {
+        let mvhd = MP4.mvhd(meta.timescale, meta.duration);
+        let trak = MP4.trak(meta);
+        let mvex = MP4.mvex(meta);
+        return MP4.box(MP4.types.moov, mvhd, trak, mvex);
+    }
+
+    // Movie header box
+    static mvhd(timescale, duration) {
+        return MP4.box(MP4.types.mvhd, new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,  // version(0) + flags
+            0x00, 0x00, 0x00, 0x00,  // creation_time
+            0x00, 0x00, 0x00, 0x00,  // modification_time
+            (timescale >>> 24) & 0xFF,  // timescale: 4 bytes
+            (timescale >>> 16) & 0xFF,
+            (timescale >>>  8) & 0xFF,
+            (timescale) & 0xFF,
+            (duration >>> 24) & 0xFF,   // duration: 4 bytes
+            (duration >>> 16) & 0xFF,
+            (duration >>>  8) & 0xFF,
+            (duration) & 0xFF,
+            0x00, 0x01, 0x00, 0x00,  // Preferred rate: 1.0
+            0x01, 0x00, 0x00, 0x00,  // PreferredVolume(1.0, 2bytes) + reserved(2bytes)
+            0x00, 0x00, 0x00, 0x00,  // reserved: 4 + 4 bytes
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x01, 0x00, 0x00,  // ----begin composition matrix----
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x01, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x40, 0x00, 0x00, 0x00,  // ----end composition matrix----
+            0x00, 0x00, 0x00, 0x00,  // ----begin pre_defined 6 * 4 bytes----
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,  // ----end pre_defined 6 * 4 bytes----
+            0xFF, 0xFF, 0xFF, 0xFF   // next_track_ID
+        ]));
+    }
+
+    // Track box
+    static trak(meta) {
+        return MP4.box(MP4.types.trak, MP4.tkhd(meta), MP4.mdia(meta));
+    }
