@@ -51,3 +51,6 @@ class AAC {
         return null;
     }
 
+}
+
+export default AAC;
