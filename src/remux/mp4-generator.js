@@ -62,3 +62,73 @@ class MP4 {
         constants.STTS = new Uint8Array([
             0x00, 0x00, 0x00, 0x00,  // version(0) + flags
             0x00, 0x00, 0x00, 0x00   // entry_count
+        ]);
+
+        constants.STSC = constants.STCO = constants.STTS;
+
+        constants.STSZ = new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,  // version(0) + flags
+            0x00, 0x00, 0x00, 0x00,  // sample_size
+            0x00, 0x00, 0x00, 0x00   // sample_count
+        ]);
+
+        constants.HDLR_VIDEO = new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,  // version(0) + flags
+            0x00, 0x00, 0x00, 0x00,  // pre_defined
+            0x76, 0x69, 0x64, 0x65,  // handler_type: 'vide'
+            0x00, 0x00, 0x00, 0x00,  // reserved: 3 * 4 bytes
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x56, 0x69, 0x64, 0x65,
+            0x6F, 0x48, 0x61, 0x6E,
+            0x64, 0x6C, 0x65, 0x72, 0x00  // name: VideoHandler
+        ]);
+
+        constants.HDLR_AUDIO = new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,  // version(0) + flags
+            0x00, 0x00, 0x00, 0x00,  // pre_defined
+            0x73, 0x6F, 0x75, 0x6E,  // handler_type: 'soun'
+            0x00, 0x00, 0x00, 0x00,  // reserved: 3 * 4 bytes
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x53, 0x6F, 0x75, 0x6E,
+            0x64, 0x48, 0x61, 0x6E,
+            0x64, 0x6C, 0x65, 0x72, 0x00  // name: SoundHandler
+        ]);
+
+        constants.DREF = new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,  // version(0) + flags
+            0x00, 0x00, 0x00, 0x01,  // entry_count
+            0x00, 0x00, 0x00, 0x0C,  // entry_size
+            0x75, 0x72, 0x6C, 0x20,  // type 'url '
+            0x00, 0x00, 0x00, 0x01   // version(0) + flags
+        ]);
+
+        // Sound media header
+        constants.SMHD = new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,  // version(0) + flags
+            0x00, 0x00, 0x00, 0x00   // balance(2) + reserved(2)
+        ]);
+
+        // video media header
+        constants.VMHD = new Uint8Array([
+            0x00, 0x00, 0x00, 0x01,  // version(0) + flags
+            0x00, 0x00,              // graphicsmode: 2 bytes
+            0x00, 0x00, 0x00, 0x00,  // opcolor: 3 * 2 bytes
+            0x00, 0x00
+        ]);
+    }
+
+    // Generate a box
+    static box(type) {
+        let size = 8;
+        let result = null;
+        let datas = Array.prototype.slice.call(arguments, 1);
+        let arrayCount = datas.length;
+
+        for (let i = 0; i < arrayCount; i++) {
+            size += datas[i].byteLength;
+        }
+
+        result = new Uint8Array(size);
+        result[0] = (size >>> 24) & 0xFF;  // size
