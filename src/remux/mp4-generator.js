@@ -284,3 +284,84 @@ class MP4 {
         }
         return MP4.box(MP4.types.hdlr, data);
     }
+
+    // Media infomation box
+    static minf(meta) {
+        let xmhd = null;
+        if (meta.type === 'audio') {
+            xmhd = MP4.box(MP4.types.smhd, MP4.constants.SMHD);
+        } else {
+            xmhd = MP4.box(MP4.types.vmhd, MP4.constants.VMHD);
+        }
+        return MP4.box(MP4.types.minf, xmhd, MP4.dinf(), MP4.stbl(meta));
+    }
+
+    // Data infomation box
+    static dinf() {
+        let result = MP4.box(MP4.types.dinf,
+            MP4.box(MP4.types.dref, MP4.constants.DREF)
+        );
+        return result;
+    }
+
+    // Sample table box
+    static stbl(meta) {
+        let result = MP4.box(MP4.types.stbl,  // type: stbl
+            MP4.stsd(meta),  // Sample Description Table
+            MP4.box(MP4.types.stts, MP4.constants.STTS),  // Time-To-Sample
+            MP4.box(MP4.types.stsc, MP4.constants.STSC),  // Sample-To-Chunk
+            MP4.box(MP4.types.stsz, MP4.constants.STSZ),  // Sample size
+            MP4.box(MP4.types.stco, MP4.constants.STCO)   // Chunk offset
+        ); 
+        return result; 
+    }
+
+    // Sample description box
+    static stsd(meta) {
+        if (meta.type === 'audio') {
+            if (meta.codec === 'mp3') {
+                return MP4.box(MP4.types.stsd, MP4.constants.STSD_PREFIX, MP4.mp3(meta));
+            }
+            // else: aac -> mp4a
+            return MP4.box(MP4.types.stsd, MP4.constants.STSD_PREFIX, MP4.mp4a(meta));
+        } else {
+            return MP4.box(MP4.types.stsd, MP4.constants.STSD_PREFIX, MP4.avc1(meta));
+        }
+    }
+
+    static mp3(meta) {
+        let channelCount = meta.channelCount;
+        let sampleRate = meta.audioSampleRate;
+
+        let data = new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,  // reserved(4)
+            0x00, 0x00, 0x00, 0x01,  // reserved(2) + data_reference_index(2)
+            0x00, 0x00, 0x00, 0x00,  // reserved: 2 * 4 bytes
+            0x00, 0x00, 0x00, 0x00,
+            0x00, channelCount,      // channelCount(2)
+            0x00, 0x10,              // sampleSize(2)
+            0x00, 0x00, 0x00, 0x00,  // reserved(4)
+            (sampleRate >>> 8) & 0xFF,  // Audio sample rate
+            (sampleRate) & 0xFF,
+            0x00, 0x00
+        ]);
+
+        return MP4.box(MP4.types['.mp3'], data);
+    }
+
+    static mp4a(meta) {
+        let channelCount = meta.channelCount;
+        let sampleRate = meta.audioSampleRate;
+
+        let data = new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,  // reserved(4)
+            0x00, 0x00, 0x00, 0x01,  // reserved(2) + data_reference_index(2)
+            0x00, 0x00, 0x00, 0x00,  // reserved: 2 * 4 bytes
+            0x00, 0x00, 0x00, 0x00,
+            0x00, channelCount,      // channelCount(2)
+            0x00, 0x10,              // sampleSize(2)
+            0x00, 0x00, 0x00, 0x00,  // reserved(4)
+            (sampleRate >>> 8) & 0xFF,  // Audio sample rate
+            (sampleRate) & 0xFF,
+            0x00, 0x00
+        ]);
