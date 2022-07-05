@@ -365,3 +365,68 @@ class MP4 {
             (sampleRate) & 0xFF,
             0x00, 0x00
         ]);
+
+        return MP4.box(MP4.types.mp4a, data, MP4.esds(meta));
+    }
+
+    static esds(meta) {
+        let config = meta.config || [];
+        let configSize = config.length;
+        let data = new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,  // version 0 + flags
+
+            0x03,                    // descriptor_type
+            0x17 + configSize,       // length3
+            0x00, 0x01,              // es_id
+            0x00,                    // stream_priority
+
+            0x04,                    // descriptor_type
+            0x0F + configSize,       // length
+            0x40,                    // codec: mpeg4_audio
+            0x15,                    // stream_type: Audio
+            0x00, 0x00, 0x00,        // buffer_size
+            0x00, 0x00, 0x00, 0x00,  // maxBitrate
+            0x00, 0x00, 0x00, 0x00,  // avgBitrate
+
+            0x05                     // descriptor_type
+        ].concat([
+            configSize
+        ]).concat(
+            config
+        ).concat([
+            0x06, 0x01, 0x02         // GASpecificConfig
+        ]));
+        return MP4.box(MP4.types.esds, data);
+    }
+
+    static avc1(meta) {
+        let avcc = meta.avcc;
+        let width = meta.codecWidth, height = meta.codecHeight;
+
+        let data = new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,  // reserved(4)
+            0x00, 0x00, 0x00, 0x01,  // reserved(2) + data_reference_index(2)
+            0x00, 0x00, 0x00, 0x00,  // pre_defined(2) + reserved(2)
+            0x00, 0x00, 0x00, 0x00,  // pre_defined: 3 * 4 bytes
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            (width >>> 8) & 0xFF,    // width: 2 bytes
+            (width) & 0xFF,
+            (height >>> 8) & 0xFF,   // height: 2 bytes
+            (height) & 0xFF,
+            0x00, 0x48, 0x00, 0x00,  // horizresolution: 4 bytes
+            0x00, 0x48, 0x00, 0x00,  // vertresolution: 4 bytes
+            0x00, 0x00, 0x00, 0x00,  // reserved: 4 bytes
+            0x00, 0x01,              // frame_count
+            0x0A,                    // strlen
+            0x78, 0x71, 0x71, 0x2F,  // compressorname: 32 bytes
+            0x66, 0x6C, 0x76, 0x2E,
+            0x6A, 0x73, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00,
+            0x00, 0x18,              // depth
+            0xFF, 0xFF               // pre_defined = -1
+        ]);
