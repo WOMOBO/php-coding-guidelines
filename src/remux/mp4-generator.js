@@ -430,3 +430,66 @@ class MP4 {
             0x00, 0x18,              // depth
             0xFF, 0xFF               // pre_defined = -1
         ]);
+        return MP4.box(MP4.types.avc1, data, MP4.box(MP4.types.avcC, avcc));
+    }
+
+    // Movie Extends box
+    static mvex(meta) {
+        return MP4.box(MP4.types.mvex, MP4.trex(meta));
+    }
+
+    // Track Extends box
+    static trex(meta) {
+        let trackId = meta.id;
+        let data = new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,  // version(0) + flags
+            (trackId >>> 24) & 0xFF, // track_ID
+            (trackId >>> 16) & 0xFF,
+            (trackId >>>  8) & 0xFF,
+            (trackId) & 0xFF,
+            0x00, 0x00, 0x00, 0x01,  // default_sample_description_index
+            0x00, 0x00, 0x00, 0x00,  // default_sample_duration
+            0x00, 0x00, 0x00, 0x00,  // default_sample_size
+            0x00, 0x01, 0x00, 0x01   // default_sample_flags
+        ]);
+        return MP4.box(MP4.types.trex, data);
+    }
+
+    // Movie fragment box
+    static moof(track, baseMediaDecodeTime) {
+        return MP4.box(MP4.types.moof, MP4.mfhd(track.sequenceNumber), MP4.traf(track, baseMediaDecodeTime));
+    }
+
+    static mfhd(sequenceNumber) {
+        let data = new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,
+            (sequenceNumber >>> 24) & 0xFF,  // sequence_number: int32
+            (sequenceNumber >>> 16) & 0xFF,
+            (sequenceNumber >>>  8) & 0xFF,
+            (sequenceNumber) & 0xFF
+        ]);
+        return MP4.box(MP4.types.mfhd, data);
+    }
+
+    // Track fragment box
+    static traf(track, baseMediaDecodeTime) {
+        let trackId = track.id;
+
+        // Track fragment header box
+        let tfhd = MP4.box(MP4.types.tfhd, new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,  // version(0) & flags
+            (trackId >>> 24) & 0xFF, // track_ID
+            (trackId >>> 16) & 0xFF,
+            (trackId >>>  8) & 0xFF,
+            (trackId) & 0xFF
+        ]));
+        // Track Fragment Decode Time
+        let tfdt = MP4.box(MP4.types.tfdt, new Uint8Array([
+            0x00, 0x00, 0x00, 0x00,  // version(0) & flags
+            (baseMediaDecodeTime >>> 24) & 0xFF,  // baseMediaDecodeTime: int32
+            (baseMediaDecodeTime >>> 16) & 0xFF,
+            (baseMediaDecodeTime >>>  8) & 0xFF,
+            (baseMediaDecodeTime) & 0xFF
+        ]));
+        let sdtp = MP4.sdtp(track);
+        let trun = MP4.trun(track, sdtp.byteLength + 16 + 16 + 8 + 16 + 8 + 8);
