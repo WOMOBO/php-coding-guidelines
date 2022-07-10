@@ -27,4 +27,8 @@ import { IllegalStateException } from '../utils/exception.js';
 // Fragmented mp4 remuxer
 class MP4Remuxer {
 
-    constructor(conf
+    constructor(config) {
+        this.TAG = 'MP4Remuxer';
+
+        this._config = config;
+        this.
