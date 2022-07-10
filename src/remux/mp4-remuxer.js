@@ -31,4 +31,7 @@ class MP4Remuxer {
         this.TAG = 'MP4Remuxer';
 
         this._config = config;
-        this.
+        this._isLive = (config.isLive === true) ? true : false;
+
+        this._dtsBase = -1;
+        this._d
