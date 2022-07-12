@@ -34,4 +34,6 @@ class MP4Remuxer {
         this._isLive = (config.isLive === true) ? true : false;
 
         this._dtsBase = -1;
-        this._d
+        this._dtsBaseInited = false;
+        this._audioDtsBase = Infinity;
+        this.
