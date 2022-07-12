@@ -36,4 +36,5 @@ class MP4Remuxer {
         this._dtsBase = -1;
         this._dtsBaseInited = false;
         this._audioDtsBase = Infinity;
-        this.
+        this._videoDtsBase = Infinity;
+        this._audioNextDts = undefine
