@@ -40,4 +40,7 @@ class MP4Remuxer {
         this._audioNextDts = undefined;
         this._videoNextDts = undefined;
         this._audioStashedLastSample = null;
-  
+        this._videoStashedLastSample = null;
+
+        this._audioMeta = null;
+        this._vid
