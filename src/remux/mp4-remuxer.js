@@ -51,4 +51,5 @@ class MP4Remuxer {
         this._onInitSegment = null;
         this._onMediaSegment = null;
 
-        // Workaround for chrome < 50: Always force first 
+        // Workaround for chrome < 50: Always force first sample as a Random Access Point in media segment
+        // see https://bugs.chrom
