@@ -49,4 +49,6 @@ class MP4Remuxer {
         this._videoSegmentInfoList = new MediaSegmentInfoList('video');
 
         this._onInitSegment = null;
-        this._o
+        this._onMediaSegment = null;
+
+        // Workaround for chrome < 50: Always force first 
