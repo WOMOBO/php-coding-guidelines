@@ -70,4 +70,6 @@ class MP4Remuxer {
     destroy() {
         this._dtsBase = -1;
         this._dtsBaseInited = false;
-        this.
+        this._audioMeta = null;
+        this._videoMeta = null;
+        this._au
