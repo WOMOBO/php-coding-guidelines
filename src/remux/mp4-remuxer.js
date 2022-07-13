@@ -67,4 +67,7 @@ class MP4Remuxer {
         this._fillAudioTimestampGap = this._config.fixAudioTimestampGap;
     }
 
-    
+    destroy() {
+        this._dtsBase = -1;
+        this._dtsBaseInited = false;
+        this.
