@@ -59,4 +59,6 @@ class MP4Remuxer {
 
         // Workaround for IE11/Edge: Fill silent aac frame after keyframe-seeking
         // Make audio beginDts equals with video beginDts, in order to fix seek freeze
-    
+        this._fillSilentAfterSeek = (Browser.msedge || Browser.msie);
+
+        // While 
