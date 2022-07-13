@@ -64,4 +64,7 @@ class MP4Remuxer {
         // While only FireFox supports 'audio/mp4, codecs="mp3"', use 'audio/mpeg' for chrome, safari, ...
         this._mp3UseMpegAudio = !Browser.firefox;
 
-       
+        this._fillAudioTimestampGap = this._config.fixAudioTimestampGap;
+    }
+
+    
