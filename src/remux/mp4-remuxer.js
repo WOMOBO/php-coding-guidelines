@@ -61,4 +61,7 @@ class MP4Remuxer {
         // Make audio beginDts equals with video beginDts, in order to fix seek freeze
         this._fillSilentAfterSeek = (Browser.msedge || Browser.msie);
 
-        // While only FireFox supports 'audio/mp4, codecs="mp3"', use 'audio/mpeg' for 
+        // While only FireFox supports 'audio/mp4, codecs="mp3"', use 'audio/mpeg' for chrome, safari, ...
+        this._mp3UseMpegAudio = !Browser.firefox;
+
+       
