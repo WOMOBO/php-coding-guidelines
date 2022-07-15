@@ -72,4 +72,6 @@ class MP4Remuxer {
         this._dtsBaseInited = false;
         this._audioMeta = null;
         this._videoMeta = null;
-        this._au
+        this._audioSegmentInfoList.clear();
+        this._audioSegmentInfoList = null;
+        thi
