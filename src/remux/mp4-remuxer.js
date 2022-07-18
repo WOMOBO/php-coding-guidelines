@@ -80,4 +80,5 @@ class MP4Remuxer {
         this._onMediaSegment = null;
     }
 
-    bin
+    bindDataSource(producer) {
+        producer.onDataAvailable = this.remux.b
