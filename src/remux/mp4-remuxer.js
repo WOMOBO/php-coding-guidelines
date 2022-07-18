@@ -83,4 +83,7 @@ class MP4Remuxer {
     bindDataSource(producer) {
         producer.onDataAvailable = this.remux.bind(this);
         producer.onTrackMetadata = this._onTrackMetadataReceived.bind(this);
-        return this
+        return this;
+    }
+
+    /* prototype: function onInitSegment(type: string, initSegment: ArrayBuffer): voi
