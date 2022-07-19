@@ -99,4 +99,7 @@ class MP4Remuxer {
     }
 
     set onInitSegment(callback) {
-        this.
+        this._onInitSegment = callback;
+    }
+
+    /* prototype: function onMediaSegment(type: string, mediaS
