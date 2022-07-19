@@ -86,4 +86,8 @@ class MP4Remuxer {
         return this;
     }
 
-    /* prototype: function onInitSegment(type: string, initSegment: ArrayBuffer): voi
+    /* prototype: function onInitSegment(type: string, initSegment: ArrayBuffer): void
+       InitSegment: {
+           type: string,
+           data: ArrayBuffer,
+        
