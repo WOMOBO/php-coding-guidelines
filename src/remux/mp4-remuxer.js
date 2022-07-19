@@ -90,4 +90,8 @@ class MP4Remuxer {
        InitSegment: {
            type: string,
            data: ArrayBuffer,
-        
+           codec: string,
+           container: string
+       }
+    */
+    get onInitSegment
