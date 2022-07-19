@@ -94,4 +94,9 @@ class MP4Remuxer {
            container: string
        }
     */
-    get onInitSegment
+    get onInitSegment() {
+        return this._onInitSegment;
+    }
+
+    set onInitSegment(callback) {
+        this.
