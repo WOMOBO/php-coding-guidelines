@@ -111,4 +111,8 @@ class MP4Remuxer {
        }
     */
     get onMediaSegment() {
-        return this._on
+        return this._onMediaSegment;
+    }
+
+    set onMediaSegment(callback) {
+        this._onMediaSegmen
