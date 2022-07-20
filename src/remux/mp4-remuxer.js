@@ -107,4 +107,8 @@ class MP4Remuxer {
            type: string,
            data: ArrayBuffer,
            sampleCount: int32
-           info: MediaSegme
+           info: MediaSegmentInfo
+       }
+    */
+    get onMediaSegment() {
+        return this._on
