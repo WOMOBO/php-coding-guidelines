@@ -115,4 +115,8 @@ class MP4Remuxer {
     }
 
     set onMediaSegment(callback) {
-        this._onMediaSegmen
+        this._onMediaSegment = callback;
+    }
+
+    insertDiscontinuity() {
+        this._audioNe
