@@ -130,4 +130,5 @@ class MP4Remuxer {
     }
 
     remux(audioTrack, videoTrack) {
-        if
+        if (!this._onMediaSegment) {
+            throw new IllegalStateException('MP4Remuxer: onMe
