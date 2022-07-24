@@ -139,3 +139,8 @@ class MP4Remuxer {
         this._remuxVideo(videoTrack);
         this._remuxAudio(audioTrack);
     }
+
+    _onTrackMetadataReceived(type, metadata) {
+        let metabox = null;
+
+        
