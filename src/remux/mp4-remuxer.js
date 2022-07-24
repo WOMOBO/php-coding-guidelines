@@ -143,4 +143,7 @@ class MP4Remuxer {
     _onTrackMetadataReceived(type, metadata) {
         let metabox = null;
 
-        
+        let container = 'mp4';
+        let codec = metadata.codec;
+
+        if (type === 'audio'
