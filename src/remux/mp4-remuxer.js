@@ -136,4 +136,6 @@ class MP4Remuxer {
         if (!this._dtsBaseInited) {
             this._calculateDtsBase(audioTrack, videoTrack);
         }
-      
+        this._remuxVideo(videoTrack);
+        this._remuxAudio(audioTrack);
+    }
