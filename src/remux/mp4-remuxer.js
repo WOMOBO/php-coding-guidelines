@@ -152,4 +152,6 @@ class MP4Remuxer {
                 // 'audio/mpeg' for MP3 audio track
                 container = 'mpeg';
                 codec = '';
-                metabox = new Uint8Ar
+                metabox = new Uint8Array();
+            } else {
+                // 'audio/mp4, codecs="codec"
