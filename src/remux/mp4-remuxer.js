@@ -157,4 +157,6 @@ class MP4Remuxer {
                 // 'audio/mp4, codecs="codec"'
                 metabox = MP4.generateInitSegment(metadata);
             }
-  
+        } else if (type === 'video') {
+            this._videoMeta = metadata;
+   
