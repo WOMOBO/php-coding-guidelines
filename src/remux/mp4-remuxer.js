@@ -154,4 +154,7 @@ class MP4Remuxer {
                 codec = '';
                 metabox = new Uint8Array();
             } else {
-                // 'audio/mp4, codecs="codec"
+                // 'audio/mp4, codecs="codec"'
+                metabox = MP4.generateInitSegment(metadata);
+            }
+  
