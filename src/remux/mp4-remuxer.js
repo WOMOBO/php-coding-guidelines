@@ -148,4 +148,6 @@ class MP4Remuxer {
 
         if (type === 'audio') {
             this._audioMeta = metadata;
-            if (metadata.codec === 'm
+            if (metadata.codec === 'mp3' && this._mp3UseMpegAudio) {
+                // 'audio/mpeg' for MP3 audio track
+                c
