@@ -162,3 +162,7 @@ class MP4Remuxer {
             metabox = MP4.generateInitSegment(metadata);
         } else {
             return;
+        }
+
+        // dispatch metabox (Initialization Segment)
+        if (!this._onInitSe
