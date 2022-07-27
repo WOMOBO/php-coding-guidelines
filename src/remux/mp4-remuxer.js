@@ -166,4 +166,7 @@ class MP4Remuxer {
 
         // dispatch metabox (Initialization Segment)
         if (!this._onInitSegment) {
-            throw new IllegalStateException('MP4Remuxer: onInitSegment ca
+            throw new IllegalStateException('MP4Remuxer: onInitSegment callback must be specified!');
+        }
+        this._onInitSegment(type, {
+   
