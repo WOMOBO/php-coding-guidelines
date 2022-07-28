@@ -169,4 +169,6 @@ class MP4Remuxer {
             throw new IllegalStateException('MP4Remuxer: onInitSegment callback must be specified!');
         }
         this._onInitSegment(type, {
-   
+            type: type,
+            data: metabox.buffer,
+            codec: codec,
