@@ -172,3 +172,5 @@ class MP4Remuxer {
             type: type,
             data: metabox.buffer,
             codec: codec,
+            container: `${type}/${container}`,
+            mediaDuration
