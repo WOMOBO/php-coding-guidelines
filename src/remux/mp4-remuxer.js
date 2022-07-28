@@ -173,4 +173,8 @@ class MP4Remuxer {
             data: metabox.buffer,
             codec: codec,
             container: `${type}/${container}`,
-            mediaDuration
+            mediaDuration: metadata.duration  // in timescale 1000 (milliseconds)
+        });
+    }
+
+    _calcula
