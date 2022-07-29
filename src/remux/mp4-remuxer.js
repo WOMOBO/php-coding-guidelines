@@ -177,4 +177,7 @@ class MP4Remuxer {
         });
     }
 
-    _calcula
+    _calculateDtsBase(audioTrack, videoTrack) {
+        if (this._dtsBaseInited) {
+            return;
+        }
