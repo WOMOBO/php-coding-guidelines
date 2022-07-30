@@ -189,4 +189,8 @@ class MP4Remuxer {
             this._videoDtsBase = videoTrack.samples[0].dts;
         }
 
-        this._dtsBase = Math.min(this._audioDtsBase, this._videoDt
+        this._dtsBase = Math.min(this._audioDtsBase, this._videoDtsBase);
+        this._dtsBaseInited = true;
+    }
+
+    flushStashedSam
