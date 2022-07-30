@@ -185,4 +185,5 @@ class MP4Remuxer {
         if (audioTrack.samples && audioTrack.samples.length) {
             this._audioDtsBase = audioTrack.samples[0].dts;
         }
-        if (videoTrack.sample
+        if (videoTrack.samples && videoTrack.samples.length) {
+            this._videoDtsBase = videoTrack.samples[0].d
