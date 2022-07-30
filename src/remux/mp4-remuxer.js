@@ -183,4 +183,6 @@ class MP4Remuxer {
         }
 
         if (audioTrack.samples && audioTrack.samples.length) {
-            t
+            this._audioDtsBase = audioTrack.samples[0].dts;
+        }
+        if (videoTrack.sample
