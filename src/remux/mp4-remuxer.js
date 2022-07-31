@@ -211,4 +211,7 @@ class MP4Remuxer {
         }
 
         let audioTrack = {
-        
+            type: 'audio',
+            id: 2,
+            sequenceNumber: 0,
+            sam
