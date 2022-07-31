@@ -207,4 +207,8 @@ class MP4Remuxer {
 
         if (videoSample != null) {
             videoTrack.samples.push(videoSample);
-         
+            videoTrack.length = videoSample.length;
+        }
+
+        let audioTrack = {
+        
