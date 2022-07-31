@@ -214,4 +214,9 @@ class MP4Remuxer {
             type: 'audio',
             id: 2,
             sequenceNumber: 0,
-            sam
+            samples: [],
+            length: 0
+        };
+
+        if (audioSample != null) {
+    
