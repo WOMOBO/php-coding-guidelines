@@ -201,4 +201,8 @@ class MP4Remuxer {
             type: 'video',
             id: 1,
             sequenceNumber: 0,
-      
+            samples: [],
+            length: 0
+        };
+
+        i
