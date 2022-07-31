@@ -193,4 +193,6 @@ class MP4Remuxer {
         this._dtsBaseInited = true;
     }
 
-    flushStashedSam
+    flushStashedSamples() {
+        let videoSample = this._videoStashedLastSample;
+        let audi
