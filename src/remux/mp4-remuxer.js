@@ -205,4 +205,6 @@ class MP4Remuxer {
             length: 0
         };
 
-        i
+        if (videoSample != null) {
+            videoTrack.samples.push(videoSample);
+         
