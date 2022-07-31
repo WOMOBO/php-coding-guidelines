@@ -219,4 +219,5 @@ class MP4Remuxer {
         };
 
         if (audioSample != null) {
-    
+            audioTrack.samples.push(audioSample);
+            audioTrack.length = audioSample.lengt
