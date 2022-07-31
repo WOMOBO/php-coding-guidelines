@@ -195,4 +195,7 @@ class MP4Remuxer {
 
     flushStashedSamples() {
         let videoSample = this._videoStashedLastSample;
-        let audi
+        let audioSample = this._audioStashedLastSample;
+
+        let videoTrack = {
+     
