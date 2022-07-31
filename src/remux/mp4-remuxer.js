@@ -198,4 +198,7 @@ class MP4Remuxer {
         let audioSample = this._audioStashedLastSample;
 
         let videoTrack = {
-     
+            type: 'video',
+            id: 1,
+            sequenceNumber: 0,
+      
