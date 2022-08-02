@@ -231,4 +231,5 @@ class MP4Remuxer {
     }
 
     _remuxAudio(audioTrack, force) {
-   
+        if (this._audioMeta == null) {
+            return;
