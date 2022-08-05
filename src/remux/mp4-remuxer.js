@@ -255,4 +255,8 @@ class MP4Remuxer {
             return;
         }  // else if (force === true) do remux
 
-        let offset = 0
+        let offset = 0;
+        let mdatbox = null;
+        let mdatBytes = 0;
+
+        // calculate initial mdat 
