@@ -252,4 +252,7 @@ class MP4Remuxer {
         if (samples.length === 1 && !force) {
             // If [sample count in current batch] === 1 && (force != true)
             // Ignore and keep in demuxer's queue
-     
+            return;
+        }  // else if (force === true) do remux
+
+        let offset = 0
