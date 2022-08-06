@@ -262,4 +262,7 @@ class MP4Remuxer {
         // calculate initial mdat size
         if (mpegRawTrack) {
             // for raw mpeg buffer
-            off
+            offset = 0;
+            mdatBytes = track.length;
+        } else {
+            // for fmp4 
