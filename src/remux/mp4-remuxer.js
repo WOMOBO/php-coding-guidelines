@@ -265,4 +265,6 @@ class MP4Remuxer {
             offset = 0;
             mdatBytes = track.length;
         } else {
-            // for fmp4 
+            // for fmp4 mdat box
+            offset = 8;  // size + type
+            mdatBytes = 8 + track.l
