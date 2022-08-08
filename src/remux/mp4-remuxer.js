@@ -281,4 +281,6 @@ class MP4Remuxer {
 
         // Insert [stashed lastSample in the previous batch] to the front
         if (this._audioStashedLastSample != null) {
-            let sample = this._audioStashedLastSamp
+            let sample = this._audioStashedLastSample;
+            this._audioStashedLastSample = null;
+            samples.un
