@@ -267,4 +267,10 @@ class MP4Remuxer {
         } else {
             // for fmp4 mdat box
             offset = 8;  // size + type
-            mdatBytes = 8 + track.l
+            mdatBytes = 8 + track.length;
+        }
+
+
+        let lastSample = null;
+
+        // Pop the lastSample 
