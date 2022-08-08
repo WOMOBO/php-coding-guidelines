@@ -279,4 +279,5 @@ class MP4Remuxer {
             mdatBytes -= lastSample.length;
         }
 
-        // I
+        // Insert [stashed lastSample in the previous batch] to the front
+        if (this._
