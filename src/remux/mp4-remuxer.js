@@ -297,4 +297,5 @@ class MP4Remuxer {
 
         // calculate dtsCorrection
         if (this._audioNextDts) {
-      
+            dtsCorrection = firstSampleOriginalDts - this._audioNextDts;
+        } else {  // th
