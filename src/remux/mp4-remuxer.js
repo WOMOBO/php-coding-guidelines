@@ -300,3 +300,5 @@ class MP4Remuxer {
             dtsCorrection = firstSampleOriginalDts - this._audioNextDts;
         } else {  // this._audioNextDts == undefined
             if (this._audioSegmentInfoList.isEmpty()) {
+                dtsCorrection = 0;
+                if (this._fillSilentAfterSeek && !th
