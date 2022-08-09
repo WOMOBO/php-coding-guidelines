@@ -288,4 +288,6 @@ class MP4Remuxer {
         }
 
         // Stash the lastSample of current batch, waiting for next batch
-        if (lastSample != n
+        if (lastSample != null) {
+            this._audioStashedLastSample = lastSample;
+  
