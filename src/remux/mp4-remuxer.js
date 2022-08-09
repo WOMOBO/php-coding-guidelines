@@ -283,4 +283,8 @@ class MP4Remuxer {
         if (this._audioStashedLastSample != null) {
             let sample = this._audioStashedLastSample;
             this._audioStashedLastSample = null;
-            samples.un
+            samples.unshift(sample);
+            mdatBytes += sample.length;
+        }
+
+        // S
