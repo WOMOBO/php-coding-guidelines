@@ -287,4 +287,5 @@ class MP4Remuxer {
             mdatBytes += sample.length;
         }
 
-        // S
+        // Stash the lastSample of current batch, waiting for next batch
+        if (lastSample != n
