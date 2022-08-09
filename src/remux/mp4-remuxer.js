@@ -290,4 +290,7 @@ class MP4Remuxer {
         // Stash the lastSample of current batch, waiting for next batch
         if (lastSample != null) {
             this._audioStashedLastSample = lastSample;
-  
+        }
+
+
+        let firstSampleOriginalDts = samples[0].dts - this._dts
