@@ -302,4 +302,6 @@ class MP4Remuxer {
             if (this._audioSegmentInfoList.isEmpty()) {
                 dtsCorrection = 0;
                 if (this._fillSilentAfterSeek && !this._videoSegmentInfoList.isEmpty()) {
-                    if (this._audioMeta
+                    if (this._audioMeta.originalCodec !== 'mp3') {
+                        insertPrefixSilentFrame = true;
+ 
