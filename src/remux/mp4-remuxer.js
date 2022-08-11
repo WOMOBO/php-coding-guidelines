@@ -307,4 +307,6 @@ class MP4Remuxer {
                     }
                 }
             } else {
-                let lastSample = this._audioSegmentInfoList.getLastSampleBefore(firstSampleOriginalDt
+                let lastSample = this._audioSegmentInfoList.getLastSampleBefore(firstSampleOriginalDts);
+                if (lastSample != null) {
+                    let distance = (firstSamp
