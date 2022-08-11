@@ -307,4 +307,4 @@ class MP4Remuxer {
                     }
                 }
             } else {
-           
+                let lastSample = this._audioSegmentInfoList.getLastSampleBefore(firstSampleOriginalDt
