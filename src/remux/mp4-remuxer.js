@@ -321,4 +321,5 @@ class MP4Remuxer {
             }
         }
 
-        i
+        if (insertPrefixSilentFrame) {
+            // align audio segment beginDts to ma
