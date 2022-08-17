@@ -329,4 +329,5 @@ class MP4Remuxer {
                 let silentUnit = AAC.getSilentFrame(this._audioMeta.originalCodec, this._audioMeta.channelCount);
                 if (silentUnit) {
                     let dts = videoSegment.beginDts;
-                    let silentFrameDuratio
+                    let silentFrameDuration = firstSampleDts - videoSegment.beginDts;
+                    Log.v(this.TAG, `InsertPrefix
