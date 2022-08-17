@@ -325,4 +325,5 @@ class MP4Remuxer {
             // align audio segment beginDts to match with current video segment's beginDts
             let firstSampleDts = firstSampleOriginalDts - dtsCorrection;
             let videoSegment = this._videoSegmentInfoList.getLastSegmentBefore(firstSampleOriginalDts);
-            if (vi
+            if (videoSegment != null && videoSegment.beginDts < firstSampleDts) {
+  
