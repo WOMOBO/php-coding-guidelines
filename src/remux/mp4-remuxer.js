@@ -330,4 +330,5 @@ class MP4Remuxer {
                 if (silentUnit) {
                     let dts = videoSegment.beginDts;
                     let silentFrameDuration = firstSampleDts - videoSegment.beginDts;
-                    Log.v(this.TAG, `InsertPrefix
+                    Log.v(this.TAG, `InsertPrefixSilentAudio: dts: ${dts}, duration: ${silentFrameDuration}`);
+                 
