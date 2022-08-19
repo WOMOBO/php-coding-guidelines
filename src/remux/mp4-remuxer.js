@@ -337,4 +337,8 @@ class MP4Remuxer {
             } else {
                 insertPrefixSilentFrame = false;
             }
- 
+        }
+
+        let mp4Samples = [];
+
+        // Correct dts for each sample, and calcu
