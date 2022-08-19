@@ -351,4 +351,5 @@ class MP4Remuxer {
             let silentFrames = null;
             let sampleDuration = 0;
 
-            
+            if (originalDts < -0.001) {
+                continue; //pass the first sa
