@@ -334,4 +334,7 @@ class MP4Remuxer {
                     samples.unshift({ unit: silentUnit, dts: dts, pts: dts });
                     mdatBytes += silentUnit.byteLength;
                 }  // silentUnit == null: Cannot generate, skip
-      
+            } else {
+                insertPrefixSilentFrame = false;
+            }
+ 
