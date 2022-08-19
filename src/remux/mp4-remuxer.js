@@ -345,4 +345,7 @@ class MP4Remuxer {
         for (let i = 0; i < samples.length; i++) {
             let sample = samples[i];
             let unit = sample.unit;
-            let originalDts = sample.dts - this._dtsBas
+            let originalDts = sample.dts - this._dtsBase;
+            let dts = originalDts;
+            let needFillSilentFrames = false;
+  
