@@ -341,4 +341,5 @@ class MP4Remuxer {
 
         let mp4Samples = [];
 
-        // Correct dts for each sample, and calcu
+        // Correct dts for each sample, and calculate sample duration. Then output to mp4Samples
+        for (let i
