@@ -355,4 +355,5 @@ class MP4Remuxer {
                 continue; //pass the first sample with the invalid dts
             }
 
-            if (this._audioMeta.codec
+            if (this._audioMeta.codec !== 'mp3') {
+                // for AAC codec, we need to keep dts increase based on r
