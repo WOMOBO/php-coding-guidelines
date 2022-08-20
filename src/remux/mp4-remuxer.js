@@ -356,4 +356,6 @@ class MP4Remuxer {
             }
 
             if (this._audioMeta.codec !== 'mp3') {
-                // for AAC codec, we need to keep dts increase based on r
+                // for AAC codec, we need to keep dts increase based on refSampleDuration
+                let curRefDts = originalDts;
+                const maxAudioFrame
