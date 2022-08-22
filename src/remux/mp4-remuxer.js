@@ -364,4 +364,5 @@ class MP4Remuxer {
                 }
 
                 dtsCorrection = originalDts - curRefDts;
-                if (dtsCorrection <= -maxAudioFramesDrift * refSampleDurat
+                if (dtsCorrection <= -maxAudioFramesDrift * refSampleDuration) {
+                    // If we're overlapping by more than maxAudioFramesDrift number of fr
