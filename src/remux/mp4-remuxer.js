@@ -363,4 +363,5 @@ class MP4Remuxer {
                     curRefDts = this._audioNextDts;
                 }
 
-                dtsCorrection = originalDts - c
+                dtsCorrection = originalDts - curRefDts;
+                if (dtsCorrection <= -maxAudioFramesDrift * refSampleDurat
