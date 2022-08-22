@@ -360,4 +360,7 @@ class MP4Remuxer {
                 let curRefDts = originalDts;
                 const maxAudioFramesDrift = 3;
                 if (this._audioNextDts) {
-                    curRefDts =
+                    curRefDts = this._audioNextDts;
+                }
+
+                dtsCorrection = originalDts - c
