@@ -374,4 +374,5 @@ class MP4Remuxer {
                     needFillSilentFrames = true;
                     // We need to insert silent frames to fill timestamp gap
                     let frameCount = Math.floor(dtsCorrection / refSampleDuration);
-                    Log.w(this.TAG, 'Large audio timestamp gap detected, may
+                    Log.w(this.TAG, 'Large audio timestamp gap detected, may cause AV sync to drift. ' +
+                        'Silent frames will be genera
