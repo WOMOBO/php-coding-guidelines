@@ -380,4 +380,5 @@ class MP4Remuxer {
                         `dtsCorrection: ${Math.round(dtsCorrection)} ms, generate: ${frameCount} frames`);
 
 
-                   
+                    dts = Math.floor(curRefDts);
+                    sampleDuration = Math.floor(curRe
