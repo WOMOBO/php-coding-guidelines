@@ -376,4 +376,5 @@ class MP4Remuxer {
                     let frameCount = Math.floor(dtsCorrection / refSampleDuration);
                     Log.w(this.TAG, 'Large audio timestamp gap detected, may cause AV sync to drift. ' +
                         'Silent frames will be generated to avoid unsync.\n' +
-                        `originalDts: ${originalDt
+                        `originalDts: ${originalDts} ms, curRefDts: ${curRefDts} ms, ` +
+                        `dtsCorrection: ${Math
