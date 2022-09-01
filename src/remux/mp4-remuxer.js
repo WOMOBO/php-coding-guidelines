@@ -387,4 +387,5 @@ class MP4Remuxer {
                     if (silentUnit == null) {
                         Log.w(this.TAG, 'Unable to generate silent frame for ' +
                             `${this._audioMeta.originalCodec} with ${this._audioMeta.channelCount} channels, repeat last frame`);
-      
+                        // Repeat last frame
+                        silentUnit 
