@@ -392,4 +392,5 @@ class MP4Remuxer {
                     }
                     silentFrames = [];
 
-           
+                    for (let j = 0; j < frameCount; j++) {
+                        curRefDts = curRef
