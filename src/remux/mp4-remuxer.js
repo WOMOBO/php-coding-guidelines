@@ -402,4 +402,5 @@ class MP4Remuxer {
                             cts: 0,
                             unit: silentUnit,
                             size: silentUnit.byteLength,
-                        
+                            duration: intDuration,  // wait for next sample
+                            originalDts
