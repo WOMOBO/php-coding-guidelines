@@ -407,4 +407,5 @@ class MP4Remuxer {
                             flags: {
                                 isLeading: 0,
                                 dependsOn: 1,
-       
+                                isDependedOn: 0,
+                              
