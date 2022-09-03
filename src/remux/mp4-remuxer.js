@@ -405,4 +405,6 @@ class MP4Remuxer {
                             duration: intDuration,  // wait for next sample
                             originalDts: originalDts,
                             flags: {
-                    
+                                isLeading: 0,
+                                dependsOn: 1,
+       
