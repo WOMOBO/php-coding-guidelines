@@ -403,4 +403,6 @@ class MP4Remuxer {
                             unit: silentUnit,
                             size: silentUnit.byteLength,
                             duration: intDuration,  // wait for next sample
-                            originalDts
+                            originalDts: originalDts,
+                            flags: {
+                    
