@@ -396,4 +396,6 @@ class MP4Remuxer {
                         curRefDts = curRefDts + refSampleDuration;
                         let intDts = Math.floor(curRefDts);  // change to integer
                         let intDuration = Math.floor(curRefDts + refSampleDuration) - intDts;
-                        let fr
+                        let frame = {
+                            dts: intDts,
+                            pts: intD
