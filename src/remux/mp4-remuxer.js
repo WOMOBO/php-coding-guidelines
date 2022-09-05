@@ -411,4 +411,5 @@ class MP4Remuxer {
                                 hasRedundancy: 0
                             }
                         };
-               
+                        silentFrames.push(frame);
+                        mdatBytes += frame.si
