@@ -412,4 +412,8 @@ class MP4Remuxer {
                             }
                         };
                         silentFrames.push(frame);
-                        mdatBytes += frame.si
+                        mdatBytes += frame.size;;
+
+                    }
+
+                    this._audioNextDts = curRefDts + r
