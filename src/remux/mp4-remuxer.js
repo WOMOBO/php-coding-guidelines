@@ -425,4 +425,5 @@ class MP4Remuxer {
                     this._audioNextDts = curRefDts + refSampleDuration;
 
                 }
-   
+            } else {
+                // keep the original dts calculate algorithm for m
