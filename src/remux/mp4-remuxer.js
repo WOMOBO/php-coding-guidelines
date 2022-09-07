@@ -426,4 +426,8 @@ class MP4Remuxer {
 
                 }
             } else {
-                // keep the original dts calculate algorithm for m
+                // keep the original dts calculate algorithm for mp3
+                dts = originalDts - dtsCorrection;
+
+
+                if (i !=
