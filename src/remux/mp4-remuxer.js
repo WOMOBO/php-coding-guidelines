@@ -421,4 +421,5 @@ class MP4Remuxer {
                 } else {
 
                     dts = Math.floor(curRefDts);
-                    sam
+                    sampleDuration = Math.floor(curRefDts + refSampleDuration) - dts;
+             
