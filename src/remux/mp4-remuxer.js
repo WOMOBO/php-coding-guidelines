@@ -435,4 +435,5 @@ class MP4Remuxer {
                     sampleDuration = nextDts - dts;
                 } else {  // the last sample
                     if (lastSample != null) {  // use stashed sample's dts to calculate sample duration
-                        let nextDts
+                        let nextDts = lastSample.dts - this._dtsBase - dtsCorrection;
+                        s
