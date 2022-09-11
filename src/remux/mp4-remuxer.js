@@ -446,4 +446,7 @@ class MP4Remuxer {
                 this._audioNextDts = dts + sampleDuration;
             }
 
-            if
+            if (firstDts === -1) {
+                firstDts = dts;
+            }
+   
