@@ -449,4 +449,7 @@ class MP4Remuxer {
             if (firstDts === -1) {
                 firstDts = dts;
             }
-   
+            mp4Samples.push({
+                dts: dts,
+                pts: dts,
+      
