@@ -452,4 +452,6 @@ class MP4Remuxer {
             mp4Samples.push({
                 dts: dts,
                 pts: dts,
-      
+                cts: 0,
+                unit: sample.unit,
+                size: sample.unit.byteLength
