@@ -438,4 +438,5 @@ class MP4Remuxer {
                         let nextDts = lastSample.dts - this._dtsBase - dtsCorrection;
                         sampleDuration = nextDts - dts;
                     } else if (mp4Samples.length >= 1) {  // use second last sample duration
-                        sampleDuration = mp4Sa
+                        sampleDuration = mp4Samples[mp4Samples.length - 1].duration;
+                    } else {  // the only one
