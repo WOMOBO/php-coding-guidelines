@@ -454,4 +454,6 @@ class MP4Remuxer {
                 pts: dts,
                 cts: 0,
                 unit: sample.unit,
-                size: sample.unit.byteLength
+                size: sample.unit.byteLength,
+                duration: sampleDuration,
+                originalDts: origina
