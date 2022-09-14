@@ -459,4 +459,6 @@ class MP4Remuxer {
                 originalDts: originalDts,
                 flags: {
                     isLeading: 0,
-                 
+                    dependsOn: 1,
+                    isDependedOn: 0,
+                    hasRedund
