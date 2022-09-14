@@ -472,4 +472,7 @@ class MP4Remuxer {
         }
 
         if (mp4Samples.length === 0) {
-            //no samples need
+            //no samples need to remux
+            track.samples = [];
+            track.length = 0;
+            r
