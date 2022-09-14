@@ -461,4 +461,8 @@ class MP4Remuxer {
                     isLeading: 0,
                     dependsOn: 1,
                     isDependedOn: 0,
-                    hasRedund
+                    hasRedundancy: 0
+                }
+            });
+
+            if (needFillSi
