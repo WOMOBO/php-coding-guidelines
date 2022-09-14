@@ -465,4 +465,5 @@ class MP4Remuxer {
                 }
             });
 
-            if (needFillSi
+            if (needFillSilentFrames) {
+                // Silent frames should be inserted after wrong-duration fr
