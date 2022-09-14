@@ -466,4 +466,6 @@ class MP4Remuxer {
             });
 
             if (needFillSilentFrames) {
-                // Silent frames should be inserted after wrong-duration fr
+                // Silent frames should be inserted after wrong-duration frame
+                mp4Samples.push.apply(mp4Samples, silentFrames);
+     
