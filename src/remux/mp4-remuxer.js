@@ -468,4 +468,8 @@ class MP4Remuxer {
             if (needFillSilentFrames) {
                 // Silent frames should be inserted after wrong-duration frame
                 mp4Samples.push.apply(mp4Samples, silentFrames);
-     
+            }
+        }
+
+        if (mp4Samples.length === 0) {
+            //no samples need
