@@ -485,4 +485,6 @@ class MP4Remuxer {
         } else {
             // allocate for fmp4 mdat box
             mdatbox = new Uint8Array(mdatBytes);
-  
+            // size field
+            mdatbox[0] = (mdatBytes >>> 24) & 0xFF;
+         
