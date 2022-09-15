@@ -495,4 +495,6 @@ class MP4Remuxer {
         }
 
         // Write samples into mdatbox
-        for (let i = 0; i < mp4S
+        for (let i = 0; i < mp4Samples.length; i++) {
+            let unit = mp4Samples[i].unit;
+         
