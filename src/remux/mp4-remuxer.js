@@ -489,4 +489,7 @@ class MP4Remuxer {
             mdatbox[0] = (mdatBytes >>> 24) & 0xFF;
             mdatbox[1] = (mdatBytes >>> 16) & 0xFF;
             mdatbox[2] = (mdatBytes >>> 8) & 0xFF;
-            mdatbox[3] = (mdatBytes) & 0x
+            mdatbox[3] = (mdatBytes) & 0xFF;
+            // type field (fourCC)
+            mdatbox.set(MP4.types.mdat, 4);
+ 
