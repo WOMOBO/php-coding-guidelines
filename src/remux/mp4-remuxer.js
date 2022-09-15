@@ -475,4 +475,9 @@ class MP4Remuxer {
             //no samples need to remux
             track.samples = [];
             track.length = 0;
-            r
+            return;
+        }
+
+        // allocate mdatbox
+        if (mpegRawTrack) {
+            // allocate
