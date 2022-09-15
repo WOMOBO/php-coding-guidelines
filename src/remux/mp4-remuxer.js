@@ -492,4 +492,7 @@ class MP4Remuxer {
             mdatbox[3] = (mdatBytes) & 0xFF;
             // type field (fourCC)
             mdatbox.set(MP4.types.mdat, 4);
- 
+        }
+
+        // Write samples into mdatbox
+        for (let i = 0; i < mp4S
