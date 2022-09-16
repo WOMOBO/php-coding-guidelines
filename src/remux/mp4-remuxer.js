@@ -515,4 +515,7 @@ class MP4Remuxer {
         info.originalEndDts = latest.originalDts + latest.duration;
         info.firstSample = new SampleInfo(mp4Samples[0].dts,
             mp4Samples[0].pts,
-            mp4Samples[0].dura
+            mp4Samples[0].duration,
+            mp4Samples[0].originalDts,
+            false);
+        info.lastSample
