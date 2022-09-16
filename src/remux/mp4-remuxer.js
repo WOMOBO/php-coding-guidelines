@@ -511,4 +511,5 @@ class MP4Remuxer {
         info.endDts = lastDts;
         info.beginPts = firstDts;
         info.endPts = lastDts;
-        inf
+        info.originalBeginDts = mp4Samples[0].originalDts;
+        info.originalEndDts = latest.or
