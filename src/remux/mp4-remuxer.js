@@ -508,4 +508,7 @@ class MP4Remuxer {
         // fill media segment info & add to info list
         let info = new MediaSegmentInfo();
         info.beginDts = firstDts;
-        info.endDts
+        info.endDts = lastDts;
+        info.beginPts = firstDts;
+        info.endPts = lastDts;
+        inf
