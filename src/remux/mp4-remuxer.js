@@ -505,4 +505,5 @@ class MP4Remuxer {
         lastDts = latest.dts + latest.duration;
         //this._audioNextDts = lastDts;
 
- 
+        // fill media segment info & add to info list
+        let info = new 
