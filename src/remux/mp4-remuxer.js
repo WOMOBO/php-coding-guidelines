@@ -520,4 +520,7 @@ class MP4Remuxer {
             false);
         info.lastSample = new SampleInfo(latest.dts,
             latest.pts,
-            latest.d
+            latest.duration,
+            latest.originalDts,
+            false);
+        if (!this._
