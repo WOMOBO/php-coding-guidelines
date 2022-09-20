@@ -527,4 +527,10 @@ class MP4Remuxer {
             this._audioSegmentInfoList.append(info);
         }
 
-        track.samples = mp4Sam
+        track.samples = mp4Samples;
+        track.sequenceNumber++;
+
+        let moofbox = null;
+
+        if (mpegRawTrack) {
+    
