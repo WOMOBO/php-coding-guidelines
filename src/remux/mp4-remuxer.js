@@ -533,4 +533,5 @@ class MP4Remuxer {
         let moofbox = null;
 
         if (mpegRawTrack) {
-    
+            // Generate empty buffer, because useless for raw mpeg
+            moofbox 
