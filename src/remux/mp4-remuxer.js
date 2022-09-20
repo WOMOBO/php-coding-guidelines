@@ -523,4 +523,8 @@ class MP4Remuxer {
             latest.duration,
             latest.originalDts,
             false);
-        if (!this._
+        if (!this._isLive) {
+            this._audioSegmentInfoList.append(info);
+        }
+
+        track.samples = mp4Sam
