@@ -546,4 +546,8 @@ class MP4Remuxer {
         let segment = {
             type: 'audio',
             data: this._mergeBoxes(moofbox, mdatbox).buffer,
-            s
+            sampleCount: mp4Samples.length,
+            info: info
+        };
+
+        if
