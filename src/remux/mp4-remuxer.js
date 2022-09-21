@@ -551,4 +551,5 @@ class MP4Remuxer {
         };
 
         if (mpegRawTrack && firstSegmentAfterSeek) {
-            // For MPEG audio stream
+            // For MPEG audio stream in MSE, if seeking occurred, before appending new buffer
+            // We nee
