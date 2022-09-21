@@ -541,3 +541,7 @@ class MP4Remuxer {
         }
 
         track.samples = [];
+        track.length = 0;
+
+        let segment = {
+            type: 'audio
