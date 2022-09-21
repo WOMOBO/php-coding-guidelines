@@ -550,4 +550,5 @@ class MP4Remuxer {
             info: info
         };
 
-        if
+        if (mpegRawTrack && firstSegmentAfterSeek) {
+            // For MPEG audio stream
