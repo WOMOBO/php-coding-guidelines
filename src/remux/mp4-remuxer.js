@@ -537,4 +537,7 @@ class MP4Remuxer {
             moofbox = new Uint8Array();
         } else {
             // Generate moof for fmp4 segment
-         
+            moofbox = MP4.moof(track, firstDts);
+        }
+
+        track.samples = [];
