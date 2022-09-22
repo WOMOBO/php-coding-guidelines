@@ -552,4 +552,8 @@ class MP4Remuxer {
 
         if (mpegRawTrack && firstSegmentAfterSeek) {
             // For MPEG audio stream in MSE, if seeking occurred, before appending new buffer
-            // We need explicitly set timestampOffset to the desired point in timeline for mpeg So
+            // We need explicitly set timestampOffset to the desired point in timeline for mpeg SourceBuffer.
+            segment.timestampOffset = firstDts;
+        }
+
+        this._onMed
