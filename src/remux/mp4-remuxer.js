@@ -556,4 +556,8 @@ class MP4Remuxer {
             segment.timestampOffset = firstDts;
         }
 
-        this._onMed
+        this._onMediaSegment('audio', segment);
+    }
+
+    _remuxVideo(videoTrack, force) {
+        if
