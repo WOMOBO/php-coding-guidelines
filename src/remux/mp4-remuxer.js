@@ -564,4 +564,6 @@ class MP4Remuxer {
             return;
         }
 
-     
+        let track = videoTrack;
+        let samples = track.samples;
+        let dt
