@@ -560,4 +560,8 @@ class MP4Remuxer {
     }
 
     _remuxVideo(videoTrack, force) {
-        if
+        if (this._videoMeta == null) {
+            return;
+        }
+
+     
