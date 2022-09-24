@@ -572,4 +572,6 @@ class MP4Remuxer {
 
         if (!samples || samples.length === 0) {
             return;
- 
+        }
+        if (samples.length === 1 && !force) {
+            // If [sample count 
