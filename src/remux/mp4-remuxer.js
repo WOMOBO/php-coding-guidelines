@@ -581,4 +581,9 @@ class MP4Remuxer {
 
         let offset = 8;
         let mdatbox = null;
-        let mdatBytes = 8 + 
+        let mdatBytes = 8 + videoTrack.length;
+
+
+        let lastSample = null;
+
+        // Pop the lastSample and waiting 
