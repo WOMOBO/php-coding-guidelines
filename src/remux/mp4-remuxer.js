@@ -586,4 +586,6 @@ class MP4Remuxer {
 
         let lastSample = null;
 
-        // Pop the lastSample and waiting 
+        // Pop the lastSample and waiting for stash
+        if (samples.length > 1) {
+            lastSample = samples.pop()
