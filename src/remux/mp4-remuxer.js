@@ -574,4 +574,5 @@ class MP4Remuxer {
             return;
         }
         if (samples.length === 1 && !force) {
-            // If [sample count 
+            // If [sample count in current batch] === 1 && (force != true)
+            // Ignore and keep 
