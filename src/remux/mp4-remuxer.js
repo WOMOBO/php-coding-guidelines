@@ -566,4 +566,6 @@ class MP4Remuxer {
 
         let track = videoTrack;
         let samples = track.samples;
-        let dt
+        let dtsCorrection = undefined;
+        let firstDts = -1, lastDts = -1;
+        let firstPts = -1, 
