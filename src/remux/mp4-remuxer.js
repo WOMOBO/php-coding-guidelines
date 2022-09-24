@@ -577,4 +577,8 @@ class MP4Remuxer {
             // If [sample count in current batch] === 1 && (force != true)
             // Ignore and keep in demuxer's queue
             return;
-        }  // else if (force === true) d
+        }  // else if (force === true) do remux
+
+        let offset = 8;
+        let mdatbox = null;
+        let mdatBytes = 8 + 
