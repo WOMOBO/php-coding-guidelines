@@ -588,4 +588,8 @@ class MP4Remuxer {
 
         // Pop the lastSample and waiting for stash
         if (samples.length > 1) {
-            lastSample = samples.pop()
+            lastSample = samples.pop();
+            mdatBytes -= lastSample.length;
+        }
+
+        // Insert [stashed 
