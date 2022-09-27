@@ -612,4 +612,7 @@ class MP4Remuxer {
         if (this._videoNextDts) {
             dtsCorrection = firstSampleOriginalDts - this._videoNextDts;
         } else {  // this._videoNextDts == undefined
-            if (this._video
+            if (this._videoSegmentInfoList.isEmpty()) {
+                dtsCorrection = 0;
+            } else {
+          
