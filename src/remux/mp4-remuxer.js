@@ -600,4 +600,6 @@ class MP4Remuxer {
             mdatBytes += sample.length;
         }
 
-        // Stash the lastSample of current batch, waiting for next 
+        // Stash the lastSample of current batch, waiting for next batch
+        if (lastSample != null) {
+            this._videoSt
