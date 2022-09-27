@@ -615,4 +615,4 @@ class MP4Remuxer {
             if (this._videoSegmentInfoList.isEmpty()) {
                 dtsCorrection = 0;
             } else {
-          
+                let lastSample = this._videoSegmentInfoList.getLastSampleBefore(firstSample
