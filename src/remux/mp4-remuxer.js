@@ -597,4 +597,7 @@ class MP4Remuxer {
             let sample = this._videoStashedLastSample;
             this._videoStashedLastSample = null;
             samples.unshift(sample);
-            mdatBytes += s
+            mdatBytes += sample.length;
+        }
+
+        // Stash the lastSample of current batch, waiting for next 
