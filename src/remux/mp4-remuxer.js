@@ -629,4 +629,7 @@ class MP4Remuxer {
             }
         }
 
-        let info = new 
+        let info = new MediaSegmentInfo();
+        let mp4Samples = [];
+
+        // Correct dts for
