@@ -621,4 +621,5 @@ class MP4Remuxer {
                     if (distance <= 3) {
                         distance = 0;
                     }
-  
+                    let expectedDts = lastSample.dts + lastSample.duration + distance;
+       
