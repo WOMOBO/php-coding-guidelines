@@ -624,4 +624,9 @@ class MP4Remuxer {
                     let expectedDts = lastSample.dts + lastSample.duration + distance;
                     dtsCorrection = firstSampleOriginalDts - expectedDts;
                 } else { // lastSample == null, cannot found
-                    dtsCorrecti
+                    dtsCorrection = 0;
+                }
+            }
+        }
+
+        let info = new 
