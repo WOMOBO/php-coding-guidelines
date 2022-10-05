@@ -632,4 +632,4 @@ class MP4Remuxer {
         let info = new MediaSegmentInfo();
         let mp4Samples = [];
 
-        // Correct dts for
+        // Correct dts for each sample, and calculate sample duration. Then output to mp4Samples
