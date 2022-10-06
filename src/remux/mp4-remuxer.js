@@ -636,4 +636,5 @@ class MP4Remuxer {
         for (let i = 0; i < samples.length; i++) {
             let sample = samples[i];
             let originalDts = sample.dts - this._dtsBase;
-            let isKey
+            let isKeyframe = sample.isKeyframe;
+            let dts = originalDts - dtsCorrection;
