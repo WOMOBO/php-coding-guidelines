@@ -644,3 +644,8 @@ class MP4Remuxer {
             if (firstDts === -1) {
                 firstDts = dts;
                 firstPts = pts;
+            }
+
+            let sampleDuration = 0;
+
+            if (i !== sampl
