@@ -649,4 +649,6 @@ class MP4Remuxer {
             let sampleDuration = 0;
 
             if (i !== samples.length - 1) {
-                let nextDts = samples[i + 1].dts - this._dts
+                let nextDts = samples[i + 1].dts - this._dtsBase - dtsCorrection;
+                sampleDuration = nextDts - dts;
+            } el
