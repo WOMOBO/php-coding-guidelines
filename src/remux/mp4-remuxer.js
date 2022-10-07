@@ -658,4 +658,8 @@ class MP4Remuxer {
                 } else if (mp4Samples.length >= 1) {  // use second last sample duration
                     sampleDuration = mp4Samples[mp4Samples.length - 1].duration;
                 } else {  // the only one sample, use reference sample duration
-                    sampleDuration = Math.floor(thi
+                    sampleDuration = Math.floor(this._videoMeta.refSampleDuration);
+                }
+            }
+
+            if (isKeyframe) {
