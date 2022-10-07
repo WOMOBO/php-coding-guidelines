@@ -668,4 +668,7 @@ class MP4Remuxer {
                 info.appendSyncPoint(syncPoint);
             }
 
-            mp4Sam
+            mp4Samples.push({
+                dts: dts,
+                pts: pts,
+                cts: c
