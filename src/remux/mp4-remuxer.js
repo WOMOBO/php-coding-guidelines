@@ -671,4 +671,7 @@ class MP4Remuxer {
             mp4Samples.push({
                 dts: dts,
                 pts: pts,
-                cts: c
+                cts: cts,
+                units: sample.units,
+                size: sample.length,
+                isKeyf
