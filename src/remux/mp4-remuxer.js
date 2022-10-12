@@ -676,4 +676,7 @@ class MP4Remuxer {
                 size: sample.length,
                 isKeyframe: isKeyframe,
                 duration: sampleDuration,
-                originalDts:
+                originalDts: originalDts,
+                flags: {
+                    isLeading: 0,
+    
