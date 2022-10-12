@@ -679,4 +679,5 @@ class MP4Remuxer {
                 originalDts: originalDts,
                 flags: {
                     isLeading: 0,
-    
+                    dependsOn: isKeyframe ? 2 : 1,
+                    isDependedOn: isKeyfr
