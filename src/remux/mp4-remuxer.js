@@ -682,4 +682,10 @@ class MP4Remuxer {
                     dependsOn: isKeyframe ? 2 : 1,
                     isDependedOn: isKeyframe ? 1 : 0,
                     hasRedundancy: 0,
-                    isNonSync: isKey
+                    isNonSync: isKeyframe ? 0 : 1
+                }
+            });
+        }
+
+        // allocate mdatbox
+ 
