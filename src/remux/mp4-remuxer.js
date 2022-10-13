@@ -680,4 +680,6 @@ class MP4Remuxer {
                 flags: {
                     isLeading: 0,
                     dependsOn: isKeyframe ? 2 : 1,
-                    isDependedOn: isKeyfr
+                    isDependedOn: isKeyframe ? 1 : 0,
+                    hasRedundancy: 0,
+                    isNonSync: isKey
