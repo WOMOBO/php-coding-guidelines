@@ -688,4 +688,5 @@ class MP4Remuxer {
         }
 
         // allocate mdatbox
- 
+        mdatbox = new Uint8Array(mdatBytes);
+        mdatbox[0] = (mdatBytes
