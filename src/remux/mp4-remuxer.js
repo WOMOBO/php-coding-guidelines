@@ -700,4 +700,6 @@ class MP4Remuxer {
             let units = mp4Samples[i].units;
             while (units.length) {
                 let unit = units.shift();
-               
+                let data = unit.data;
+                mdatbox.set(data, offset);
+                
