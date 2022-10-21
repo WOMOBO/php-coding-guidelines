@@ -713,4 +713,6 @@ class MP4Remuxer {
 
         // fill media segment info & add to info list
         info.beginDts = firstDts;
-        info.endDts = la
+        info.endDts = lastDts;
+        info.beginPts = firstPts;
+        info.endPts = lastPt
