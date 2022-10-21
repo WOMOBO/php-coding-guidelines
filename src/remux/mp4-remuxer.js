@@ -711,4 +711,6 @@ class MP4Remuxer {
         lastPts = latest.pts + latest.duration;
         this._videoNextDts = lastDts;
 
-        // fi
+        // fill media segment info & add to info list
+        info.beginDts = firstDts;
+        info.endDts = la
