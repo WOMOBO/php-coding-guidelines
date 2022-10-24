@@ -717,4 +717,5 @@ class MP4Remuxer {
         info.beginPts = firstPts;
         info.endPts = lastPts;
         info.originalBeginDts = mp4Samples[0].originalDts;
-        info.originalEndD
+        info.originalEndDts = latest.originalDts + latest.duration;
+        info.firstSample = new Sa
