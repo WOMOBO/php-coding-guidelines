@@ -732,4 +732,7 @@ class MP4Remuxer {
             this._videoSegmentInfoList.append(info);
         }
 
-        track.s
+        track.samples = mp4Samples;
+        track.sequenceNumber++;
+
+        // workarou
