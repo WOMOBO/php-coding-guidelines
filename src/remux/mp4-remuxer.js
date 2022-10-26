@@ -729,3 +729,7 @@ class MP4Remuxer {
             latest.originalDts,
             latest.isKeyframe);
         if (!this._isLive) {
+            this._videoSegmentInfoList.append(info);
+        }
+
+        track.s
