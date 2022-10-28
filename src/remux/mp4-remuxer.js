@@ -735,4 +735,5 @@ class MP4Remuxer {
         track.samples = mp4Samples;
         track.sequenceNumber++;
 
-        // workarou
+        // workaround for chrome < 50: force first sample as a random access point
+        // see https://bugs.c
