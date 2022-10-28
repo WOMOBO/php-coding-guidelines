@@ -740,4 +740,7 @@ class MP4Remuxer {
         if (this._forceFirstIDR) {
             let flags = mp4Samples[0].flags;
             flags.dependsOn = 2;
-    
+            flags.isNonSync = 0;
+        }
+
+        let moofbox = MP4.moof(track, firstDts);
