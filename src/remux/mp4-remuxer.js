@@ -750,4 +750,7 @@ class MP4Remuxer {
         this._onMediaSegment('video', {
             type: 'video',
             data: this._mergeBoxes(moofbox, mdatbox).buffer,
-  
+            sampleCount: mp4Samples.length,
+            info: info
+        });
+ 
