@@ -753,4 +753,7 @@ class MP4Remuxer {
             sampleCount: mp4Samples.length,
             info: info
         });
- 
+    }
+
+    _mergeBoxes(moof, mdat) {
+        let result = new Uint8Array(moof.byteLen
