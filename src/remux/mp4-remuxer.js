@@ -756,4 +756,7 @@ class MP4Remuxer {
     }
 
     _mergeBoxes(moof, mdat) {
-        let result = new Uint8Array(moof.byteLen
+        let result = new Uint8Array(moof.byteLength + mdat.byteLength);
+        result.set(moof, 0);
+        result.set(mdat, moof.byteLength);
+ 
