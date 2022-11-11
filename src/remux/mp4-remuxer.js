@@ -759,4 +759,9 @@ class MP4Remuxer {
         let result = new Uint8Array(moof.byteLength + mdat.byteLength);
         result.set(moof, 0);
         result.set(mdat, moof.byteLength);
- 
+        return result;
+    }
+
+}
+
+export default MP4Remuxer;
