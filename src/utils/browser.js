@@ -21,4 +21,7 @@ let Browser = {};
 function detect() {
     // modified from jquery-browser-plugin
 
-    let u
+    let ua = self.navigator.userAgent.toLowerCase();
+
+    let match = /(edge)\/([\w.]+)/.exec(ua) ||
+        /(
