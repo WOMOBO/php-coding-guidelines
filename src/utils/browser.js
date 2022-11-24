@@ -16,4 +16,9 @@
  * limitations under the License.
  */
 
-let
+let Browser = {};
+
+function detect() {
+    // modified from jquery-browser-plugin
+
+    let u
