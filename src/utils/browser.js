@@ -26,4 +26,5 @@ function detect() {
     let match = /(edge)\/([\w.]+)/.exec(ua) ||
         /(opr)[\/]([\w.]+)/.exec(ua) ||
         /(chrome)[ \/]([\w.]+)/.exec(ua) ||
-        /(iemobile
+        /(iemobile)[\/]([\w.]+)/.exec(ua) ||
+        /(version)(applewebkit)[ \/]([\w.]+).*(safari)[ \/]([\w.]+)
