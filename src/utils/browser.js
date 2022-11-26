@@ -24,4 +24,6 @@ function detect() {
     let ua = self.navigator.userAgent.toLowerCase();
 
     let match = /(edge)\/([\w.]+)/.exec(ua) ||
-        /(
+        /(opr)[\/]([\w.]+)/.exec(ua) ||
+        /(chrome)[ \/]([\w.]+)/.exec(ua) ||
+        /(iemobile
