@@ -28,4 +28,6 @@ function detect() {
         /(chrome)[ \/]([\w.]+)/.exec(ua) ||
         /(iemobile)[\/]([\w.]+)/.exec(ua) ||
         /(version)(applewebkit)[ \/]([\w.]+).*(safari)[ \/]([\w.]+)/.exec(ua) ||
-        /(webkit)[ \/]([\w.]+).*(version)[ \/]([\w.]+).*(safari)[ 
+        /(webkit)[ \/]([\w.]+).*(version)[ \/]([\w.]+).*(safari)[ \/]([\w.]+)/.exec(ua) ||
+        /(webkit)[ \/]([\w.]+)/.exec(ua) ||
+        /
