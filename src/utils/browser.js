@@ -27,4 +27,5 @@ function detect() {
         /(opr)[\/]([\w.]+)/.exec(ua) ||
         /(chrome)[ \/]([\w.]+)/.exec(ua) ||
         /(iemobile)[\/]([\w.]+)/.exec(ua) ||
-        /(version)(applewebkit)[ \/]([\w.]+).*(safari)[ \/]([\w.]+)
+        /(version)(applewebkit)[ \/]([\w.]+).*(safari)[ \/]([\w.]+)/.exec(ua) ||
+        /(webkit)[ \/]([\w.]+).*(version)[ \/]([\w.]+).*(safari)[ 
