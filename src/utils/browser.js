@@ -32,4 +32,5 @@ function detect() {
         /(webkit)[ \/]([\w.]+)/.exec(ua) ||
         /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
         /(msie) ([\w.]+)/.exec(ua) ||
-        ua.indexOf('trident') >= 0 && /(rv)(?::| )([\w.
+        ua.indexOf('trident') >= 0 && /(rv)(?::| )([\w.]+)/.exec(ua) ||
+        ua.indexOf('compatible') < 0 && /(firefox)[ \
