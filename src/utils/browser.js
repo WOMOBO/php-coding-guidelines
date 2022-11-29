@@ -31,4 +31,5 @@ function detect() {
         /(webkit)[ \/]([\w.]+).*(version)[ \/]([\w.]+).*(safari)[ \/]([\w.]+)/.exec(ua) ||
         /(webkit)[ \/]([\w.]+)/.exec(ua) ||
         /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
-        /(msie) ([\w.]+)/
+        /(msie) ([\w.]+)/.exec(ua) ||
+        ua.indexOf('trident') >= 0 && /(rv)(?::| )([\w.
