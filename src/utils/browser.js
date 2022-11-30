@@ -37,4 +37,7 @@ function detect() {
         [];
 
     let platform_match = /(ipad)/.exec(ua) ||
-      
+        /(ipod)/.exec(ua) ||
+        /(windows phone)/.exec(ua) ||
+        /(iphone)/.exec(ua) ||
+ 
