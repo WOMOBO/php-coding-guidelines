@@ -40,4 +40,6 @@ function detect() {
         /(ipod)/.exec(ua) ||
         /(windows phone)/.exec(ua) ||
         /(iphone)/.exec(ua) ||
- 
+        /(kindle)/.exec(ua) ||
+        /(android)/.exec(ua) ||
+        /(windows)/.ex
