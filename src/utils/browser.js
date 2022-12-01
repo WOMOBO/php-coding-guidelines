@@ -42,4 +42,7 @@ function detect() {
         /(iphone)/.exec(ua) ||
         /(kindle)/.exec(ua) ||
         /(android)/.exec(ua) ||
-        /(windows)/.ex
+        /(windows)/.exec(ua) ||
+        /(mac)/.exec(ua) ||
+        /(linux)/.exec(ua) ||
+        /(cros)/.ex
