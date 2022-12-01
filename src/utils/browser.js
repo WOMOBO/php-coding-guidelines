@@ -45,4 +45,8 @@ function detect() {
         /(windows)/.exec(ua) ||
         /(mac)/.exec(ua) ||
         /(linux)/.exec(ua) ||
-        /(cros)/.ex
+        /(cros)/.exec(ua) ||
+        [];
+
+    let matched = {
+        browser: match[5] || match[3] || match[1] ||
