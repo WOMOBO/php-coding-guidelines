@@ -49,4 +49,6 @@ function detect() {
         [];
 
     let matched = {
-        browser: match[5] || match[3] || match[1] ||
+        browser: match[5] || match[3] || match[1] || '',
+        version: match[2] || match[4] || '0',
+        majorVersion: match[4] || match[
