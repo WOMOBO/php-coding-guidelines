@@ -51,4 +51,9 @@ function detect() {
     let matched = {
         browser: match[5] || match[3] || match[1] || '',
         version: match[2] || match[4] || '0',
-        majorVersion: match[4] || match[
+        majorVersion: match[4] || match[2] || '0',
+        platform: platform_match[0] || ''
+    };
+
+    let browser = {};
+   
