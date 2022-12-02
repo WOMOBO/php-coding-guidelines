@@ -56,4 +56,7 @@ function detect() {
     };
 
     let browser = {};
-   
+    if (matched.browser) {
+        browser[matched.browser] = true;
+
+        let 
