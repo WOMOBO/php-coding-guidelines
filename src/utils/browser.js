@@ -59,4 +59,6 @@ function detect() {
     if (matched.browser) {
         browser[matched.browser] = true;
 
-        let 
+        let versionArray = matched.majorVersion.split('.');
+        browser.version = {
+   
