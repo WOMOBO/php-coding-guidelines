@@ -62,4 +62,7 @@ function detect() {
         let versionArray = matched.majorVersion.split('.');
         browser.version = {
             major: parseInt(matched.majorVersion, 10),
-            string: match
+            string: matched.version
+        };
+        if (versionArray.length > 1) {
+            browser.version.mi
