@@ -65,4 +65,7 @@ function detect() {
             string: matched.version
         };
         if (versionArray.length > 1) {
-            browser.version.mi
+            browser.version.minor = parseInt(versionArray[1], 10);
+        }
+        if (versionArray.length > 2) {
+ 
