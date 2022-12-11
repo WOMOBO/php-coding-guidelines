@@ -68,4 +68,8 @@ function detect() {
             browser.version.minor = parseInt(versionArray[1], 10);
         }
         if (versionArray.length > 2) {
- 
+            browser.version.build = parseInt(versionArray[2], 10);
+        }
+    }
+
+  
