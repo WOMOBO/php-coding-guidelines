@@ -72,4 +72,6 @@ function detect() {
         }
     }
 
+    if (matched.platform) {
+        browser[matched.platform] = true;
   
