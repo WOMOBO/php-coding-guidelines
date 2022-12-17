@@ -77,4 +77,8 @@ function detect() {
     }
 
     if (browser.chrome || browser.opr || browser.safari) {
-        b
+        browser.webkit = true;
+    }
+
+    // MSIE. IE11 has 'rv' identifer
+    if (browser.rv || browser
