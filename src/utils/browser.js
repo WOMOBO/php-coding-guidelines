@@ -74,4 +74,7 @@ function detect() {
 
     if (matched.platform) {
         browser[matched.platform] = true;
-  
+    }
+
+    if (browser.chrome || browser.opr || browser.safari) {
+        b
