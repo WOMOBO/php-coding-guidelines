@@ -81,4 +81,8 @@ function detect() {
     }
 
     // MSIE. IE11 has 'rv' identifer
-    if (browser.rv || browser
+    if (browser.rv || browser.iemobile) {
+        if (browser.rv) {
+            delete browser.rv;
+        }
+   
