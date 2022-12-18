@@ -87,4 +87,9 @@ function detect() {
         }
         let msie = 'msie';
         matched.browser = msie;
-        browser[msie] = true
+        browser[msie] = true;
+    }
+
+    // Microsoft Edge
+    if (browser.edge) {
+        
