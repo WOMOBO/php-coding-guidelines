@@ -85,4 +85,6 @@ function detect() {
         if (browser.rv) {
             delete browser.rv;
         }
-   
+        let msie = 'msie';
+        matched.browser = msie;
+        browser[msie] = true
