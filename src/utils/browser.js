@@ -92,4 +92,7 @@ function detect() {
 
     // Microsoft Edge
     if (browser.edge) {
-        
+        delete browser.edge;
+        let msedge = 'msedge';
+        matched.browser = msedge;
+       
