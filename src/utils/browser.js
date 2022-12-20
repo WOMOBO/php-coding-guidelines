@@ -100,4 +100,9 @@ function detect() {
 
     // Opera 15+
     if (browser.opr) {
-        let opera = 
+        let opera = 'opera';
+        matched.browser = opera;
+        browser[opera] = true;
+    }
+
+    // Stock
