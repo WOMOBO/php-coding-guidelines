@@ -95,4 +95,9 @@ function detect() {
         delete browser.edge;
         let msedge = 'msedge';
         matched.browser = msedge;
-       
+        browser[msedge] = true;
+    }
+
+    // Opera 15+
+    if (browser.opr) {
+        let opera = 
