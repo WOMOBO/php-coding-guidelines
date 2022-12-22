@@ -105,4 +105,5 @@ function detect() {
         browser[opera] = true;
     }
 
-    // Stock
+    // Stock android browsers are marked as Safari
+    if (browser.safari && browser.and
