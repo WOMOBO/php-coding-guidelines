@@ -106,4 +106,7 @@ function detect() {
     }
 
     // Stock android browsers are marked as Safari
-    if (browser.safari && browser.and
+    if (browser.safari && browser.android) {
+        let android = 'android';
+        matched.browser = android;
+        br
