@@ -113,4 +113,7 @@ function detect() {
     }
 
     browser.name = matched.browser;
-    browser.platf
+    browser.platform = matched.platform;
+
+    for (let key in Browser) {
+        if (Browser.hasOwnProperty(ke
