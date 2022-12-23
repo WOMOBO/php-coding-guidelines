@@ -109,4 +109,8 @@ function detect() {
     if (browser.safari && browser.android) {
         let android = 'android';
         matched.browser = android;
-        br
+        browser[android] = true;
+    }
+
+    browser.name = matched.browser;
+    browser.platf
