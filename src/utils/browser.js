@@ -120,4 +120,9 @@ function detect() {
             delete Browser[key];
         }
     }
-    Object.assign(Browser, browse
+    Object.assign(Browser, browser);
+}
+
+detect();
+
+export default Browser;
