@@ -22,4 +22,9 @@ export class RuntimeException {
         this._message = message;
     }
 
-    get 
+    get name() {
+        return 'RuntimeException';
+    }
+
+    get message() {
+      
