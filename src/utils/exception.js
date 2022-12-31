@@ -16,4 +16,10 @@
  * limitations under the License.
  */
 
-export class RuntimeException
+export class RuntimeException {
+
+    constructor(message) {
+        this._message = message;
+    }
+
+    get 
