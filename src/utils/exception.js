@@ -43,4 +43,9 @@ export class IllegalStateException extends RuntimeException {
     }
 
     get name() {
-   
+        return 'IllegalStateException';
+    }
+
+}
+
+export class InvalidArgumentException ex
