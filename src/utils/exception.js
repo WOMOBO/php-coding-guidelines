@@ -36,4 +36,11 @@ export class RuntimeException {
 
 }
 
-export class IllegalStateException extends R
+export class IllegalStateException extends RuntimeException {
+
+    constructor(message) {
+        super(message);
+    }
+
+    get name() {
+   
