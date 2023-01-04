@@ -27,4 +27,8 @@ export class RuntimeException {
     }
 
     get message() {
-      
+        return this._message;
+    }
+
+    toString() {
+        return this.name + ': ' 
