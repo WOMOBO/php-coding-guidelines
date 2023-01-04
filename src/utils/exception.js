@@ -31,4 +31,9 @@ export class RuntimeException {
     }
 
     toString() {
-        return this.name + ': ' 
+        return this.name + ': ' + this.message;
+    }
+
+}
+
+export class IllegalStateException extends R
