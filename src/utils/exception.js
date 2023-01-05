@@ -48,4 +48,7 @@ export class IllegalStateException extends RuntimeException {
 
 }
 
-export class InvalidArgumentException ex
+export class InvalidArgumentException extends RuntimeException {
+
+    constructor(message) {
+        super(message);
