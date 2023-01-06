@@ -52,3 +52,12 @@ export class InvalidArgumentException extends RuntimeException {
 
     constructor(message) {
         super(message);
+    }
+
+    get name() {
+        return 'InvalidArgumentException';
+    }
+
+}
+
+export 
