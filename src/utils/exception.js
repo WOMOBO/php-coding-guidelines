@@ -62,4 +62,9 @@ export class InvalidArgumentException extends RuntimeException {
 
 export class NotImplementedException extends RuntimeException {
 
-    constructor(message)
+    constructor(message) {
+        super(message);
+    }
+
+    get name() {
+        return 'NotImplementedEx
