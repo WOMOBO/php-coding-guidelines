@@ -67,4 +67,7 @@ export class NotImplementedException extends RuntimeException {
     }
 
     get name() {
-        return 'NotImplementedEx
+        return 'NotImplementedException';
+    }
+
+}
