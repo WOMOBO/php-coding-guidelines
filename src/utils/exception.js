@@ -60,4 +60,6 @@ export class InvalidArgumentException extends RuntimeException {
 
 }
 
-export 
+export class NotImplementedException extends RuntimeException {
+
+    constructor(message)
