@@ -72,3 +72,70 @@ class Log {
         let str = `[${tag}] > ${msg}`;
 
         if (Log.ENABLE_CALLBACK) {
+            Log.emitter.emit('log', 'warn', str);
+        }
+
+        if (!Log.ENABLE_WARN) {
+            return;
+        }
+
+        if (console.warn) {
+            console.warn(str);
+        } else {
+            console.log(str);
+        }
+    }
+
+    static d(tag, msg) {
+        if (!tag || Log.FORCE_GLOBAL_TAG)
+            tag = Log.GLOBAL_TAG;
+
+        let str = `[${tag}] > ${msg}`;
+
+        if (Log.ENABLE_CALLBACK) {
+            Log.emitter.emit('log', 'debug', str);
+        }
+
+        if (!Log.ENABLE_DEBUG) {
+            return;
+        }
+
+        if (console.debug) {
+            console.debug(str);
+        } else {
+            console.log(str);
+        }
+    }
+
+    static v(tag, msg) {
+        if (!tag || Log.FORCE_GLOBAL_TAG)
+            tag = Log.GLOBAL_TAG;
+
+        let str = `[${tag}] > ${msg}`;
+
+        if (Log.ENABLE_CALLBACK) {
+            Log.emitter.emit('log', 'verbose', str);
+        }
+
+        if (!Log.ENABLE_VERBOSE) {
+            return;
+        }
+
+        console.log(str);
+    }
+
+}
+
+Log.GLOBAL_TAG = 'flv.js';
+Log.FORCE_GLOBAL_TAG = false;
+Log.ENABLE_ERROR = true;
+Log.ENABLE_INFO = true;
+Log.ENABLE_WARN = true;
+Log.ENABLE_DEBUG = true;
+Log.ENABLE_VERBOSE = true;
+
+Log.ENABLE_CALLBACK = false;
+
+Log.emitter = new EventEmitter();
+
+export default Log;
