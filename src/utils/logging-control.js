@@ -90,3 +90,77 @@ class LoggingControl {
 
     static set enableWarn(enable) {
         Log.ENABLE_WARN = enable;
+        LoggingControl._notifyChange();
+    }
+
+    static get enableError() {
+        return Log.ENABLE_ERROR;
+    }
+
+    static set enableError(enable) {
+        Log.ENABLE_ERROR = enable;
+        LoggingControl._notifyChange();
+    }
+
+    static getConfig() {
+        return {
+            globalTag: Log.GLOBAL_TAG,
+            forceGlobalTag: Log.FORCE_GLOBAL_TAG,
+            enableVerbose: Log.ENABLE_VERBOSE,
+            enableDebug: Log.ENABLE_DEBUG,
+            enableInfo: Log.ENABLE_INFO,
+            enableWarn: Log.ENABLE_WARN,
+            enableError: Log.ENABLE_ERROR,
+            enableCallback: Log.ENABLE_CALLBACK
+        };
+    }
+
+    static applyConfig(config) {
+        Log.GLOBAL_TAG = config.globalTag;
+        Log.FORCE_GLOBAL_TAG = config.forceGlobalTag;
+        Log.ENABLE_VERBOSE = config.enableVerbose;
+        Log.ENABLE_DEBUG = config.enableDebug;
+        Log.ENABLE_INFO = config.enableInfo;
+        Log.ENABLE_WARN = config.enableWarn;
+        Log.ENABLE_ERROR = config.enableError;
+        Log.ENABLE_CALLBACK = config.enableCallback;
+    }
+
+    static _notifyChange() {
+        let emitter = LoggingControl.emitter;
+
+        if (emitter.listenerCount('change') > 0) {
+            let config = LoggingControl.getConfig();
+            emitter.emit('change', config);
+        }
+    }
+
+    static registerListener(listener) {
+        LoggingControl.emitter.addListener('change', listener);
+    }
+
+    static removeListener(listener) {
+        LoggingControl.emitter.removeListener('change', listener);
+    }
+
+    static addLogListener(listener) {
+        Log.emitter.addListener('log', listener);
+        if (Log.emitter.listenerCount('log') > 0) {
+            Log.ENABLE_CALLBACK = true;
+            LoggingControl._notifyChange();
+        }
+    }
+
+    static removeLogListener(listener) {
+        Log.emitter.removeListener('log', listener);
+        if (Log.emitter.listenerCount('log') === 0) {
+            Log.ENABLE_CALLBACK = false;
+            LoggingControl._notifyChange();
+        }
+    }
+
+}
+
+LoggingControl.emitter = new EventEmitter();
+
+export default LoggingControl;
