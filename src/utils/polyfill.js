@@ -16,4 +16,8 @@
  * limitations under the License.
  */
 
-clas
+class Polyfill {
+
+    static install() {
+        // ES6 Object.setPrototypeOf
+        Object
