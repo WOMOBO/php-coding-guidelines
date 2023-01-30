@@ -20,4 +20,5 @@ class Polyfill {
 
     static install() {
         // ES6 Object.setPrototypeOf
-        Object
+        Object.setPrototypeOf = Object.setPrototypeOf || function (obj, proto) {
+     
