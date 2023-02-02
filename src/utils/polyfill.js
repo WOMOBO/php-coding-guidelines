@@ -27,4 +27,5 @@ class Polyfill {
 
         // ES6 Object.assign
         Object.assign = Object.assign || function (target) {
-     
+            if (target === undefined || target === null) {
+                throw new TypeErro
