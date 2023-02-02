@@ -25,4 +25,6 @@ class Polyfill {
             return obj;
         };
 
-        // ES6 Object
+        // ES6 Object.assign
+        Object.assign = Object.assign || function (target) {
+     
