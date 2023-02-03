@@ -31,4 +31,6 @@ class Polyfill {
                 throw new TypeError('Cannot convert undefined or null to object');
             }
 
-            let output = Object
+            let output = Object(target);
+            for (let i = 1; i < arguments.length; i++) {
+                let so
