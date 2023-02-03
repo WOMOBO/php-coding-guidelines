@@ -33,4 +33,5 @@ class Polyfill {
 
             let output = Object(target);
             for (let i = 1; i < arguments.length; i++) {
-                let so
+                let source = arguments[i];
+                if (source !== undefined && source !
