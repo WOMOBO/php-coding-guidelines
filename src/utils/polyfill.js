@@ -36,4 +36,6 @@ class Polyfill {
                 let source = arguments[i];
                 if (source !== undefined && source !== null) {
                     for (let key in source) {
-                     
+                        if (source.hasOwnProperty(key)) {
+                            output[key] = source[key];
+              
