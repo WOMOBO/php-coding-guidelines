@@ -42,4 +42,8 @@ class Polyfill {
                     }
                 }
             }
-            return o
+            return output;
+        };
+
+        // ES6 Promise (missing support in IE11)
+        if (typeof self.Promise
