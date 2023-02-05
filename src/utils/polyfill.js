@@ -53,4 +53,6 @@ class Polyfill {
 
 }
 
-Pol
+Polyfill.install();
+
+export default Polyfill;
