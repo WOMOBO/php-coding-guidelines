@@ -38,4 +38,8 @@ class Polyfill {
                     for (let key in source) {
                         if (source.hasOwnProperty(key)) {
                             output[key] = source[key];
-              
+                        }
+                    }
+                }
+            }
+            return o
