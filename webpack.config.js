@@ -1,2 +1,4 @@
 const webpack = require('webpack');
-co
+const pkg = require('./package.json');
+const path = require('path');
+const TerserPl
