@@ -8,4 +8,7 @@ let config = {
     output: {
         filename: 'flv.js',
         path: path.resolve(__dirname, 'dist'),
-        library: 'fl
+        library: 'flvjs',
+        libraryTarget: 'umd',
+        environment: {
+            arrowFuncti
