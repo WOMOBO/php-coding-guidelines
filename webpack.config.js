@@ -14,4 +14,7 @@ let config = {
             arrowFunction: false,
             bigIntLiteral: false,
             const: false,
-            
+            destructuring: false,
+            dynamicImport: false,
+            forOf: false,
+ 
