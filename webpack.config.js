@@ -11,4 +11,7 @@ let config = {
         library: 'flvjs',
         libraryTarget: 'umd',
         environment: {
-            arrowFuncti
+            arrowFunction: false,
+            bigIntLiteral: false,
+            const: false,
+            
