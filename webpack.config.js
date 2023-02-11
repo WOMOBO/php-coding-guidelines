@@ -17,4 +17,10 @@ let config = {
             destructuring: false,
             dynamicImport: false,
             forOf: false,
- 
+            module: false
+        }
+    },
+
+    devtool: 'source-map',
+
+    reso
