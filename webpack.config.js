@@ -25,4 +25,10 @@ let config = {
 
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json'],
-        fallba
+        fallback: {
+            fs: false,
+            path: false
+        }
+    },
+
+    plugins: 
