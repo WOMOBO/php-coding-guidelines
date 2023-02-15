@@ -23,4 +23,6 @@ let config = {
 
     devtool: 'source-map',
 
-    reso
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js', '.json'],
+        fallba
