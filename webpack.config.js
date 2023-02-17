@@ -39,4 +39,7 @@ let config = {
 
     optimization: {
         minimizer: [
-            
+            new TerserPlugin({
+                extractComments: false,
+            })
+   
