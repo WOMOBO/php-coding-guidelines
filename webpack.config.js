@@ -33,4 +33,10 @@ let config = {
 
     plugins: [
         new webpack.DefinePlugin({
-            __VERSION__: JSON.stringif
+            __VERSION__: JSON.stringify(pkg.version)
+        })
+    ],
+
+    optimization: {
+        minimizer: [
+            
