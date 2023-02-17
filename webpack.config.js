@@ -31,4 +31,6 @@ let config = {
         }
     },
 
-    plugins: 
+    plugins: [
+        new webpack.DefinePlugin({
+            __VERSION__: JSON.stringif
