@@ -51,3 +51,7 @@ let config = {
                 test: /\.(ts|js)$/,
                 use: 'ts-loader',
                 exclude: /node-modules/
+            },
+            {
+                enforce: 'pre',
+    
