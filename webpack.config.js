@@ -42,4 +42,10 @@ let config = {
             new TerserPlugin({
                 extractComments: false,
             })
-   
+        ]
+    },
+
+    module: {
+        rules: [
+            {
+                test: /\.(
