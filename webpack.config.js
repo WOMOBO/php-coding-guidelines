@@ -48,4 +48,6 @@ let config = {
     module: {
         rules: [
             {
-                test: /\.(
+                test: /\.(ts|js)$/,
+                use: 'ts-loader',
+                exclude: /node-modules/
