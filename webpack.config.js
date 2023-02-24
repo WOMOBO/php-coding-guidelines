@@ -57,4 +57,9 @@ let config = {
                 test: /\.js$/,
                 use: 'source-map-loader'
             }
- 
+        ]
+    }
+};
+
+module.exports = (env, argv) => {
+    if (argv.mode === 'produ
