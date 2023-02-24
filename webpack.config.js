@@ -62,4 +62,9 @@ let config = {
 };
 
 module.exports = (env, argv) => {
-    if (argv.mode === 'produ
+    if (argv.mode === 'production') {
+        config.output.filename = 'flv.min.js';
+    }
+
+    return config;
+};
