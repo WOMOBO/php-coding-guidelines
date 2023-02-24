@@ -54,4 +54,7 @@ let config = {
             },
             {
                 enforce: 'pre',
-    
+                test: /\.js$/,
+                use: 'source-map-loader'
+            }
+ 
